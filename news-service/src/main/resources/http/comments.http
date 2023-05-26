@@ -1,3 +1,33 @@
 ###findById
 GET http://localhost:8080/comments/5
 Accept: application/json
+
+###findAllByNewsId
+GET http://localhost:8080/comments/news/2?page=1&size=5&sort=username
+Accept: application/json
+
+###findAllByMatchingTextParams
+GET http://localhost:8080/comments/params?username=Анна&page=0&size=10&sort=username
+Accept: application/json
+
+###save
+POST http://localhost:8080/comments
+Content-Type: application/json
+
+{
+  "text": "Как то не очень :(",
+  "username": "Василий"
+}
+
+###update
+PUT http://localhost:8080/comments/191
+Content-Type: application/json
+
+{
+  "text": "Воу, это круто!",
+  "username": "Светка"
+}
+
+###delete
+DELETE http://localhost:8080/comments/191
+Content-Type: application/json
