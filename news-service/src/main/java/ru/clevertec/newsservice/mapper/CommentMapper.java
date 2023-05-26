@@ -1,7 +1,7 @@
 package ru.clevertec.newsservice.mapper;
 
 import org.mapstruct.Mapper;
-import ru.clevertec.newsservice.dto.CommentResponse;
+import ru.clevertec.newsservice.dto.comment.CommentResponse;
 import ru.clevertec.newsservice.model.Comment;
 
 import java.util.List;

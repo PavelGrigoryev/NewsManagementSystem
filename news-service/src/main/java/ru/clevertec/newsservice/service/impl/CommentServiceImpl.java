@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.newsservice.dto.CommentResponse;
+import ru.clevertec.newsservice.dto.comment.CommentResponse;
 import ru.clevertec.newsservice.exception.NoSuchCommentException;
 import ru.clevertec.newsservice.mapper.CommentMapper;
 import ru.clevertec.newsservice.repository.CommentRepository;

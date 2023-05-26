@@ -1,9 +1,10 @@
 package ru.clevertec.newsservice.service;
 
 import org.springframework.data.domain.Pageable;
-import ru.clevertec.newsservice.dto.NewsMatcherRequest;
-import ru.clevertec.newsservice.dto.NewsResponse;
-import ru.clevertec.newsservice.dto.NewsWithCommentsResponse;
+import ru.clevertec.newsservice.dto.DeleteResponse;
+import ru.clevertec.newsservice.dto.news.NewsRequest;
+import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 
 import java.util.List;
 
@@ -15,6 +16,12 @@ public interface NewsService {
 
     NewsWithCommentsResponse findByIdWithComments(Long id, Pageable pageable);
 
-    List<NewsResponse> findAllByMatchingTextParams(NewsMatcherRequest newsMatcherRequest, Pageable pageable);
+    List<NewsResponse> findAllByMatchingTextParams(NewsRequest newsRequest, Pageable pageable);
+
+    NewsResponse save(NewsRequest newsRequest);
+
+    NewsResponse updateById(Long id, NewsRequest newsRequest);
+
+    DeleteResponse deleteById(Long id);
 
 }

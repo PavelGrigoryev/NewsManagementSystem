@@ -6,10 +6,11 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.newsservice.dto.CommentResponse;
-import ru.clevertec.newsservice.dto.NewsMatcherRequest;
-import ru.clevertec.newsservice.dto.NewsResponse;
-import ru.clevertec.newsservice.dto.NewsWithCommentsResponse;
+import ru.clevertec.newsservice.dto.DeleteResponse;
+import ru.clevertec.newsservice.dto.comment.CommentResponse;
+import ru.clevertec.newsservice.dto.news.NewsRequest;
+import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.exception.NoSuchNewsException;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.News;
@@ -49,14 +50,42 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsResponse> findAllByMatchingTextParams(NewsMatcherRequest newsMatcherRequest, Pageable pageable) {
-        News news = newsMapper.fromRequest(newsMatcherRequest);
+    public List<NewsResponse> findAllByMatchingTextParams(NewsRequest newsRequest, Pageable pageable) {
+        News news = newsMapper.fromRequest(newsRequest);
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
                 .withIgnoreNullValues()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Example<News> newsExample = Example.of(news, exampleMatcher);
         return newsMapper.toResponses(newsRepository.findAll(newsExample, pageable));
+    }
+
+    @Override
+    @Transactional
+    public NewsResponse save(NewsRequest newsRequest) {
+        News news = newsMapper.fromRequest(newsRequest);
+        News saved = newsRepository.save(news);
+        return newsMapper.toResponse(saved);
+    }
+
+    @Override
+    @Transactional
+    public NewsResponse updateById(Long id, NewsRequest newsRequest) {
+        News news = newsRepository.findById(id)
+                .orElseThrow(() -> new NoSuchNewsException("There is no News with ID " + id + " to update"));
+        news.setTitle(newsRequest.title());
+        news.setText(newsRequest.text());
+        News saved = newsRepository.saveAndFlush(news);
+        return newsMapper.toResponse(saved);
+    }
+
+    @Override
+    @Transactional
+    public DeleteResponse deleteById(Long id) {
+        News news = newsRepository.findById(id)
+                .orElseThrow(() -> new NoSuchNewsException("There is no News with ID " + id + " to delete"));
+        newsRepository.delete(news);
+        return new DeleteResponse("News with ID " + id + " was successfully deleted");
     }
 
 }

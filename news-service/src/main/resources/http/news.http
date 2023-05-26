@@ -13,3 +13,25 @@ Accept: application/json
 ###findAllByMatchingTextParams
 GET http://localhost:8080/news/params?title=в россии&page=0&size=2&sort=title
 Accept: application/json
+
+###save
+POST http://localhost:8080/news
+Content-Type: application/json
+
+{
+  "title": "Привет из Беларуси",
+  "text": "Беларусь - великая страна!"
+}
+
+###update
+PUT http://localhost:8080/news/21
+Content-Type: application/json
+
+{
+  "title": "До свидания от Беларуси",
+  "text": "Беларусь прощается с вами"
+}
+
+###delete
+DELETE http://localhost:8080/news/21
+Content-Type: application/json

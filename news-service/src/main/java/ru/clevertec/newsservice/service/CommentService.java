@@ -1,7 +1,7 @@
 package ru.clevertec.newsservice.service;
 
 import org.springframework.data.domain.Pageable;
-import ru.clevertec.newsservice.dto.CommentResponse;
+import ru.clevertec.newsservice.dto.comment.CommentResponse;
 
 import java.util.List;
 
