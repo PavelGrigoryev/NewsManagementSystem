@@ -1,0 +1,7 @@
+###findById
+GET http://localhost:8080/news/19
+Accept: application/json
+
+###findByIdWithComments
+GET http://localhost:8080/news/comments/19
+Accept: application/json

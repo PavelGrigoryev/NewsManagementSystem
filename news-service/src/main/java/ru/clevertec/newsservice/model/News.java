@@ -2,6 +2,7 @@ package ru.clevertec.newsservice.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,7 +39,7 @@ public class News {
     private String title;
     private String text;
 
-    @OneToMany(mappedBy = "news")
+    @OneToMany(mappedBy = "news", fetch = FetchType.LAZY)
     @ToString.Exclude
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
