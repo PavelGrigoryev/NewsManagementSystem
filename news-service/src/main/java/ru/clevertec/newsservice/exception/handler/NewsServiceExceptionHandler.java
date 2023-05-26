@@ -1,5 +1,6 @@
 package ru.clevertec.newsservice.exception.handler;
 
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,6 +14,11 @@ public class NewsServiceExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<IncorrectData> notFoundException(NotFoundException exception) {
         return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    public ResponseEntity<IncorrectData> propertyReferenceException(PropertyReferenceException exception) {
+        return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.NOT_ACCEPTABLE);
     }
 
     private static ResponseEntity<IncorrectData> getResponse(String name, String message, HttpStatus status) {

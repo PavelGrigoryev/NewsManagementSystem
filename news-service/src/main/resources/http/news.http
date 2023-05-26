@@ -2,6 +2,14 @@
 GET http://localhost:8080/news/19
 Accept: application/json
 
+###findAll
+GET http://localhost:8080/news?page=1&size=5
+Accept: application/json
+
 ###findByIdWithComments
-GET http://localhost:8080/news/comments/19
+GET http://localhost:8080/news/19/comments?page=1&size=5&sort=username
+Accept: application/json
+
+###findAllByMatchingTextParams
+GET http://localhost:8080/news/params?title=в россии&page=0&size=2&sort=title
 Accept: application/json
