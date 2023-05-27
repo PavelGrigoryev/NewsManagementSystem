@@ -9,11 +9,17 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
+import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.exception.NoSuchCommentException;
 import ru.clevertec.newsservice.mapper.CommentMapper;
+import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.Comment;
+import ru.clevertec.newsservice.model.News;
 import ru.clevertec.newsservice.repository.CommentRepository;
 import ru.clevertec.newsservice.service.CommentService;
+import ru.clevertec.newsservice.service.NewsService;
 
 import java.util.List;
 
@@ -24,6 +30,8 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
+    private final NewsService newsService;
+    private final NewsMapper newsMapper;
 
     @Override
     public CommentResponse findById(Long id) {
@@ -33,8 +41,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentResponse> findAllByNewsId(Long newsId, Pageable pageable) {
-        return commentMapper.toResponses(commentRepository.findAllByNewsId(newsId, pageable));
+    public NewsWithCommentsResponse findNewsByNewsIdWithComments(Long newsId, Pageable pageable) {
+        NewsResponse newsResponse = newsService.findById(newsId);
+        List<Comment> comments = commentRepository.findAllByNewsId(newsId, pageable);
+        return commentMapper.toWithCommentsResponse(newsResponse, comments);
     }
 
     @Override
@@ -50,8 +60,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentResponse save(CommentRequest commentRequest) {
-        Comment comment = commentMapper.fromRequest(commentRequest);
+    public CommentResponse save(CommentWithNewsRequest commentWithNewsRequest) {
+        NewsResponse newsResponse = newsService.findById(commentWithNewsRequest.newsId());
+        Comment comment = commentMapper.fromWithNewsRequest(commentWithNewsRequest);
+        News news = newsMapper.fromResponse(newsResponse);
+        comment.setNews(news);
         Comment saved = commentRepository.save(comment);
         return commentMapper.toResponse(saved);
     }

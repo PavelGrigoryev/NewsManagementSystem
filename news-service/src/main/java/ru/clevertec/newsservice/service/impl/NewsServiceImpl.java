@@ -7,15 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.comment.CommentResponse;
 import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
-import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.exception.NoSuchNewsException;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.News;
 import ru.clevertec.newsservice.repository.NewsRepository;
-import ru.clevertec.newsservice.service.CommentService;
 import ru.clevertec.newsservice.service.NewsService;
 
 import java.util.List;
@@ -27,7 +24,6 @@ public class NewsServiceImpl implements NewsService {
 
     private final NewsRepository newsRepository;
     private final NewsMapper newsMapper;
-    private final CommentService commentService;
 
     @Override
     public NewsResponse findById(Long id) {
@@ -39,14 +35,6 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsResponse> findAll(Pageable pageable) {
         return newsMapper.toResponses(newsRepository.findAll(pageable));
-    }
-
-    @Override
-    public NewsWithCommentsResponse findByIdWithComments(Long id, Pageable pageable) {
-        News news = newsRepository.findById(id)
-                .orElseThrow(() -> new NoSuchNewsException("News with ID " + id + " does not exist"));
-        List<CommentResponse> commentResponses = commentService.findAllByNewsId(id, pageable);
-        return newsMapper.toWithCommentsResponse(news, commentResponses);
     }
 
     @Override

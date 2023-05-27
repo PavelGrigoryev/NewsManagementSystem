@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
+import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.service.CommentService;
 
 import java.util.List;
@@ -32,8 +34,8 @@ public class CommentController {
     }
 
     @GetMapping("/news/{newsId}")
-    public ResponseEntity<List<CommentResponse>> findAllByNewsId(@PathVariable Long newsId, Pageable pageable) {
-        return ResponseEntity.ok(commentService.findAllByNewsId(newsId, pageable));
+    public ResponseEntity<NewsWithCommentsResponse> findNewsByNewsIdWithComments(@PathVariable Long newsId, Pageable pageable) {
+        return ResponseEntity.ok(commentService.findNewsByNewsIdWithComments(newsId, pageable));
     }
 
     @GetMapping("/params")
@@ -42,8 +44,8 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<CommentResponse> save(@RequestBody CommentRequest commentRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(commentRequest));
+    public ResponseEntity<CommentResponse> save(@RequestBody CommentWithNewsRequest commentWithNewsRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(commentWithNewsRequest));
     }
 
     @PutMapping("/{id}")

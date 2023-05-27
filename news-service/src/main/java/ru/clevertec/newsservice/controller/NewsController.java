@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
-import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.service.NewsService;
 
 import java.util.List;
@@ -35,11 +34,6 @@ public class NewsController {
     @GetMapping
     public ResponseEntity<List<NewsResponse>> findAll(Pageable pageable) {
         return ResponseEntity.ok(newsService.findAll(pageable));
-    }
-
-    @GetMapping("/{id}/comments")
-    public ResponseEntity<NewsWithCommentsResponse> findByIdWithComments(@PathVariable Long id, Pageable pageable) {
-        return ResponseEntity.ok(newsService.findByIdWithComments(id, pageable));
     }
 
     @GetMapping("/params")

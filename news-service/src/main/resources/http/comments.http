@@ -2,8 +2,8 @@
 GET http://localhost:8080/comments/5
 Accept: application/json
 
-###findAllByNewsId
-GET http://localhost:8080/comments/news/2?page=1&size=5&sort=username
+###findNewsByNewsIdWithComments
+GET http://localhost:8080/comments/news/19?page=1&size=5&sort=username
 Accept: application/json
 
 ###findAllByMatchingTextParams
@@ -16,7 +16,8 @@ Content-Type: application/json
 
 {
   "text": "Как то не очень :(",
-  "username": "Василий"
+  "username": "Василий",
+  "news_id": 20
 }
 
 ###update
