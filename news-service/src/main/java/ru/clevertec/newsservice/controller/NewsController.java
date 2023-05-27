@@ -1,9 +1,12 @@
 package ru.clevertec.newsservice.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +22,7 @@ import ru.clevertec.newsservice.service.NewsService;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/news")
@@ -27,7 +31,7 @@ public class NewsController {
     private final NewsService newsService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<NewsResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<NewsResponse> findById(@PathVariable @Positive Long id) {
         return ResponseEntity.ok(newsService.findById(id));
     }
 
@@ -37,22 +41,24 @@ public class NewsController {
     }
 
     @GetMapping("/params")
-    public ResponseEntity<List<NewsResponse>> findAllByMatchingTextParams(NewsRequest newsRequest, Pageable pageable) {
+    public ResponseEntity<List<NewsResponse>> findAllByMatchingTextParams(NewsRequest newsRequest,
+                                                                          Pageable pageable) {
         return ResponseEntity.ok(newsService.findAllByMatchingTextParams(newsRequest, pageable));
     }
 
     @PostMapping
-    public ResponseEntity<NewsResponse> save(@RequestBody NewsRequest newsRequest) {
+    public ResponseEntity<NewsResponse> save(@RequestBody @Valid NewsRequest newsRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(newsService.save(newsRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<NewsResponse> updateById(@PathVariable Long id, @RequestBody NewsRequest newsRequest) {
+    public ResponseEntity<NewsResponse> updateById(@PathVariable @Positive Long id,
+                                                   @RequestBody @Valid NewsRequest newsRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(newsService.updateById(id, newsRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<DeleteResponse> deleteById(@PathVariable Long id) {
+    public ResponseEntity<DeleteResponse> deleteById(@PathVariable @Positive Long id) {
         return ResponseEntity.ok(newsService.deleteById(id));
     }
 
