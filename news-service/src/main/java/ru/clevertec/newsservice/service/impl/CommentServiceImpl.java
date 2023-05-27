@@ -6,6 +6,9 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.clevertec.newsservice.aop.annotation.GetCacheable;
+import ru.clevertec.newsservice.aop.annotation.PutCacheable;
+import ru.clevertec.newsservice.aop.annotation.RemoveCacheable;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
@@ -44,6 +47,7 @@ public class CommentServiceImpl implements CommentService {
      * @throws NoSuchCommentException if Comment is not exists by finding it by ID.
      */
     @Override
+    @GetCacheable
     public CommentResponse findById(Long id) {
         return commentRepository.findById(id)
                 .map(commentMapper::toResponse)
@@ -91,6 +95,7 @@ public class CommentServiceImpl implements CommentService {
      * @return the CommentResponse which was mapped from saved Comment entity.
      */
     @Override
+    @PutCacheable
     @Transactional
     public CommentResponse save(CommentWithNewsRequest commentWithNewsRequest) {
         NewsResponse newsResponse = newsService.findById(commentWithNewsRequest.newsId());
@@ -110,6 +115,7 @@ public class CommentServiceImpl implements CommentService {
      * @throws NoSuchCommentException if Comment is not exists by finding it by ID.
      */
     @Override
+    @PutCacheable
     @Transactional
     public CommentResponse updateById(Long id, CommentRequest commentRequest) {
         Comment comment = commentRepository.findById(id)
@@ -129,6 +135,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     @Transactional
+    @RemoveCacheable
     public DeleteResponse deleteById(Long id) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchCommentException("There is no Comment with ID " + id + " to delete"));

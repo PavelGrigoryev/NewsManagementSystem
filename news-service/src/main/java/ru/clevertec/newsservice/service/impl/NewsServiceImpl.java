@@ -6,6 +6,9 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.clevertec.newsservice.aop.annotation.GetCacheable;
+import ru.clevertec.newsservice.aop.annotation.PutCacheable;
+import ru.clevertec.newsservice.aop.annotation.RemoveCacheable;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
@@ -36,6 +39,7 @@ public class NewsServiceImpl implements NewsService {
      * @throws NoSuchNewsException if News is not exists by finding it by ID.
      */
     @Override
+    @GetCacheable
     public NewsResponse findById(Long id) {
         return newsRepository.findById(id)
                 .map(newsMapper::toResponse)
@@ -79,6 +83,7 @@ public class NewsServiceImpl implements NewsService {
      * @return the NewsResponse which was mapped from saved News entity.
      */
     @Override
+    @PutCacheable
     @Transactional
     public NewsResponse save(NewsRequest newsRequest) {
         News news = newsMapper.fromRequest(newsRequest);
@@ -95,6 +100,7 @@ public class NewsServiceImpl implements NewsService {
      * @throws NoSuchNewsException if News is not exists by finding it by ID.
      */
     @Override
+    @PutCacheable
     @Transactional
     public NewsResponse updateById(Long id, NewsRequest newsRequest) {
         News news = newsRepository.findById(id)
@@ -106,7 +112,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     /**
-     * Deletes one {@link News} by ID.
+     * Deletes one {@link News} by ID and related Comments.
      *
      * @param id the ID of the News.
      * @return the {@link DeleteResponse} with message that News was deleted.
@@ -114,6 +120,7 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     @Transactional
+    @RemoveCacheable
     public DeleteResponse deleteById(Long id) {
         News news = newsRepository.findById(id)
                 .orElseThrow(() -> new NoSuchNewsException("There is no News with ID " + id + " to delete"));
