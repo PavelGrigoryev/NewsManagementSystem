@@ -24,4 +24,8 @@ public class Pointcuts {
     public void isCommentServiceImplLayer() {
     }
 
+    @Pointcut("within(@ru.clevertec.newsservice.aop.annotation.Loggable *)")
+    public void isClassWithLoggableAnnotation() {
+    }
+
 }

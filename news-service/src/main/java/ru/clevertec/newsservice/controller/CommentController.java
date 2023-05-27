@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.clevertec.newsservice.aop.annotation.Loggable;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
@@ -24,6 +25,7 @@ import ru.clevertec.newsservice.service.CommentService;
 
 import java.util.List;
 
+@Loggable
 @Validated
 @RestController
 @RequiredArgsConstructor
