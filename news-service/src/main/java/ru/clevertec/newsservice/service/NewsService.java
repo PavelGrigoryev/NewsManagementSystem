@@ -7,6 +7,9 @@ import ru.clevertec.newsservice.dto.news.NewsResponse;
 
 import java.util.List;
 
+/**
+ * The NewsService interface provides the implementation for CRUD operations.
+ */
 public interface NewsService {
 
     NewsResponse findById(Long id);

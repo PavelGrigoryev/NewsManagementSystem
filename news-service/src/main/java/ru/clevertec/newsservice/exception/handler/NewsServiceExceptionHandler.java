@@ -14,14 +14,29 @@ import ru.clevertec.newsservice.exception.model.Violation;
 
 import java.util.List;
 
+/**
+ * This NewsServiceExceptionHandler class handles exceptions and returns appropriate error responses.
+ */
 @ControllerAdvice
 public class NewsServiceExceptionHandler {
 
+    /**
+     * Handles {@link NotFoundException} and returns a 404 Not Found response with an error message.
+     *
+     * @param exception The NotFoundException to handle.
+     * @return A ResponseEntity containing an {@link IncorrectData} object and a 404 status code.
+     */
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<IncorrectData> notFoundException(NotFoundException exception) {
         return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Handles {@link PropertyReferenceException} and returns a 406 Not Acceptable response with an error message.
+     *
+     * @param exception The PropertyReferenceException to handle.
+     * @return A ResponseEntity containing an {@link IncorrectData} object and a 406 status code.
+     */
     @ExceptionHandler(PropertyReferenceException.class)
     public ResponseEntity<IncorrectData> propertyReferenceException(PropertyReferenceException exception) {
         return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.NOT_ACCEPTABLE);
@@ -61,6 +76,14 @@ public class NewsServiceExceptionHandler {
                 .body(new ValidationErrorResponse(HttpStatus.CONFLICT.toString(), violations));
     }
 
+    /**
+     * Creates response {@link ResponseEntity} with {@link IncorrectData}.
+     *
+     * @param name    the simple name of exception
+     * @param message the message from exception
+     * @param status  the {@link HttpStatus} code
+     * @return A ResponseEntity containing an IncorrectData object and a status code.
+     */
     private static ResponseEntity<IncorrectData> getResponse(String name, String message, HttpStatus status) {
         IncorrectData incorrectData = new IncorrectData(name, message, status.toString());
         return ResponseEntity.status(status).body(incorrectData);

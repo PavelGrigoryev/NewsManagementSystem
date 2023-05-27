@@ -9,6 +9,9 @@ import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 
 import java.util.List;
 
+/**
+ * The CommentService interface provides the implementation for CRUD operations.
+ */
 public interface CommentService {
 
     CommentResponse findById(Long id);

@@ -17,6 +17,9 @@ import ru.clevertec.newsservice.service.NewsService;
 
 import java.util.List;
 
+/**
+ * The NewsServiceImpl class implements NewsService and provides the implementation for CRUD operations.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -25,6 +28,13 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
     private final NewsMapper newsMapper;
 
+    /**
+     * Finds one {@link News} by ID.
+     *
+     * @param id the ID of the News.
+     * @return {@link NewsResponse} with the specified ID and mapped from News entity.
+     * @throws NoSuchNewsException if News is not exists by finding it by ID.
+     */
     @Override
     public NewsResponse findById(Long id) {
         return newsRepository.findById(id)
@@ -32,11 +42,24 @@ public class NewsServiceImpl implements NewsService {
                 .orElseThrow(() -> new NoSuchNewsException("News with ID " + id + " does not exist"));
     }
 
+    /**
+     * Finds all {@link News} with pagination.
+     *
+     * @param pageable the {@link Pageable} News will be sorted by its parameters and divided into pages.
+     * @return a sorted by pageable and mapped from entity to dto list of all News.
+     */
     @Override
     public List<NewsResponse> findAll(Pageable pageable) {
         return newsMapper.toResponses(newsRepository.findAll(pageable));
     }
 
+    /**
+     * Finds all {@link News} by matching it through {@link ExampleMatcher} with pagination.
+     *
+     * @param newsRequest the {@link NewsRequest} which will be mapped to {@link NewsResponse}.
+     * @param pageable    {@link Pageable} News will be sorted by its parameters and divided into pages.
+     * @return sorted by pageable, filtered by ExampleMatcher and mapped from entity to dto list of all NewsResponse.
+     */
     @Override
     public List<NewsResponse> findAllByMatchingTextParams(NewsRequest newsRequest, Pageable pageable) {
         News news = newsMapper.fromRequest(newsRequest);
@@ -48,6 +71,13 @@ public class NewsServiceImpl implements NewsService {
         return newsMapper.toResponses(newsRepository.findAll(newsExample, pageable));
     }
 
+    /**
+     * Saves one {@link News}.
+     *
+     * @param newsRequest the {@link NewsRequest} which will be mapped to {@link NewsResponse} and saved in database
+     *                    by repository.
+     * @return the NewsResponse which was mapped from saved News entity.
+     */
     @Override
     @Transactional
     public NewsResponse save(NewsRequest newsRequest) {
@@ -56,6 +86,14 @@ public class NewsServiceImpl implements NewsService {
         return newsMapper.toResponse(saved);
     }
 
+    /**
+     * Updates one {@link News} by ID.
+     *
+     * @param id          the ID of the News.
+     * @param newsRequest the {@link NewsRequest} which will be mapped to {@link NewsResponse}.
+     * @return the NewsResponse which was mapped from updated News entity.
+     * @throws NoSuchNewsException if News is not exists by finding it by ID.
+     */
     @Override
     @Transactional
     public NewsResponse updateById(Long id, NewsRequest newsRequest) {
@@ -67,6 +105,13 @@ public class NewsServiceImpl implements NewsService {
         return newsMapper.toResponse(saved);
     }
 
+    /**
+     * Deletes one {@link News} by ID.
+     *
+     * @param id the ID of the News.
+     * @return the {@link DeleteResponse} with message that News was deleted.
+     * @throws NoSuchNewsException if News is not exists by finding it by ID.
+     */
     @Override
     @Transactional
     public DeleteResponse deleteById(Long id) {

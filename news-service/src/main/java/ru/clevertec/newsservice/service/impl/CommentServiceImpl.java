@@ -23,6 +23,9 @@ import ru.clevertec.newsservice.service.NewsService;
 
 import java.util.List;
 
+/**
+ * The CommentServiceImpl class implements CommentService and provides the implementation for CRUD operations.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -33,6 +36,13 @@ public class CommentServiceImpl implements CommentService {
     private final NewsService newsService;
     private final NewsMapper newsMapper;
 
+    /**
+     * Finds one {@link Comment} by ID.
+     *
+     * @param id the ID of the Comment.
+     * @return {@link CommentResponse} with the specified ID and mapped from Comment entity.
+     * @throws NoSuchCommentException if Comment is not exists by finding it by ID.
+     */
     @Override
     public CommentResponse findById(Long id) {
         return commentRepository.findById(id)
@@ -40,6 +50,13 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new NoSuchCommentException("Comment with ID " + id + " does not exist"));
     }
 
+    /**
+     * Finds {@link News} with {@link Comment}s and pagination.
+     *
+     * @param newsId   the ID of the News.
+     * @param pageable {@link Pageable} Comments will be sorted by its parameters and divided into pages.
+     * @return {@link NewsWithCommentsResponse} that contains one News and its Comments.
+     */
     @Override
     public NewsWithCommentsResponse findNewsByNewsIdWithComments(Long newsId, Pageable pageable) {
         NewsResponse newsResponse = newsService.findById(newsId);
@@ -47,6 +64,14 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.toWithCommentsResponse(newsResponse, comments);
     }
 
+
+    /**
+     * Finds all {@link Comment} by matching it through {@link ExampleMatcher} with pagination.
+     *
+     * @param commentRequest the {@link CommentRequest} which will be mapped to {@link CommentResponse}.
+     * @param pageable       {@link Pageable} Comments will be sorted by its parameters and divided into pages.
+     * @return sorted by pageable, filtered by ExampleMatcher and mapped from entity to dto list of all CommentResponse.
+     */
     @Override
     public List<CommentResponse> findAllByMatchingTextParams(CommentRequest commentRequest, Pageable pageable) {
         Comment comment = commentMapper.fromRequest(commentRequest);
@@ -58,6 +83,13 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.toResponses(commentRepository.findAll(commentExample, pageable).stream().toList());
     }
 
+    /**
+     * Saves one {@link Comment} and links it to the {@link News}.
+     *
+     * @param commentWithNewsRequest the {@link CommentWithNewsRequest} which will be mapped to {@link CommentResponse}
+     *                               and saved in database by repository.
+     * @return the CommentResponse which was mapped from saved Comment entity.
+     */
     @Override
     @Transactional
     public CommentResponse save(CommentWithNewsRequest commentWithNewsRequest) {
@@ -69,6 +101,14 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.toResponse(saved);
     }
 
+    /**
+     * Updates one {@link Comment} by ID.
+     *
+     * @param id             the ID of the Comment.
+     * @param commentRequest the {@link CommentRequest} which will be mapped to {@link CommentResponse}.
+     * @return the CommentResponse which was mapped from updated Comment entity.
+     * @throws NoSuchCommentException if Comment is not exists by finding it by ID.
+     */
     @Override
     @Transactional
     public CommentResponse updateById(Long id, CommentRequest commentRequest) {
@@ -80,6 +120,13 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.toResponse(saved);
     }
 
+    /**
+     * Deletes one {@link Comment} by ID.
+     *
+     * @param id the ID of the Comment.
+     * @return the {@link DeleteResponse} with message that Comment was deleted.
+     * @throws NoSuchCommentException if Comment is not exists by finding it by ID.
+     */
     @Override
     @Transactional
     public DeleteResponse deleteById(Long id) {
