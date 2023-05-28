@@ -3,7 +3,7 @@ GET http://localhost:8080/comments/5
 Accept: application/json
 
 ###findNewsByNewsIdWithComments
-GET http://localhost:8080/comments/news/19?page=1&size=5&sort=username
+GET http://localhost:8080/comments/news/19?page=1&size=5&sort=username,desc
 Accept: application/json
 
 ###findAllByMatchingTextParams
