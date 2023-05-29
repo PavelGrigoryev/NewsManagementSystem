@@ -4,14 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
-import ru.clevertec.newsservice.util.testbuilder.NewsResponseTestBuilder;
+import ru.clevertec.newsservice.util.testbuilder.news.NewsResponseTestBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class LFUCacheTest {
 
     private Cache<Long, NewsResponse> cache;
-    private static final NewsResponseTestBuilder TEST_BUILDER = NewsResponseTestBuilder.aNews();
+    private static final NewsResponseTestBuilder TEST_BUILDER = NewsResponseTestBuilder.aNewsResponse();
 
     @BeforeEach
     void setUp() {
