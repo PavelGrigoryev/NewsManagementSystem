@@ -1,22 +1,18 @@
-package ru.clevertec.newsservice.cache.factory;
+package ru.clevertec.newsservice.integration.cache.factory;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestConstructor;
 import ru.clevertec.newsservice.cache.Cache;
 import ru.clevertec.newsservice.cache.LFUCache;
+import ru.clevertec.newsservice.cache.factory.CacheFactory;
+import ru.clevertec.newsservice.integration.BaseIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ActiveProfiles("test")
 @RequiredArgsConstructor
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-class CacheFactoryImplTest {
+class CacheFactoryImplTest extends BaseIntegrationTest {
 
     @Value("${cache.capacity}")
     private Integer cacheCapacity;

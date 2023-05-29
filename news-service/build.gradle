@@ -19,6 +19,7 @@ dependencies {
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 	runtimeOnly 'org.postgresql:postgresql'
 
+	testImplementation 'org.testcontainers:postgresql:1.18.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
