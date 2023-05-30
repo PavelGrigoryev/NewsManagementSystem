@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.clevertec.newsservice.aop.annotation.Loggable;
+import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.newsservice.exception.NotFoundException;
 import ru.clevertec.newsservice.exception.model.IncorrectData;
 import ru.clevertec.newsservice.exception.model.ValidationErrorResponse;

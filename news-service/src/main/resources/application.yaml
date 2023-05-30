@@ -21,3 +21,6 @@ spring:
 cache:
   algorithm: LRU
   capacity: 5
+aop:
+  logging:
+    enabled: true
