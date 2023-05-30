@@ -1,0 +1,5 @@
+{
+  "exception": "NoSuchNewsException",
+  "errorMessage": "News with ID 122 does not exist",
+  "errorCode": "404 NOT_FOUND"
+}

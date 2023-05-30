@@ -1,0 +1,5 @@
+{
+  "exception": "NoSuchCommentException",
+  "errorMessage": "There is no Comment with ID 122 to delete",
+  "errorCode": "404 NOT_FOUND"
+}

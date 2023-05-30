@@ -1,0 +1,5 @@
+{
+  "exception": "PropertyReferenceException",
+  "errorMessage": "No property 'tit' found for type 'News'; Did you mean 'id','text','time','title'",
+  "errorCode": "406 NOT_ACCEPTABLE"
+}

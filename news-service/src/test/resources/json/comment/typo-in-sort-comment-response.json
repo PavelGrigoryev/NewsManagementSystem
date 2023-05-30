@@ -1,0 +1,5 @@
+{
+  "exception": "PropertyReferenceException",
+  "errorMessage": "No property 'usename' found for type 'Comment'; Did you mean 'username'",
+  "errorCode": "406 NOT_ACCEPTABLE"
+}

@@ -1,0 +1,9 @@
+{
+  "errorMessage": "409 CONFLICT",
+  "violations": [
+    {
+      "fieldName": "findById.id",
+      "message": "must be greater than 0"
+    }
+  ]
+}

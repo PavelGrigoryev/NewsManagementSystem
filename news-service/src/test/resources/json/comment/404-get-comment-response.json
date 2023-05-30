@@ -1,0 +1,5 @@
+{
+  "exception": "NoSuchCommentException",
+  "errorMessage": "Comment with ID 256 does not exist",
+  "errorCode": "404 NOT_FOUND"
+}
