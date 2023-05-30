@@ -1,0 +1,9 @@
+{
+  "errorMessage": "409 CONFLICT",
+  "violations": [
+    {
+      "fieldName": "deleteById.id",
+      "message": "must be greater than 0"
+    }
+  ]
+}
