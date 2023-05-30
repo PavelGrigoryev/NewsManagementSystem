@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+  postgres:
+    container_name: postgres
+    image: "postgres:14.5"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=enter your password here
+      - POSTGRES_USER=enter your username here
+      - POSTGRES_DB=news
+    networks:
+      - backend
+  news-service:
+    container_name: news-service
+    image: news-service
+    build:
+      dockerfile: news-service/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
