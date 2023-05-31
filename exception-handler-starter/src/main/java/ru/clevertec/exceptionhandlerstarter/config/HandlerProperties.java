@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * The HandlerProperties class that can be used to enable exception handling on the service layer.
+ */
 @Slf4j
 @Data
 @NoArgsConstructor
@@ -17,6 +20,10 @@ public class HandlerProperties {
      */
     private boolean enabled;
 
+    /**
+     * This method logs a message that indicates the successful initialization of the HandlerProperties bean along with
+     * its current state.
+     */
     @PostConstruct
     void init() {
         log.info("HandlerProperties initialized: {}", this);
