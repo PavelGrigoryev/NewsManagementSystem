@@ -1,2 +1,2 @@
 rootProject.name = 'NewsManagementSystem'
-include 'news-service', 'logging-starter'
+include 'news-service', 'logging-starter', 'exception-handler-starter'

@@ -1,4 +1,4 @@
-package ru.clevertec.newsservice.exception.handler;
+package ru.clevertec.exceptionhandlerstarter.handler;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.data.mapping.PropertyReferenceException;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.clevertec.loggingstarter.annotation.Loggable;
-import ru.clevertec.newsservice.exception.NotFoundException;
-import ru.clevertec.newsservice.exception.model.IncorrectData;
-import ru.clevertec.newsservice.exception.model.ValidationErrorResponse;
-import ru.clevertec.newsservice.exception.model.Violation;
+import ru.clevertec.exceptionhandlerstarter.exception.NotFoundException;
+import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
+import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
+import ru.clevertec.exceptionhandlerstarter.model.Violation;
 
 import java.util.List;
 

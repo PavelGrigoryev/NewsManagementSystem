@@ -24,3 +24,6 @@ cache:
 aop:
   logging:
     enabled: true
+exception:
+  handling:
+    enabled: true

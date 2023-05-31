@@ -24,7 +24,6 @@ public class LoggingAspect {
     public void isClassWithLoggableAnnotation() {
     }
 
-
     /**
      * This method intercepts method invocations on controllers and handlers that have the Loggable annotation and
      * logging the results of the method calls.

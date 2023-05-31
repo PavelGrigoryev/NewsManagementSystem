@@ -18,8 +18,8 @@ import org.springframework.validation.annotation.Validated;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
-import ru.clevertec.newsservice.exception.model.IncorrectData;
-import ru.clevertec.newsservice.exception.model.ValidationErrorResponse;
+import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
+import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
 
 import java.util.List;
 
