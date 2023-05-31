@@ -1,4 +1,4 @@
-package ru.clevertec.newsservice.exception.model;
+package ru.clevertec.exceptionhandlerstarter.model;
 
 import java.util.List;
 

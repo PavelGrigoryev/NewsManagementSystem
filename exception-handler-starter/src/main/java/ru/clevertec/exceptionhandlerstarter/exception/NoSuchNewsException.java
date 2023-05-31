@@ -1,4 +1,4 @@
-package ru.clevertec.newsservice.exception;
+package ru.clevertec.exceptionhandlerstarter.exception;
 
 public class NoSuchNewsException extends NotFoundException {
 

@@ -24,7 +24,7 @@ import ru.clevertec.newsservice.dto.comment.CommentResponse;
 import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
-import ru.clevertec.newsservice.exception.NoSuchCommentException;
+import ru.clevertec.exceptionhandlerstarter.exception.NoSuchCommentException;
 import ru.clevertec.newsservice.mapper.CommentMapper;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.Comment;

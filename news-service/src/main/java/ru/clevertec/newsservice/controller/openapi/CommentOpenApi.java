@@ -20,8 +20,8 @@ import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
 import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
-import ru.clevertec.newsservice.exception.model.IncorrectData;
-import ru.clevertec.newsservice.exception.model.ValidationErrorResponse;
+import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
+import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
 
 import java.util.List;
 

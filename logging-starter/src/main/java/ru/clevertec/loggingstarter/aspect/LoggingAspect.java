@@ -1,12 +1,11 @@
-package ru.clevertec.newsservice.aop;
+package ru.clevertec.loggingstarter.aspect;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
+import org.aspectj.lang.annotation.Pointcut;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -18,10 +17,12 @@ import java.util.Arrays;
  */
 @Slf4j
 @Aspect
-@Component
 @RequiredArgsConstructor
-@Profile("dev")
 public class LoggingAspect {
+
+    @Pointcut("within(@ru.clevertec.loggingstarter.annotation.Loggable *)")
+    public void isClassWithLoggableAnnotation() {
+    }
 
     /**
      * This method intercepts method invocations on controllers and handlers that have the Loggable annotation and
@@ -31,7 +32,7 @@ public class LoggingAspect {
      * @return the result of the intercepted method invocation.
      * @throws Throwable if an error occurs while invoking the intercepted method.
      */
-    @Around("ru.clevertec.newsservice.aop.pointcut.Pointcuts.isClassWithLoggableAnnotation()")
+    @Around("isClassWithLoggableAnnotation()")
     public Object loggingMethod(ProceedingJoinPoint joinPoint) throws Throwable {
         LocalDateTime before = LocalDateTime.now();
         Object result = joinPoint.proceed(joinPoint.getArgs());

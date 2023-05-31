@@ -21,7 +21,7 @@ import org.springframework.data.domain.Pageable;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
-import ru.clevertec.newsservice.exception.NoSuchNewsException;
+import ru.clevertec.exceptionhandlerstarter.exception.NoSuchNewsException;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.News;
 import ru.clevertec.newsservice.repository.NewsRepository;
