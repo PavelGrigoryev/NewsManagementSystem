@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
 import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.exceptionhandlerstarter.exception.NotFoundException;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
@@ -41,6 +42,17 @@ public class NewsServiceExceptionHandler {
      */
     @ExceptionHandler(PropertyReferenceException.class)
     public ResponseEntity<IncorrectData> propertyReferenceException(PropertyReferenceException exception) {
+        return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    /**
+     * Handles {@link UniqueEmailException} and returns a 406 Not Acceptable response with an error message.
+     *
+     * @param exception The UniqueEmailException to handle.
+     * @return A ResponseEntity containing an {@link IncorrectData} object and a 406 status code.
+     */
+    @ExceptionHandler(UniqueEmailException.class)
+    public ResponseEntity<IncorrectData> uniqueEmailException(UniqueEmailException exception) {
         return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.NOT_ACCEPTABLE);
     }
 

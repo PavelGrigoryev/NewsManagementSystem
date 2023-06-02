@@ -1,0 +1,20 @@
+###register
+POST http://localhost:8081/users/register
+Content-Type: application/json
+
+{
+  "firstname": "Pavel",
+  "lastname": "Shishkin",
+  "email": "Gareen@mail.com",
+  "password": "1234",
+  "role": "ADMIN"
+}
+
+###authenticate
+POST http://localhost:8081/users/authenticate
+Content-Type: application/json
+
+{
+  "email": "Green@mail.com",
+  "password": "1234"
+}

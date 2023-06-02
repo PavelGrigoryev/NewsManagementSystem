@@ -16,13 +16,11 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.clevertec.userservice.model.listener.UserListener;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -44,11 +42,12 @@ public class User implements UserDetails {
     private String lastname;
     private String email;
     private String password;
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
 
     @Override
     public boolean equals(Object o) {
@@ -65,7 +64,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return role.getGrantedAuthorities();
     }
 
     @Override
