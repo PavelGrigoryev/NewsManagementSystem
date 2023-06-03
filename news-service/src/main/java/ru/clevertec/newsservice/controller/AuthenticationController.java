@@ -1,4 +1,4 @@
-package ru.clevertec.userservice.controller;
+package ru.clevertec.newsservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,37 +10,37 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.loggingstarter.annotation.Loggable;
-import ru.clevertec.userservice.dto.AuthenticationRequest;
-import ru.clevertec.userservice.dto.RegisterRequest;
-import ru.clevertec.userservice.dto.RoleResponse;
-import ru.clevertec.userservice.dto.TokenRequest;
-import ru.clevertec.userservice.dto.UserResponse;
-import ru.clevertec.userservice.service.UserService;
+import ru.clevertec.newsservice.client.UserApiClient;
+import ru.clevertec.newsservice.dto.user.AuthenticationRequest;
+import ru.clevertec.newsservice.dto.user.RegisterRequest;
+import ru.clevertec.newsservice.dto.user.RoleResponse;
+import ru.clevertec.newsservice.dto.user.TokenRequest;
+import ru.clevertec.newsservice.dto.user.UserResponse;
 
 @Slf4j
 @Loggable
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/auth")
+public class AuthenticationController {
 
-    private final UserService userService;
+    private final UserApiClient userApiClient;
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest registerRequest) {
-        return ResponseEntity.ok(userService.register(registerRequest));
+        return ResponseEntity.ok(userApiClient.register(registerRequest));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<UserResponse> authenticate(@RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(userService.authenticate(request));
+    public ResponseEntity<UserResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
+        return ResponseEntity.ok(userApiClient.authenticate(authenticationRequest));
     }
 
     @PostMapping("/validate")
     public ResponseEntity<RoleResponse> tokenValidationCheck(@RequestHeader(HttpHeaders.AUTHORIZATION)
-                                                             TokenRequest tokenRequest) {
+                                                                 TokenRequest tokenRequest) {
         log.warn(tokenRequest.toString());
-        return ResponseEntity.ok(userService.tokenValidationCheck(tokenRequest));
+        return ResponseEntity.ok(userApiClient.tokenValidationCheck(tokenRequest));
     }
 
 }

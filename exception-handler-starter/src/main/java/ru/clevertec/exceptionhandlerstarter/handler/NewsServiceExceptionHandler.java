@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
+import ru.clevertec.exceptionhandlerstarter.exception.UserApiClientException;
 import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.exceptionhandlerstarter.exception.NotFoundException;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
@@ -54,6 +55,18 @@ public class NewsServiceExceptionHandler {
     @ExceptionHandler(UniqueEmailException.class)
     public ResponseEntity<IncorrectData> uniqueEmailException(UniqueEmailException exception) {
         return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    /**
+     * Handles {@link UserApiClientException} and returns the status code depending on the status of the UserApi
+     * with an error message.
+     *
+     * @param exception The UserApiClientException to handle.
+     * @return A ResponseEntity containing an {@link IncorrectData} object and UserApi status code.
+     */
+    @ExceptionHandler(UserApiClientException.class)
+    public ResponseEntity<IncorrectData> userApiClientException(UserApiClientException exception) {
+        return getResponse(exception.getExceptionName(), exception.getMessage(), HttpStatus.valueOf(exception.getErrorCode()));
     }
 
     /**

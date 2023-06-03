@@ -27,3 +27,6 @@ aop:
 exception:
   handling:
     enabled: true
+base:
+  url:
+    users: http://localhost:8081/users

@@ -1,0 +1,28 @@
+###register
+POST http://localhost:8081/users/register
+Content-Type: application/json
+
+{
+  "firstname": "Pavel",
+  "lastname": "Shishkin",
+  "email": "Green@mail.com",
+  "password": "1234",
+  "role": "ADMIN"
+}
+
+###authenticate
+POST http://localhost:8081/users/authenticate
+Content-Type: application/json
+
+{
+  "email": "Green@mail.com",
+  "password": "1234"
+}
+
+###validate
+< {%
+    request.variables.set("auth_token", "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiQURNSU4ifV0sInN1YiI6IkdyZWVuQG1haWwuY29tIiwiaWF0IjoxNjg1ODA2Nzk5LCJleHAiOjE2ODU4OTMxOTl9.pMxUn0Wy5b4oHTNtWLe7-ZGohO32Rw1vmf7314Y7O0Q")
+%}
+POST http://localhost:8081/users/validate
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}

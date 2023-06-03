@@ -1,4 +1,4 @@
-package ru.clevertec.userservice.model;
+package ru.clevertec.newsservice.dto.user;
 
 public enum Role {
 
