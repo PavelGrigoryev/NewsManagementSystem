@@ -1,9 +1,12 @@
 package ru.clevertec.userservice.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -13,12 +16,11 @@ import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.userservice.dto.AuthenticationRequest;
 import ru.clevertec.userservice.dto.RegisterRequest;
 import ru.clevertec.userservice.dto.RoleResponse;
-import ru.clevertec.userservice.dto.TokenRequest;
 import ru.clevertec.userservice.dto.UserResponse;
 import ru.clevertec.userservice.service.UserService;
 
-@Slf4j
 @Loggable
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -27,20 +29,21 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest registerRequest) {
-        return ResponseEntity.ok(userService.register(registerRequest));
+    public ResponseEntity<UserResponse> register(@RequestBody @Valid RegisterRequest request) {
+        return ResponseEntity.ok(userService.register(request));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<UserResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<UserResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) {
         return ResponseEntity.ok(userService.authenticate(request));
     }
 
-    @PostMapping("/validate")
+    @GetMapping("/validate")
     public ResponseEntity<RoleResponse> tokenValidationCheck(@RequestHeader(HttpHeaders.AUTHORIZATION)
-                                                             TokenRequest tokenRequest) {
-        log.warn(tokenRequest.toString());
-        return ResponseEntity.ok(userService.tokenValidationCheck(tokenRequest));
+                                                             @Pattern(regexp = "^Bearer\\s.*$",
+                                                             message = "Header must starts with 'Bearer ' !")
+                                                             String token) {
+        return ResponseEntity.ok(userService.tokenValidationCheck(token));
     }
 
 }
