@@ -39,6 +39,7 @@ public class Comment {
     private LocalDateTime time;
     private String text;
     private String username;
+    private String email;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "news_id")

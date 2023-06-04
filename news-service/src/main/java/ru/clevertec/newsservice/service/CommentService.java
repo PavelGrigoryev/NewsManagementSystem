@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
+import ru.clevertec.newsservice.dto.comment.CommentUpdateRequest;
 import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 
@@ -22,7 +23,7 @@ public interface CommentService {
 
     CommentResponse save(CommentWithNewsRequest commentWithNewsRequest);
 
-    CommentResponse updateById(Long id, CommentRequest commentRequest);
+    CommentResponse updateById(Long id, CommentUpdateRequest commentUpdateRequest);
 
     DeleteResponse deleteById(Long id);
 

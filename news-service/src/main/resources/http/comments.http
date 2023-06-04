@@ -17,6 +17,7 @@ Content-Type: application/json
 {
   "text": "Как то не очень :(",
   "username": "Василий",
+  "email": "Green@mail.by",
   "news_id": 20
 }
 

@@ -21,6 +21,7 @@ import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
 import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
+import ru.clevertec.newsservice.dto.news.NewsUpdateRequest;
 
 import java.util.List;
 
@@ -174,12 +175,12 @@ public interface NewsOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<List<NewsResponse>> findAllByMatchingTextParams(@Valid @ParameterObject NewsRequest newsRequest,
+    ResponseEntity<List<NewsResponse>> findAllByMatchingTextParams(@ParameterObject NewsRequest newsRequest,
                                                                    @ParameterObject Pageable pageable);
 
     @Operation(summary = "Save new News.", tags = "News",
-            requestBody = @RequestBody(description = "RequestBody for NewsResponse",
-                    content = @Content(schema = @Schema(implementation = NewsResponse.class),
+            requestBody = @RequestBody(description = "RequestBody for NewsRequest",
+                    content = @Content(schema = @Schema(implementation = NewsRequest.class),
                             examples = @ExampleObject("""
                                     {
                                       "title": "Привет из Беларуси",
@@ -218,8 +219,8 @@ public interface NewsOpenApi {
 
     @Operation(summary = "Update News by id.", tags = "News",
             parameters = @Parameter(name = "id", description = "Enter id here", example = "21"),
-            requestBody = @RequestBody(description = "RequestBody for NewsResponse",
-                    content = @Content(schema = @Schema(implementation = NewsResponse.class),
+            requestBody = @RequestBody(description = "RequestBody for NewsUpdateRequest",
+                    content = @Content(schema = @Schema(implementation = NewsUpdateRequest.class),
                             examples = @ExampleObject("""
                                     {
                                       "title": "До свидания от Беларуси",
@@ -262,7 +263,7 @@ public interface NewsOpenApi {
                                     """)))
     })
     ResponseEntity<NewsResponse> updateById(@Positive Long id,
-                                            @Valid NewsRequest newsRequest);
+                                            @Valid NewsUpdateRequest newsUpdateRequest);
 
     @Operation(summary = "Delete News by id with related Comments.", tags = "News",
             parameters = @Parameter(name = "id", description = "Enter id here", example = "21"))

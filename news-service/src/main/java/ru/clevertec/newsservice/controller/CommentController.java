@@ -17,6 +17,7 @@ import ru.clevertec.newsservice.controller.openapi.CommentOpenApi;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
+import ru.clevertec.newsservice.dto.comment.CommentUpdateRequest;
 import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.service.CommentService;
@@ -60,8 +61,8 @@ public class CommentController implements CommentOpenApi {
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<CommentResponse> updateById(@PathVariable Long id,
-                                                      @RequestBody CommentRequest commentRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.updateById(id, commentRequest));
+                                                      @RequestBody CommentUpdateRequest commentUpdateRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.updateById(id, commentUpdateRequest));
     }
 
     @Override

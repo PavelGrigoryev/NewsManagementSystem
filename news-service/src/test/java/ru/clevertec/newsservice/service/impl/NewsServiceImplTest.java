@@ -22,6 +22,7 @@ import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchNewsException;
+import ru.clevertec.newsservice.dto.news.NewsUpdateRequest;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.News;
 import ru.clevertec.newsservice.repository.NewsRepository;
@@ -29,6 +30,7 @@ import ru.clevertec.newsservice.util.testbuilder.ExampleMatcherTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.news.NewsRequestTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.news.NewsResponseTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.news.NewsTestBuilder;
+import ru.clevertec.newsservice.util.testbuilder.news.NewsUpdateRequestTestBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -292,7 +294,7 @@ class NewsServiceImplTest {
         void testShouldReturnUpdatedTagDto() {
             News mockedNews = NewsTestBuilder.aNews().build();
             NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().build();
-            NewsRequest mockedNewsRequest = NewsRequestTestBuilder.aNewsRequest().build();
+            NewsUpdateRequest mockedNewsRequest = NewsUpdateRequestTestBuilder.aNewsUpdateRequest().build();
             long id = mockedNews.getId();
 
             doReturn(Optional.of(mockedNews))
@@ -315,7 +317,7 @@ class NewsServiceImplTest {
         @Test
         @DisplayName("test should throw NoSuchNewsException")
         void testShouldThrowNoSuchNewsException() {
-            NewsRequest mockedNewsRequest = NewsRequestTestBuilder.aNewsRequest().build();
+            NewsUpdateRequest mockedNewsRequest = NewsUpdateRequestTestBuilder.aNewsUpdateRequest().build();
             long id = 2L;
 
             doThrow(new NoSuchNewsException(""))
@@ -328,7 +330,7 @@ class NewsServiceImplTest {
         @Test
         @DisplayName("test should throw NoSuchNewsException with expected message")
         void testShouldThrowNoSuchNewsExceptionWithExpectedMessage() {
-            NewsRequest mockedNewsRequest = NewsRequestTestBuilder.aNewsRequest().build();
+            NewsUpdateRequest mockedNewsRequest = NewsUpdateRequestTestBuilder.aNewsUpdateRequest().build();
             long id = 1L;
             String expectedMessage = "There is no News with ID " + id + " to update";
 

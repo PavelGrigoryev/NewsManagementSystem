@@ -17,11 +17,13 @@ public record RegisterRequest(@Size(min = 2, max = 30)
                                                 "alphabets without spaces in any case")
                               String lastname,
 
-                              @NotBlank
                               @Email
+                              @NotBlank
+                              @Size(max = 64)
                               String email,
 
                               @NotBlank
+                              @Size(max = 64)
                               String password,
 
                               @Pattern(regexp = "ADMIN|JOURNALIST|SUBSCRIBER",

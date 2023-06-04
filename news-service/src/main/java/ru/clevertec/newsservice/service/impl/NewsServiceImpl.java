@@ -13,6 +13,7 @@ import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchNewsException;
+import ru.clevertec.newsservice.dto.news.NewsUpdateRequest;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.News;
 import ru.clevertec.newsservice.repository.NewsRepository;
@@ -94,19 +95,19 @@ public class NewsServiceImpl implements NewsService {
     /**
      * Updates one {@link News} by ID.
      *
-     * @param id          the ID of the News.
-     * @param newsRequest the {@link NewsRequest} which will be mapped to {@link NewsResponse}.
+     * @param id                the ID of the News.
+     * @param newsUpdateRequest the {@link NewsUpdateRequest}.
      * @return the NewsResponse which was mapped from updated News entity.
      * @throws NoSuchNewsException if News is not exists by finding it by ID.
      */
     @Override
     @PutCacheable
     @Transactional
-    public NewsResponse updateById(Long id, NewsRequest newsRequest) {
+    public NewsResponse updateById(Long id, NewsUpdateRequest newsUpdateRequest) {
         News news = newsRepository.findById(id)
                 .orElseThrow(() -> new NoSuchNewsException("There is no News with ID " + id + " to update"));
-        news.setTitle(newsRequest.title());
-        news.setText(newsRequest.text());
+        news.setTitle(newsUpdateRequest.title());
+        news.setText(newsUpdateRequest.text());
         News saved = newsRepository.saveAndFlush(news);
         return newsMapper.toResponse(saved);
     }

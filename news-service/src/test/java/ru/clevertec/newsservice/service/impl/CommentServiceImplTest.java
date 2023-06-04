@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
+import ru.clevertec.newsservice.dto.comment.CommentUpdateRequest;
 import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
@@ -35,6 +36,7 @@ import ru.clevertec.newsservice.util.testbuilder.ExampleMatcherTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.comment.CommentRequestTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.comment.CommentResponseTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.comment.CommentTestBuilder;
+import ru.clevertec.newsservice.util.testbuilder.comment.CommentUpdateRequestTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.comment.CommentWithNewsRequestTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.news.NewsResponseTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.news.NewsTestBuilder;
@@ -369,7 +371,7 @@ class CommentServiceImplTest {
         void testShouldReturnUpdatedTagDto() {
             Comment mockedComment = CommentTestBuilder.aComment().build();
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().build();
-            CommentRequest mockedCommentRequest = CommentRequestTestBuilder.aCommentRequest().build();
+            CommentUpdateRequest mockedCommentRequest = CommentUpdateRequestTestBuilder.aCommentUpdateRequest().build();
             long id = mockedComment.getId();
 
             doReturn(Optional.of(mockedComment))
@@ -392,7 +394,7 @@ class CommentServiceImplTest {
         @Test
         @DisplayName("test should throw NoSuchCommentException")
         void testShouldThrowNoSuchCommentException() {
-            CommentRequest mockedCommentRequest = CommentRequestTestBuilder.aCommentRequest().build();
+            CommentUpdateRequest mockedCommentRequest = CommentUpdateRequestTestBuilder.aCommentUpdateRequest().build();
             long id = 2L;
 
             doThrow(new NoSuchCommentException(""))
@@ -405,7 +407,7 @@ class CommentServiceImplTest {
         @Test
         @DisplayName("test should throw NoSuchCommentException with expected message")
         void testShouldThrowNoSuchCommentExceptionWithExpectedMessage() {
-            CommentRequest mockedCommentRequest = CommentRequestTestBuilder.aCommentRequest().build();
+            CommentUpdateRequest mockedCommentRequest = CommentUpdateRequestTestBuilder.aCommentUpdateRequest().build();
             long id = 1L;
             String expectedMessage = "There is no Comment with ID " + id + " to update";
 

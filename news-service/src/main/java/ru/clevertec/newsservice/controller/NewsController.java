@@ -19,6 +19,7 @@ import ru.clevertec.newsservice.controller.openapi.NewsOpenApi;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.news.NewsUpdateRequest;
 import ru.clevertec.newsservice.service.AuthenticationService;
 import ru.clevertec.newsservice.service.NewsService;
 
@@ -64,8 +65,8 @@ public class NewsController implements NewsOpenApi {
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<NewsResponse> updateById(@PathVariable Long id,
-                                                   @RequestBody NewsRequest newsRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(newsService.updateById(id, newsRequest));
+                                                   @RequestBody NewsUpdateRequest newsUpdateRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(newsService.updateById(id, newsUpdateRequest));
     }
 
     @Override

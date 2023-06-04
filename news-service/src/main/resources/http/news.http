@@ -17,7 +17,8 @@ Authorization: Bearer {{jwt_token}}
 
 {
   "title": "Привет из Беларуси",
-  "text": "Беларусь - великая страна!"
+  "text": "Беларусь - великая страна!",
+  "email": "Green@mail.ru"
 }
 
 ###update

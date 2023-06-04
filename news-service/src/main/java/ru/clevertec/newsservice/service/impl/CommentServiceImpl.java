@@ -12,6 +12,7 @@ import ru.clevertec.newsservice.aop.annotation.RemoveCacheable;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
+import ru.clevertec.newsservice.dto.comment.CommentUpdateRequest;
 import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
@@ -110,18 +111,18 @@ public class CommentServiceImpl implements CommentService {
      * Updates one {@link Comment} by ID.
      *
      * @param id             the ID of the Comment.
-     * @param commentRequest the {@link CommentRequest} which will be mapped to {@link CommentResponse}.
+     * @param commentUpdateRequest the {@link CommentUpdateRequest}.
      * @return the CommentResponse which was mapped from updated Comment entity.
      * @throws NoSuchCommentException if Comment is not exists by finding it by ID.
      */
     @Override
     @PutCacheable
     @Transactional
-    public CommentResponse updateById(Long id, CommentRequest commentRequest) {
+    public CommentResponse updateById(Long id, CommentUpdateRequest commentUpdateRequest) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchCommentException("There is no Comment with ID " + id + " to update"));
-        comment.setText(commentRequest.text());
-        comment.setUsername(commentRequest.username());
+        comment.setText(commentUpdateRequest.text());
+        comment.setUsername(commentUpdateRequest.username());
         Comment saved = commentRepository.saveAndFlush(comment);
         return commentMapper.toResponse(saved);
     }

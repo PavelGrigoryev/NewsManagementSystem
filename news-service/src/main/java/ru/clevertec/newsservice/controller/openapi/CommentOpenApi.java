@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
+import ru.clevertec.newsservice.dto.comment.CommentUpdateRequest;
 import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
@@ -224,7 +225,7 @@ public interface CommentOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<List<CommentResponse>> findAllByMatchingTextParams(@Valid @ParameterObject CommentRequest commentRequest,
+    ResponseEntity<List<CommentResponse>> findAllByMatchingTextParams(@ParameterObject CommentRequest commentRequest,
                                                                       @ParameterObject Pageable pageable);
 
     @Operation(summary = "Save new Comment and related it with News by newsId.", tags = "Comment",
@@ -277,7 +278,7 @@ public interface CommentOpenApi {
     @Operation(summary = "Update Comment by id.", tags = "Comment",
             parameters = @Parameter(name = "id", description = "Enter id here", example = "191"),
             requestBody = @RequestBody(description = "RequestBody for CommentWithNewsRequest",
-                    content = @Content(schema = @Schema(implementation = CommentRequest.class),
+                    content = @Content(schema = @Schema(implementation = CommentUpdateRequest.class),
                             examples = @ExampleObject("""
                                     {
                                       "text": "Воу, это круто!",
@@ -320,7 +321,7 @@ public interface CommentOpenApi {
                                     """)))
     })
     ResponseEntity<CommentResponse> updateById(@Positive Long id,
-                                               @Valid CommentRequest commentRequest);
+                                               @Valid CommentUpdateRequest commentUpdateRequest);
 
     @Operation(summary = "Delete Comment by id.", tags = "Comment",
             parameters = @Parameter(name = "id", description = "Enter id here", example = "191"))

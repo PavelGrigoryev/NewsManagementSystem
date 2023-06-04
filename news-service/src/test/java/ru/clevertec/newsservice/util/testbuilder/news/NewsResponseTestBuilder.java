@@ -18,10 +18,11 @@ public class NewsResponseTestBuilder implements TestBuilder<NewsResponse> {
     private LocalDateTime time = LocalDateTime.of(2023, Month.MAY, 25, 15, 25, 33);
     private String title = "В Беларуси прошли массовые акции протеста против алкоголизма";
     private String text = "В Беларуси прошли массовые акции протеста против алкоголизма, который удерживает власть над алкоголиками более 40 лет.";
+    private String email = "olga1989@yandex.ru";
 
     @Override
     public NewsResponse build() {
-        return new NewsResponse(id, time, title, text);
+        return new NewsResponse(id, time, title, text, email);
     }
 
 }

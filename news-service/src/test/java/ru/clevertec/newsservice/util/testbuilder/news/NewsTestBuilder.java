@@ -18,6 +18,7 @@ public class NewsTestBuilder implements TestBuilder<News> {
     private LocalDateTime time = LocalDateTime.of(2023, Month.MAY, 25, 15, 25, 33);
     private String title = "В Беларуси прошли массовые акции протеста против алкоголизма";
     private String text = "В Беларуси прошли массовые акции протеста против алкоголизма, который удерживает власть над алкоголиками более 40 лет.";
+    private String email = "olga1989@yandex.ru";
 
     @Override
     public News build() {
@@ -26,6 +27,7 @@ public class NewsTestBuilder implements TestBuilder<News> {
                 .time(time)
                 .title(title)
                 .text(text)
+                .email(email)
                 .build();
     }
 

@@ -23,10 +23,11 @@ public class NewsWithCommentsResponseTestBuilder implements TestBuilder<NewsWith
     private String text = "В Беларуси прошли массовые акции протеста против алкоголизма, который удерживает власть над алкоголиками более 40 лет.";
     private List<CommentResponse> comments = List.of(CommentResponseTestBuilder.aCommentResponse().build(),
             CommentResponseTestBuilder.aCommentResponse().withId(2L).withUsername("Саня").build());
+    private String email = "olga1989@yandex.ru";
 
     @Override
     public NewsWithCommentsResponse build() {
-        return new NewsWithCommentsResponse(id, time, title, text, comments);
+        return new NewsWithCommentsResponse(id, time, title, text, email, comments);
     }
 
 }
