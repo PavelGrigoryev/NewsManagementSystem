@@ -2,6 +2,7 @@ package ru.clevertec.newsservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.loggingstarter.annotation.Loggable;
@@ -17,6 +19,7 @@ import ru.clevertec.newsservice.controller.openapi.NewsOpenApi;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.service.AuthenticationService;
 import ru.clevertec.newsservice.service.NewsService;
 
 import java.util.List;
@@ -28,6 +31,7 @@ import java.util.List;
 public class NewsController implements NewsOpenApi {
 
     private final NewsService newsService;
+    private final AuthenticationService authenticationService;
 
     @Override
     @GetMapping("/{id}")
@@ -51,7 +55,9 @@ public class NewsController implements NewsOpenApi {
 
     @Override
     @PostMapping
-    public ResponseEntity<NewsResponse> save(@RequestBody NewsRequest newsRequest) {
+    public ResponseEntity<NewsResponse> save(@RequestBody NewsRequest newsRequest,
+                                             @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        authenticationService.isRoleAdminOrJournalist(token);
         return ResponseEntity.status(HttpStatus.CREATED).body(newsService.save(newsRequest));
     }
 

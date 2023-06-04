@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import ru.clevertec.exceptionhandlerstarter.exception.AccessDeniedForThisRoleException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UserApiClientException;
 import ru.clevertec.loggingstarter.annotation.Loggable;
@@ -23,6 +24,17 @@ import java.util.List;
 @Loggable
 @ControllerAdvice
 public class NewsServiceExceptionHandler {
+
+    /**
+     * Handles {@link AccessDeniedForThisRoleException} and returns a 403 Forbidden response with an error message.
+     *
+     * @param exception The AccessDeniedForThisRoleException to handle.
+     * @return A ResponseEntity containing an {@link IncorrectData} object and a 403 status code.
+     */
+    @ExceptionHandler(AccessDeniedForThisRoleException.class)
+    public ResponseEntity<IncorrectData> accessDeniedForThisRoleException(AccessDeniedForThisRoleException exception) {
+        return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.FORBIDDEN);
+    }
 
     /**
      * Handles {@link NotFoundException} and returns a 404 Not Found response with an error message.

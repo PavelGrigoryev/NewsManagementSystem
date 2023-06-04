@@ -1,8 +1,11 @@
 package ru.clevertec.newsservice.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +20,7 @@ import ru.clevertec.newsservice.dto.user.RoleResponse;
 import ru.clevertec.newsservice.dto.user.UserResponse;
 
 @Loggable
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -25,17 +29,20 @@ public class AuthenticationController {
     private final UserApiClient userApiClient;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<UserResponse> register(@RequestBody @Valid RegisterRequest request) {
         return ResponseEntity.ok(userApiClient.register(request));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<UserResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<UserResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) {
         return ResponseEntity.ok(userApiClient.authenticate(request));
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<RoleResponse> tokenValidationCheck(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<RoleResponse> tokenValidationCheck(@RequestHeader(HttpHeaders.AUTHORIZATION)
+                                                             @Pattern(regexp = "^Bearer\\s.*$",
+                                                                     message = "Header must starts with 'Bearer ' !")
+                                                             String token) {
         return ResponseEntity.ok(userApiClient.tokenValidationCheck(token));
     }
 
