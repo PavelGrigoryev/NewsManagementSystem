@@ -13,11 +13,10 @@ public class NewsRequestTestBuilder implements TestBuilder<NewsRequest> {
 
     private String title = "title";
     private String text = "text";
-    private String email = "olga1989@yandex.ru";
 
     @Override
     public NewsRequest build() {
-        return new NewsRequest(title, text, email);
+        return new NewsRequest(title, text);
     }
 
 }

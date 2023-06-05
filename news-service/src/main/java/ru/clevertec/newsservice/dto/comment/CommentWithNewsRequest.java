@@ -1,8 +1,6 @@
 package ru.clevertec.newsservice.dto.comment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -15,10 +13,6 @@ public record CommentWithNewsRequest(@Size(min = 3, max = 500)
                                              message = "This field must contain only letters of the Russian and English" +
                                                        " alphabets, numbers, symbols(@ _ -) without spaces in any case")
                                      String username,
-
-                                     @NotBlank
-                                     @Email
-                                     String email,
 
                                      @JsonProperty("news_id")
                                      @Positive

@@ -13,17 +13,18 @@ Accept: application/json
 ###save
 POST http://localhost:8080/comments
 Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
 
 {
   "text": "Как то не очень :(",
   "username": "Василий",
-  "email": "Green@mail.by",
   "news_id": 20
 }
 
 ###update
 PUT http://localhost:8080/comments/191
 Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
 
 {
   "text": "Воу, это круто!",
@@ -33,3 +34,4 @@ Content-Type: application/json
 ###delete
 DELETE http://localhost:8080/comments/191
 Content-Type: application/json
+Authorization: Bearer {{jwt_token}}

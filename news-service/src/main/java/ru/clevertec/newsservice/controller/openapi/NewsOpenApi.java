@@ -16,12 +16,11 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
+import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
-import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
-import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
-import ru.clevertec.newsservice.dto.news.NewsUpdateRequest;
 
 import java.util.List;
 
@@ -219,8 +218,8 @@ public interface NewsOpenApi {
 
     @Operation(summary = "Update News by id.", tags = "News",
             parameters = @Parameter(name = "id", description = "Enter id here", example = "21"),
-            requestBody = @RequestBody(description = "RequestBody for NewsUpdateRequest",
-                    content = @Content(schema = @Schema(implementation = NewsUpdateRequest.class),
+            requestBody = @RequestBody(description = "RequestBody for NewsRequest",
+                    content = @Content(schema = @Schema(implementation = NewsRequest.class),
                             examples = @ExampleObject("""
                                     {
                                       "title": "До свидания от Беларуси",
@@ -263,7 +262,9 @@ public interface NewsOpenApi {
                                     """)))
     })
     ResponseEntity<NewsResponse> updateById(@Positive Long id,
-                                            @Valid NewsUpdateRequest newsUpdateRequest);
+                                            @Valid NewsRequest newsRequest,
+                                            @Pattern(regexp = "^Bearer\\s.*$",
+                                                    message = "Header must starts with 'Bearer ' !") String token);
 
     @Operation(summary = "Delete News by id with related Comments.", tags = "News",
             parameters = @Parameter(name = "id", description = "Enter id here", example = "21"))
@@ -299,6 +300,8 @@ public interface NewsOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<DeleteResponse> deleteById(@Positive Long id);
+    ResponseEntity<DeleteResponse> deleteById(@Positive Long id,
+                                              @Pattern(regexp = "^Bearer\\s.*$",
+                                                      message = "Header must starts with 'Bearer ' !") String token);
 
 }

@@ -17,13 +17,13 @@ Authorization: Bearer {{jwt_token}}
 
 {
   "title": "Привет из Беларуси",
-  "text": "Беларусь - великая страна!",
-  "email": "Green@mail.ru"
+  "text": "Беларусь - великая страна!"
 }
 
 ###update
 PUT http://localhost:8080/news/21
 Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
 
 {
   "title": "До свидания от Беларуси",
@@ -33,3 +33,4 @@ Content-Type: application/json
 ###delete
 DELETE http://localhost:8080/news/21
 Content-Type: application/json
+Authorization: Bearer {{jwt_token}}

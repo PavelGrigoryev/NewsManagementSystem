@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.userservice.dto.AuthenticationRequest;
 import ru.clevertec.userservice.dto.RegisterRequest;
-import ru.clevertec.userservice.dto.RoleResponse;
+import ru.clevertec.userservice.dto.TokenValidationResponse;
 import ru.clevertec.userservice.dto.UserResponse;
 import ru.clevertec.userservice.service.UserService;
 
@@ -38,11 +37,11 @@ public class UserController {
         return ResponseEntity.ok(userService.authenticate(request));
     }
 
-    @GetMapping("/validate")
-    public ResponseEntity<RoleResponse> tokenValidationCheck(@RequestHeader(HttpHeaders.AUTHORIZATION)
-                                                             @Pattern(regexp = "^Bearer\\s.*$",
-                                                             message = "Header must starts with 'Bearer ' !")
-                                                             String token) {
+    @PostMapping("/validate")
+    public ResponseEntity<TokenValidationResponse> tokenValidationCheck(@RequestHeader(HttpHeaders.AUTHORIZATION)
+                                                                        @Pattern(regexp = "^Bearer\\s.*$",
+                                                                                message = "Header must starts with 'Bearer ' !")
+                                                                        String token) {
         return ResponseEntity.ok(userService.tokenValidationCheck(token));
     }
 

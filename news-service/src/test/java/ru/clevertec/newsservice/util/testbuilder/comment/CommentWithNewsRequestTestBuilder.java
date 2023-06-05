@@ -14,11 +14,10 @@ public class CommentWithNewsRequestTestBuilder implements TestBuilder<CommentWit
     private String text = "Не очень понятно, надо бы больше примеров";
     private String username = "Ольга";
     private Long newsId = 1L;
-    private String email = "olga1989@yandex.ru";
 
     @Override
     public CommentWithNewsRequest build() {
-        return new CommentWithNewsRequest(text, username, email, newsId);
+        return new CommentWithNewsRequest(text, username, newsId);
     }
 
 }

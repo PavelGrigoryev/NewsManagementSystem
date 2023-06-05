@@ -13,11 +13,10 @@ public class CommentRequestTestBuilder implements TestBuilder<CommentRequest> {
 
     private String text = "Ужас какой, что творится...";
     private String username = "Евлампия";
-    private String email = "Google@gmail.com";
 
     @Override
     public CommentRequest build() {
-        return new CommentRequest(text, username, email);
+        return new CommentRequest(text, username);
     }
 
 }

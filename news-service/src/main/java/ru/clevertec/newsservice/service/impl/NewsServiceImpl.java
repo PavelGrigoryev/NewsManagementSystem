@@ -6,17 +6,19 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.clevertec.exceptionhandlerstarter.exception.NoSuchNewsException;
 import ru.clevertec.newsservice.aop.annotation.GetCacheable;
 import ru.clevertec.newsservice.aop.annotation.PutCacheable;
 import ru.clevertec.newsservice.aop.annotation.RemoveCacheable;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
-import ru.clevertec.exceptionhandlerstarter.exception.NoSuchNewsException;
-import ru.clevertec.newsservice.dto.news.NewsUpdateRequest;
+import ru.clevertec.newsservice.dto.user.Role;
+import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.News;
 import ru.clevertec.newsservice.repository.NewsRepository;
+import ru.clevertec.newsservice.service.AuthenticationService;
 import ru.clevertec.newsservice.service.NewsService;
 
 import java.util.List;
@@ -31,6 +33,7 @@ public class NewsServiceImpl implements NewsService {
 
     private final NewsRepository newsRepository;
     private final NewsMapper newsMapper;
+    private final AuthenticationService authenticationService;
 
     /**
      * Finds one {@link News} by ID.
@@ -81,13 +84,16 @@ public class NewsServiceImpl implements NewsService {
      *
      * @param newsRequest the {@link NewsRequest} which will be mapped to {@link NewsResponse} and saved in database
      *                    by repository.
+     * @param token       jwt token.
      * @return the NewsResponse which was mapped from saved News entity.
      */
     @Override
     @PutCacheable
     @Transactional
-    public NewsResponse save(NewsRequest newsRequest) {
+    public NewsResponse save(NewsRequest newsRequest, String token) {
+        TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.JOURNALIST);
         News news = newsMapper.fromRequest(newsRequest);
+        news.setEmail(response.email());
         News saved = newsRepository.save(news);
         return newsMapper.toResponse(saved);
     }
@@ -95,19 +101,23 @@ public class NewsServiceImpl implements NewsService {
     /**
      * Updates one {@link News} by ID.
      *
-     * @param id                the ID of the News.
-     * @param newsUpdateRequest the {@link NewsUpdateRequest}.
+     * @param id          the ID of the News.
+     * @param newsRequest the {@link NewsRequest}.
+     * @param token       jwt token.
      * @return the NewsResponse which was mapped from updated News entity.
      * @throws NoSuchNewsException if News is not exists by finding it by ID.
      */
     @Override
     @PutCacheable
     @Transactional
-    public NewsResponse updateById(Long id, NewsUpdateRequest newsUpdateRequest) {
+    public NewsResponse updateById(Long id, NewsRequest newsRequest, String token) {
+        TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.JOURNALIST);
         News news = newsRepository.findById(id)
                 .orElseThrow(() -> new NoSuchNewsException("There is no News with ID " + id + " to update"));
-        news.setTitle(newsUpdateRequest.title());
-        news.setText(newsUpdateRequest.text());
+        authenticationService.isObjectOwnedByEmailAndRole(
+                response.role(), Role.JOURNALIST, response.email(), news.getEmail());
+        news.setTitle(newsRequest.title());
+        news.setText(newsRequest.text());
         News saved = newsRepository.saveAndFlush(news);
         return newsMapper.toResponse(saved);
     }
@@ -115,16 +125,20 @@ public class NewsServiceImpl implements NewsService {
     /**
      * Deletes one {@link News} by ID and related Comments.
      *
-     * @param id the ID of the News.
+     * @param id    the ID of the News.
+     * @param token jwt token.
      * @return the {@link DeleteResponse} with message that News was deleted.
      * @throws NoSuchNewsException if News is not exists by finding it by ID.
      */
     @Override
     @Transactional
     @RemoveCacheable
-    public DeleteResponse deleteById(Long id) {
+    public DeleteResponse deleteById(Long id, String token) {
+        TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.JOURNALIST);
         News news = newsRepository.findById(id)
                 .orElseThrow(() -> new NoSuchNewsException("There is no News with ID " + id + " to delete"));
+        authenticationService.isObjectOwnedByEmailAndRole(
+                response.role(), Role.JOURNALIST, response.email(), news.getEmail());
         newsRepository.delete(news);
         return new DeleteResponse("News with ID " + id + " was successfully deleted");
     }

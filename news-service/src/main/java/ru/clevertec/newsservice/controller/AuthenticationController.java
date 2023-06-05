@@ -1,22 +1,17 @@
 package ru.clevertec.newsservice.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.newsservice.client.UserApiClient;
 import ru.clevertec.newsservice.dto.user.AuthenticationRequest;
 import ru.clevertec.newsservice.dto.user.RegisterRequest;
-import ru.clevertec.newsservice.dto.user.RoleResponse;
 import ru.clevertec.newsservice.dto.user.UserResponse;
 
 @Loggable
@@ -36,14 +31,6 @@ public class AuthenticationController {
     @PostMapping("/authenticate")
     public ResponseEntity<UserResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) {
         return ResponseEntity.ok(userApiClient.authenticate(request));
-    }
-
-    @GetMapping("/validate")
-    public ResponseEntity<RoleResponse> tokenValidationCheck(@RequestHeader(HttpHeaders.AUTHORIZATION)
-                                                             @Pattern(regexp = "^Bearer\\s.*$",
-                                                                     message = "Header must starts with 'Bearer ' !")
-                                                             String token) {
-        return ResponseEntity.ok(userApiClient.tokenValidationCheck(token));
     }
 
 }

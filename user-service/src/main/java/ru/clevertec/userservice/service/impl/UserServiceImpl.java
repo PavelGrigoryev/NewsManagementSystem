@@ -10,7 +10,7 @@ import ru.clevertec.exceptionhandlerstarter.exception.NoSuchUserEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
 import ru.clevertec.userservice.dto.AuthenticationRequest;
 import ru.clevertec.userservice.dto.RegisterRequest;
-import ru.clevertec.userservice.dto.RoleResponse;
+import ru.clevertec.userservice.dto.TokenValidationResponse;
 import ru.clevertec.userservice.dto.UserResponse;
 import ru.clevertec.userservice.mapper.UserMapper;
 import ru.clevertec.userservice.model.User;
@@ -52,19 +52,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RoleResponse tokenValidationCheck(String token) {
+    public TokenValidationResponse tokenValidationCheck(String token) {
         String jwt = token.substring(7);
         String userEmail = jwtService.extractUsername(jwt);
-        String role = "";
-        if (userEmail != null) {
-            String roles = jwtService.extractClaim(jwt, claims -> claims.get("roles")).toString();
-            role = roles.lines()
-                    .map(s -> s.substring(s.indexOf("=") + 1, s.length() - 2))
-                    .findFirst()
-                    .orElse("");
-            return new RoleResponse(role);
-        }
-        return new RoleResponse(role);
+        String roles = jwtService.extractClaim(jwt, claims -> claims.get("roles")).toString();
+        String role = roles.lines()
+                .map(s -> s.substring(s.indexOf("=") + 1, s.length() - 2))
+                .findFirst()
+                .orElse("");
+        return new TokenValidationResponse(role, userEmail);
     }
 
 }

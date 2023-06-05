@@ -22,13 +22,15 @@ public class UserApiErrorDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response) {
         String exceptionName = "UserApiClientException";
-        String errorMessage = "Bad Request";
-        try (InputStream responseBody = response.body().asInputStream()) {
-            JsonNode jsonNode = objectMapper.readTree(responseBody);
-            exceptionName = jsonNode.at("/exception").asText();
-            errorMessage = jsonNode.at("/errorMessage").asText();
-        } catch (IOException e) {
-            log.error(e.getMessage());
+        String errorMessage = "Bad credentials";
+        if (response.body() != null) {
+            try (InputStream responseBody = response.body().asInputStream()) {
+                JsonNode jsonNode = objectMapper.readTree(responseBody);
+                exceptionName = jsonNode.at("/exception").asText();
+                errorMessage = jsonNode.at("/errorMessage").asText();
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
         }
         return new UserApiClientException(errorMessage, exceptionName, response.status());
     }

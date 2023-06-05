@@ -18,14 +18,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import ru.clevertec.exceptionhandlerstarter.exception.NoSuchCommentException;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.comment.CommentUpdateRequest;
 import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
-import ru.clevertec.exceptionhandlerstarter.exception.NoSuchCommentException;
 import ru.clevertec.newsservice.mapper.CommentMapper;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.Comment;
@@ -36,7 +35,6 @@ import ru.clevertec.newsservice.util.testbuilder.ExampleMatcherTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.comment.CommentRequestTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.comment.CommentResponseTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.comment.CommentTestBuilder;
-import ru.clevertec.newsservice.util.testbuilder.comment.CommentUpdateRequestTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.comment.CommentWithNewsRequestTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.news.NewsResponseTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.news.NewsTestBuilder;
@@ -333,6 +331,7 @@ class CommentServiceImplTest {
             CommentWithNewsRequest mockedRequest = CommentWithNewsRequestTestBuilder.aCommentWithNewsRequest().build();
             NewsResponse mockedNewsResponse = NewsResponseTestBuilder.aNewsResponse().build();
             News mockedNews = NewsTestBuilder.aNews().build();
+            String token = "2afafag";
 
             doReturn(mockedNewsResponse)
                     .when(newsService)
@@ -354,7 +353,7 @@ class CommentServiceImplTest {
                     .when(commentMapper)
                     .toResponse(expectedValue);
 
-            commentService.save(mockedRequest);
+            commentService.save(mockedRequest, token);
             verify(commentRepository).save(captor.capture());
 
             Comment captorValue = captor.getValue();
@@ -371,8 +370,9 @@ class CommentServiceImplTest {
         void testShouldReturnUpdatedTagDto() {
             Comment mockedComment = CommentTestBuilder.aComment().build();
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().build();
-            CommentUpdateRequest mockedCommentRequest = CommentUpdateRequestTestBuilder.aCommentUpdateRequest().build();
+            CommentRequest mockedCommentRequest = CommentRequestTestBuilder.aCommentRequest().build();
             long id = mockedComment.getId();
+            String token = "2afafag";
 
             doReturn(Optional.of(mockedComment))
                     .when(commentRepository)
@@ -386,7 +386,7 @@ class CommentServiceImplTest {
                     .when(commentMapper)
                     .toResponse(mockedComment);
 
-            CommentResponse actualValue = commentService.updateById(id, mockedCommentRequest);
+            CommentResponse actualValue = commentService.updateById(id, mockedCommentRequest, token);
 
             assertThat(actualValue).isEqualTo(expectedValue);
         }
@@ -394,25 +394,27 @@ class CommentServiceImplTest {
         @Test
         @DisplayName("test should throw NoSuchCommentException")
         void testShouldThrowNoSuchCommentException() {
-            CommentUpdateRequest mockedCommentRequest = CommentUpdateRequestTestBuilder.aCommentUpdateRequest().build();
+            CommentRequest mockedCommentRequest = CommentRequestTestBuilder.aCommentRequest().build();
             long id = 2L;
+            String token = "2afafag";
 
             doThrow(new NoSuchCommentException(""))
                     .when(commentRepository)
                     .findById(id);
 
-            assertThrows(NoSuchCommentException.class, () -> commentService.updateById(id, mockedCommentRequest));
+            assertThrows(NoSuchCommentException.class, () -> commentService.updateById(id, mockedCommentRequest, token));
         }
 
         @Test
         @DisplayName("test should throw NoSuchCommentException with expected message")
         void testShouldThrowNoSuchCommentExceptionWithExpectedMessage() {
-            CommentUpdateRequest mockedCommentRequest = CommentUpdateRequestTestBuilder.aCommentUpdateRequest().build();
+            CommentRequest mockedCommentRequest = CommentRequestTestBuilder.aCommentRequest().build();
             long id = 1L;
             String expectedMessage = "There is no Comment with ID " + id + " to update";
+            String token = "2afafag";
 
             Exception exception = assertThrows(NoSuchCommentException.class,
-                    () -> commentService.updateById(id, mockedCommentRequest));
+                    () -> commentService.updateById(id, mockedCommentRequest, token));
             String actualMessage = exception.getMessage();
 
             assertThat(actualMessage).isEqualTo(expectedMessage);
@@ -429,6 +431,7 @@ class CommentServiceImplTest {
             Comment mockedComment = CommentTestBuilder.aComment().build();
             long id = mockedComment.getId();
             DeleteResponse expectedValue = new DeleteResponse("Comment with ID " + id + " was successfully deleted");
+            String token = "2afafag";
 
             doReturn(Optional.of(mockedComment))
                     .when(commentRepository)
@@ -438,7 +441,7 @@ class CommentServiceImplTest {
                     .when(commentRepository)
                     .delete(mockedComment);
 
-            DeleteResponse actualValue = commentService.deleteById(id);
+            DeleteResponse actualValue = commentService.deleteById(id, token);
 
             assertThat(actualValue).isEqualTo(expectedValue);
         }
@@ -448,6 +451,7 @@ class CommentServiceImplTest {
         void testShouldInvokeOneTime() {
             Comment mockedComment = CommentTestBuilder.aComment().build();
             long id = mockedComment.getId();
+            String token = "2afafag";
 
             doReturn(Optional.of(mockedComment))
                     .when(commentRepository)
@@ -457,7 +461,7 @@ class CommentServiceImplTest {
                     .when(commentRepository)
                     .delete(mockedComment);
 
-            commentService.deleteById(id);
+            commentService.deleteById(id, token);
 
             verify(commentRepository, times(1))
                     .delete(mockedComment);
@@ -467,12 +471,13 @@ class CommentServiceImplTest {
         @DisplayName("test should throw NoSuchCommentException")
         void testShouldThrowNoSuchCommentException() {
             long id = 2L;
+            String token = "2afafag";
 
             doThrow(new NoSuchCommentException(""))
                     .when(commentRepository)
                     .findById(id);
 
-            assertThrows(NoSuchCommentException.class, () -> commentService.deleteById(id));
+            assertThrows(NoSuchCommentException.class, () -> commentService.deleteById(id, token));
         }
 
         @Test
@@ -480,8 +485,9 @@ class CommentServiceImplTest {
         void testShouldThrowNoSuchCommentExceptionWithExpectedMessage() {
             long id = 1L;
             String expectedMessage = "There is no Comment with ID " + id + " to delete";
+            String token = "2afafag";
 
-            Exception exception = assertThrows(NoSuchCommentException.class, () -> commentService.deleteById(id));
+            Exception exception = assertThrows(NoSuchCommentException.class, () -> commentService.deleteById(id, token));
             String actualMessage = exception.getMessage();
 
             assertThat(actualMessage).isEqualTo(expectedMessage);

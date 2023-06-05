@@ -19,8 +19,6 @@ import ru.clevertec.newsservice.controller.openapi.NewsOpenApi;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
-import ru.clevertec.newsservice.dto.news.NewsUpdateRequest;
-import ru.clevertec.newsservice.service.AuthenticationService;
 import ru.clevertec.newsservice.service.NewsService;
 
 import java.util.List;
@@ -32,7 +30,6 @@ import java.util.List;
 public class NewsController implements NewsOpenApi {
 
     private final NewsService newsService;
-    private final AuthenticationService authenticationService;
 
     @Override
     @GetMapping("/{id}")
@@ -46,7 +43,6 @@ public class NewsController implements NewsOpenApi {
         return ResponseEntity.ok(newsService.findAll(pageable));
     }
 
-
     @Override
     @GetMapping("/params")
     public ResponseEntity<List<NewsResponse>> findAllByMatchingTextParams(NewsRequest newsRequest,
@@ -58,21 +54,22 @@ public class NewsController implements NewsOpenApi {
     @PostMapping
     public ResponseEntity<NewsResponse> save(@RequestBody NewsRequest newsRequest,
                                              @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        authenticationService.isRoleAdminOrJournalist(token);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newsService.save(newsRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(newsService.save(newsRequest, token));
     }
 
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<NewsResponse> updateById(@PathVariable Long id,
-                                                   @RequestBody NewsUpdateRequest newsUpdateRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(newsService.updateById(id, newsUpdateRequest));
+                                                   @RequestBody NewsRequest newsRequest,
+                                                   @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(newsService.updateById(id, newsRequest, token));
     }
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<DeleteResponse> deleteById(@PathVariable Long id) {
-        return ResponseEntity.ok(newsService.deleteById(id));
+    public ResponseEntity<DeleteResponse> deleteById(@PathVariable Long id,
+                                                     @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        return ResponseEntity.ok(newsService.deleteById(id, token));
     }
 
 }

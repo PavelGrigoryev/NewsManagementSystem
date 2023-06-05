@@ -10,19 +10,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
+import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.comment.CommentUpdateRequest;
 import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
-import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
-import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
 
 import java.util.List;
 
@@ -273,12 +273,14 @@ public interface CommentOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<CommentResponse> save(@Valid CommentWithNewsRequest commentWithNewsRequest);
+    ResponseEntity<CommentResponse> save(@Valid CommentWithNewsRequest commentWithNewsRequest,
+                                         @Pattern(regexp = "^Bearer\\s.*$",
+                                                 message = "Header must starts with 'Bearer ' !") String token);
 
     @Operation(summary = "Update Comment by id.", tags = "Comment",
             parameters = @Parameter(name = "id", description = "Enter id here", example = "191"),
             requestBody = @RequestBody(description = "RequestBody for CommentWithNewsRequest",
-                    content = @Content(schema = @Schema(implementation = CommentUpdateRequest.class),
+                    content = @Content(schema = @Schema(implementation = CommentRequest.class),
                             examples = @ExampleObject("""
                                     {
                                       "text": "Воу, это круто!",
@@ -321,7 +323,9 @@ public interface CommentOpenApi {
                                     """)))
     })
     ResponseEntity<CommentResponse> updateById(@Positive Long id,
-                                               @Valid CommentUpdateRequest commentUpdateRequest);
+                                               @Valid CommentRequest commentRequest,
+                                               @Pattern(regexp = "^Bearer\\s.*$",
+                                                       message = "Header must starts with 'Bearer ' !") String token);
 
     @Operation(summary = "Delete Comment by id.", tags = "Comment",
             parameters = @Parameter(name = "id", description = "Enter id here", example = "191"))
@@ -357,6 +361,8 @@ public interface CommentOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<DeleteResponse> deleteById(@Positive Long id);
+    ResponseEntity<DeleteResponse> deleteById(@Positive Long id,
+                                              @Pattern(regexp = "^Bearer\\s.*$",
+                                                      message = "Header must starts with 'Bearer ' !") String token);
 
 }
