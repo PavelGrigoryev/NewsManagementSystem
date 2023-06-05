@@ -2,6 +2,7 @@ package ru.clevertec.newsservice.dto.comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public record CommentResponse(Long id,
@@ -11,5 +12,5 @@ public record CommentResponse(Long id,
 
                               String text,
                               String username,
-                              String email) {
+                              String email) implements Serializable {
 }

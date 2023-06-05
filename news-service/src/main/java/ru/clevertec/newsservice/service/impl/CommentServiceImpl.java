@@ -1,6 +1,9 @@
 package ru.clevertec.newsservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Pageable;
@@ -52,6 +55,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     @GetCacheable
+    @Cacheable(value = "comment")
     public CommentResponse findById(Long id) {
         return commentRepository.findById(id)
                 .map(commentMapper::toResponse)
@@ -102,6 +106,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @PutCacheable
     @Transactional
+    @CachePut(value = "comment", key = "#result.id()")
     public CommentResponse save(CommentWithNewsRequest commentWithNewsRequest, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.SUBSCRIBER);
         NewsResponse newsResponse = newsService.findById(commentWithNewsRequest.newsId());
@@ -125,6 +130,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @PutCacheable
     @Transactional
+    @CachePut(value = "comment", key = "#result.id()")
     public CommentResponse updateById(Long id, CommentRequest commentRequest, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.SUBSCRIBER);
         Comment comment = commentRepository.findById(id)
@@ -148,6 +154,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     @RemoveCacheable
+    @CacheEvict(value = "comment", key = "#id")
     public DeleteResponse deleteById(Long id, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.SUBSCRIBER);
         Comment comment = commentRepository.findById(id)

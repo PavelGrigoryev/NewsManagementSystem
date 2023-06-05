@@ -2,6 +2,7 @@ package ru.clevertec.newsservice.dto.news;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public record NewsResponse(Long id,
@@ -9,5 +10,5 @@ public record NewsResponse(Long id,
                            LocalDateTime time,
                            String title,
                            String text,
-                           String email) {
+                           String email) implements Serializable {
 }

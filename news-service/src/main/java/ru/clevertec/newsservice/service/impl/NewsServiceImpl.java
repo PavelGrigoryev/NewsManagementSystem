@@ -1,6 +1,9 @@
 package ru.clevertec.newsservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +47,7 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     @GetCacheable
+    @Cacheable(value = "news")
     public NewsResponse findById(Long id) {
         return newsRepository.findById(id)
                 .map(newsMapper::toResponse)
@@ -90,6 +94,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     @PutCacheable
     @Transactional
+    @CachePut(value = "news", key = "#result.id()")
     public NewsResponse save(NewsRequest newsRequest, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.JOURNALIST);
         News news = newsMapper.fromRequest(newsRequest);
@@ -110,6 +115,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     @PutCacheable
     @Transactional
+    @CachePut(value = "news", key = "#result.id()")
     public NewsResponse updateById(Long id, NewsRequest newsRequest, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.JOURNALIST);
         News news = newsRepository.findById(id)
@@ -133,6 +139,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     @Transactional
     @RemoveCacheable
+    @CacheEvict(value = "news", key = "#id")
     public DeleteResponse deleteById(Long id, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.JOURNALIST);
         News news = newsRepository.findById(id)
