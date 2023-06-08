@@ -18,3 +18,19 @@ Content-Type: application/json
   "email": "ChakcNunChuck@gmail.com",
   "password": "555"
 }
+
+###updateByToken
+PUT http://localhost:8080/auth
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "firstname": "Igor",
+  "lastname": "Zavadskiy",
+  "password": "987"
+}
+
+###deleteByToken
+DELETE http://localhost:8080/auth
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}

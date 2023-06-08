@@ -20,9 +20,22 @@ Content-Type: application/json
 }
 
 ###validate
-< {%
-    request.variables.set("auth_token", "your token")
-%}
-GET http://localhost:8081/users/validate
+POST http://localhost:8081/users/validate
 Content-Type: application/json
-Authorization: Bearer {{auth_token}}
+Authorization: Bearer {{jwt_token}}
+
+###updateByToken
+PUT http://localhost:8081/users
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "firstname": "Igor",
+  "lastname": "Zavadskiy",
+  "password": "987"
+}
+
+###deleteByToken
+DELETE http://localhost:8081/users
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}

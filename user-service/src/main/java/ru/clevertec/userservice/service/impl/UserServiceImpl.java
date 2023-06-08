@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchUserEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
 import ru.clevertec.userservice.dto.AuthenticationRequest;
+import ru.clevertec.userservice.dto.DeleteResponse;
 import ru.clevertec.userservice.dto.RegisterRequest;
 import ru.clevertec.userservice.dto.TokenValidationResponse;
+import ru.clevertec.userservice.dto.UpdateRequest;
 import ru.clevertec.userservice.dto.UserResponse;
 import ru.clevertec.userservice.mapper.UserMapper;
 import ru.clevertec.userservice.model.User;
@@ -57,13 +59,38 @@ public class UserServiceImpl implements UserService {
     @Override
     public TokenValidationResponse tokenValidationCheck(String token) {
         String jwt = token.substring(7);
-        String userEmail = jwtService.extractUsername(jwt);
+        String email = jwtService.extractUsername(jwt);
         String roles = jwtService.extractClaim(jwt, claims -> claims.get("roles")).toString();
         String role = roles.lines()
                 .map(s -> s.substring(s.indexOf("=") + 1, s.length() - 2))
                 .findFirst()
                 .orElse("");
-        return new TokenValidationResponse(role, userEmail);
+        return new TokenValidationResponse(role, email);
+    }
+
+    @Override
+    @Transactional
+    public UserResponse updateByToken(UpdateRequest request, String token) {
+        String jwt = token.substring(7);
+        String email = jwtService.extractUsername(jwt);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchUserEmailException("There is no User with email " + email + " to update"));
+        user.setFirstname(request.firstname());
+        user.setLastname(request.lastname());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        User updatedUser = userRepository.saveAndFlush(user);
+        return userMapper.toResponse(updatedUser, jwt, jwtService.extractExpiration(jwt).toString());
+    }
+
+    @Override
+    @Transactional
+    public DeleteResponse deleteByToken(String token) {
+        String jwt = token.substring(7);
+        String email = jwtService.extractUsername(jwt);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchUserEmailException("There is no User with email " + email + " to delete"));
+        userRepository.delete(user);
+        return new DeleteResponse("User with email " + email + " was successfully deleted");
     }
 
 }

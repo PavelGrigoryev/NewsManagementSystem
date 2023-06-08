@@ -17,7 +17,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public TokenValidationResponse checkTokenValidationForRole(String token, Role role) {
-        TokenValidationResponse response = userApiClient.checkTokenValidation(token);
+        TokenValidationResponse response = userApiClient.tokenValidationCheck(token);
         Role userRole = Role.valueOf(response.role());
         if (!userRole.equals(Role.ADMIN) && !userRole.equals(role)) {
             throw new AccessDeniedForThisRoleException("Access Denied for role: " + userRole);

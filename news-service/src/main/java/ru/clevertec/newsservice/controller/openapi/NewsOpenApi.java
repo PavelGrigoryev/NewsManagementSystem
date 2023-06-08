@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -212,9 +211,7 @@ public interface NewsOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<NewsResponse> save(@Valid NewsRequest newsRequest,
-                                      @Pattern(regexp = "^Bearer\\s.*$",
-                                              message = "Header must starts with 'Bearer ' !") String token);
+    ResponseEntity<NewsResponse> save(@Valid NewsRequest newsRequest, String token);
 
     @Operation(summary = "Update News by id.", tags = "News",
             parameters = @Parameter(name = "id", description = "Enter id here", example = "21"),
@@ -261,10 +258,7 @@ public interface NewsOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<NewsResponse> updateById(@Positive Long id,
-                                            @Valid NewsRequest newsRequest,
-                                            @Pattern(regexp = "^Bearer\\s.*$",
-                                                    message = "Header must starts with 'Bearer ' !") String token);
+    ResponseEntity<NewsResponse> updateById(@Positive Long id, @Valid NewsRequest newsRequest, String token);
 
     @Operation(summary = "Delete News by id with related Comments.", tags = "News",
             parameters = @Parameter(name = "id", description = "Enter id here", example = "21"))
@@ -300,8 +294,6 @@ public interface NewsOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<DeleteResponse> deleteById(@Positive Long id,
-                                              @Pattern(regexp = "^Bearer\\s.*$",
-                                                      message = "Header must starts with 'Bearer ' !") String token);
+    ResponseEntity<DeleteResponse> deleteById(@Positive Long id, String token);
 
 }
