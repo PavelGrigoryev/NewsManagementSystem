@@ -8,7 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.clevertec.exceptionhandlerstarter.exception.AccessDeniedForThisRoleException;
-import ru.clevertec.exceptionhandlerstarter.exception.CantChangeException;
+import ru.clevertec.exceptionhandlerstarter.exception.UserDoesNotHavePermissionException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UserApiClientException;
 import ru.clevertec.loggingstarter.annotation.Loggable;
@@ -49,13 +49,13 @@ public class NewsServiceExceptionHandler {
     }
 
     /**
-     * Handles {@link CantChangeException} and returns a 405 Method Not Allowed response with an error message.
+     * Handles {@link UserDoesNotHavePermissionException} and returns a 405 Method Not Allowed response with an error message.
      *
-     * @param exception The CantChangeException to handle.
+     * @param exception The UserDoesNotHavePermissionException to handle.
      * @return A ResponseEntity containing an {@link IncorrectData} object and a 405 status code.
      */
-    @ExceptionHandler(CantChangeException.class)
-    public ResponseEntity<IncorrectData> cantChangeException(CantChangeException exception) {
+    @ExceptionHandler(UserDoesNotHavePermissionException.class)
+    public ResponseEntity<IncorrectData> cantChangeException(UserDoesNotHavePermissionException exception) {
         return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
     }
 

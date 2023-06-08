@@ -8,11 +8,19 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 
 import java.time.Duration;
 
+/**
+ * This class provides configuration for Redis caching in production mode.
+ */
 @Configuration
 @EnableCaching
 @Profile(value = "prod")
 public class RedisCacheConfig {
 
+    /**
+     * Configures the Redis cache with a default time-to-live of 30 minutes and disables caching of null values.
+     *
+     * @return {@link RedisCacheConfiguration}.
+     */
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()

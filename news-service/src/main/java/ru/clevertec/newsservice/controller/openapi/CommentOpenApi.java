@@ -39,7 +39,8 @@ public interface CommentOpenApi {
                               "id": 5,
                               "time": "2023-06-03T17:56:12",
                               "text": "Все это бессмысленно, никто не будет использовать это",
-                              "username": "Дмитрий"
+                              "username": "Дмитрий",
+                              "email": "cthompson05@gmail.com"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No Comment with this id in database",
@@ -80,42 +81,48 @@ public interface CommentOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = NewsWithCommentsResponse.class), examples = @ExampleObject("""
                             {
-                               "id": 19,
-                               "time": "2023-05-27T10:55:59",
-                               "title": "В Беларуси прошли массовые акции протеста против алкоголизма",
-                               "text": "В Беларуси прошли массовые акции протеста против алкоголизма, который удерживает власть над алкоголиками более 40 лет.",
-                               "comments": [
-                                 {
-                                   "id": 187,
-                                   "time": "2023-06-18T15:23:34",
-                                   "text": "Не согласен с автором, это не сработает",
-                                   "username": "Кира"
-                                 },
-                                 {
-                                   "id": 183,
-                                   "time": "2023-06-16T12:45:34",
-                                   "text": "Мне кажется, что это не совсем точно",
-                                   "username": "Ирина"
-                                 },
-                                 {
-                                   "id": 185,
-                                   "time": "2023-06-17T11:34:56",
-                                   "text": "Спасибо за информацию, очень интересно",
-                                   "username": "Егор"
-                                 },
-                                 {
-                                   "id": 182,
-                                   "time": "2023-06-16T09:34:12",
-                                   "text": "Не очень понятно, надо бы больше примеров",
-                                   "username": "Василий"
-                                 },
-                                 {
-                                   "id": 190,
-                                   "time": "2023-06-20T11:12:45",
-                                   "text": "Мне кажется, что это не совсем правильно",
-                                   "username": "Антон"
-                                 }
-                               ]
+                              "id": 19,
+                              "time": "2023-05-27T10:55:59",
+                              "title": "В Беларуси прошли массовые акции протеста против алкоголизма",
+                              "text": "В Беларуси прошли массовые акции протеста против алкоголизма, который удерживает власть над алкоголиками более 40 лет.",
+                              "email": "rrogers19@hotmail.com",
+                              "comments": [
+                                {
+                                  "id": 187,
+                                  "time": "2023-06-18T15:23:34",
+                                  "text": "Не согласен с автором, это не сработает",
+                                  "username": "Кира",
+                                  "email": "jhernandez37@gmail.com"
+                                },
+                                {
+                                  "id": 183,
+                                  "time": "2023-06-16T12:45:34",
+                                  "text": "Мне кажется, что это не совсем точно",
+                                  "username": "Ирина",
+                                  "email": "flopez33@gmail.com"
+                                },
+                                {
+                                  "id": 185,
+                                  "time": "2023-06-17T11:34:56",
+                                  "text": "Спасибо за информацию, очень интересно",
+                                  "username": "Егор",
+                                  "email": "hjohnson35@hotmail.com"
+                                },
+                                {
+                                  "id": 182,
+                                  "time": "2023-06-16T09:34:12",
+                                  "text": "Не очень понятно, надо бы больше примеров",
+                                  "username": "Василий",
+                                  "email": "ejames32@outlook.com"
+                                },
+                                {
+                                  "id": 190,
+                                  "time": "2023-06-20T11:12:45",
+                                  "text": "Мне кажется, что это не совсем правильно",
+                                  "username": "Антон",
+                                  "email": "msmith40@outlook.com"
+                                }
+                              ]
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No News with this newsId in database",
@@ -168,45 +175,50 @@ public interface CommentOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CommentResponse.class), examples = @ExampleObject("""
                             [
-                               {
-                                 "id": 3,
-                                 "time": "2023-06-02T09:12:08",
-                                 "text": "Какая интересная статья, мне очень понравилось",
-                                 "username": "Анна"
-                               },
-                               {
-                                 "id": 48,
-                                 "time": "2023-06-02T09:12:08",
-                                 "text": "Какая интересная статья, мне очень понравилось",
-                                 "username": "Анна"
-                               },
-                               {
-                                 "id": 93,
-                                 "time": "2023-06-02T09:12:08",
-                                 "text": "Какая интересная статья, мне очень понравилось",
-                                 "username": "Анна"
-                               },
-                               {
-                                 "id": 138,
-                                 "time": "2023-06-02T09:12:08",
-                                 "text": "Какая интересная статья, мне очень понравилось",
-                                 "username": "Анна"
-                               },
-                               {
-                                 "id": 199,
-                                 "time": "2023-06-02T09:12:08",
-                                 "text": "Какая интересная статья, мне очень понравилось",
-                                 "username": "Анна"
-                               }
+                              {
+                                "id": 3,
+                                "time": "2023-06-02T09:12:08",
+                                "text": "Какая интересная статья, мне очень понравилось",
+                                "username": "Анна",
+                                "email": "klee03@hotmail.com"
+                              },
+                              {
+                                "id": 48,
+                                "time": "2023-06-02T09:12:08",
+                                "text": "Какая интересная статья, мне очень понравилось",
+                                "username": "Анна",
+                                "email": "ucook48@outlook.com"
+                              },
+                              {
+                                "id": 93,
+                                "time": "2023-06-02T09:12:08",
+                                "text": "Какая интересная статья, мне очень понравилось",
+                                "username": "Анна",
+                                "email": "pscott43@hotmail.com"
+                              },
+                              {
+                                "id": 138,
+                                "time": "2023-06-02T09:12:08",
+                                "text": "Какая интересная статья, мне очень понравилось",
+                                "username": "Анна",
+                                "email": "krivera38@yahoo.com"
+                              },
+                              {
+                                "id": 199,
+                                "time": "2023-06-02T09:12:08",
+                                "text": "Какая интересная статья, мне очень понравилось",
+                                "username": "Анна",
+                                "email": "vevans49@gmail.com"
+                              }
                             ]
                             """))),
             @ApiResponse(responseCode = "406", description = "Pageable wrong sort params",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
-                               "exception": "PropertyReferenceException",
-                               "errorMessage": "No property 'tex' found for type 'Comment'; Did you mean 'text'",
-                               "errorCode": "406 NOT_ACCEPTABLE"
+                              "exception": "PropertyReferenceException",
+                              "errorMessage": "No property 'tex' found for type 'Comment'; Did you mean 'text'",
+                              "errorCode": "406 NOT_ACCEPTABLE"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -242,19 +254,38 @@ public interface CommentOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CommentResponse.class), examples = @ExampleObject("""
                             {
-                               "id": 204,
-                               "time": "2023-05-28T14:19:41",
-                               "text": "Как то не очень :(",
-                               "username": "Василий"
+                              "id": 207,
+                              "time": "2023-06-08T22:34:43",
+                              "text": "Как то не очень :(",
+                              "username": "Василий",
+                              "email": "Green@mail.com"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "401", description = "Not Authenticated User",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "InsufficientAuthenticationException",
+                              "errorMessage": "Full authentication is required to access this resource",
+                              "errorCode": "401 UNAUTHORIZED"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "403", description = "Access denied for User with this role",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "AccessDeniedForThisRoleException",
+                              "errorMessage": "Access Denied for role: JOURNALIST",
+                              "errorCode": "403 FORBIDDEN"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No News with this newsId in database",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
-                               "exception": "NoSuchNewsException",
-                               "errorMessage": "News with ID 22 does not exist",
-                               "errorCode": "404 NOT_FOUND"
+                              "exception": "NoSuchNewsException",
+                              "errorMessage": "News with ID 22 does not exist",
+                              "errorCode": "404 NOT_FOUND"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -262,13 +293,13 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                       "errorMessage": "409 CONFLICT",
-                                       "violations": [
-                                         {
-                                           "fieldName": "text",
-                                           "message": "size must be between 3 and 500"
-                                         }
-                                       ]
+                                      "errorMessage": "409 CONFLICT",
+                                      "violations": [
+                                        {
+                                          "fieldName": "text",
+                                          "message": "size must be between 3 and 500"
+                                        }
+                                      ]
                                     }
                                     """)))
     })
@@ -289,19 +320,47 @@ public interface CommentOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CommentResponse.class), examples = @ExampleObject("""
                             {
-                               "id": 190,
-                               "time": "2023-05-28T14:26:23",
-                               "text": "Воу, это круто!",
-                               "username": "Светка"
+                              "id": 208,
+                              "time": "2023-06-08T22:36:44",
+                              "text": "Воу, это круто!",
+                              "username": "Светка",
+                              "email": "ChakcNunChuck@gmail.com"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "401", description = "Not Authenticated User",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "InsufficientAuthenticationException",
+                              "errorMessage": "Full authentication is required to access this resource",
+                              "errorCode": "401 UNAUTHORIZED"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "403", description = "Access denied for User with this role",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "AccessDeniedForThisRoleException",
+                              "errorMessage": "Access Denied for role: JOURNALIST",
+                              "errorCode": "403 FORBIDDEN"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No Comment with this id in database",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
-                               "exception": "NoSuchCommentException",
-                               "errorMessage": "There is no Comment with ID 333 to update",
-                               "errorCode": "404 NOT_FOUND"
+                              "exception": "NoSuchCommentException",
+                              "errorMessage": "There is no Comment with ID 333 to update",
+                              "errorCode": "404 NOT_FOUND"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "405", description = "User with this role does not have required permission",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "UserDoesNotHavePermissionException",
+                              "errorMessage": "With role SUBSCRIBER you can update or delete only your own news/comments",
+                              "errorCode": "405 METHOD_NOT_ALLOWED"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -309,13 +368,13 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                       "errorMessage": "409 CONFLICT",
-                                       "violations": [
-                                         {
-                                           "fieldName": "text",
-                                           "message": "size must be between 3 and 500"
-                                         }
-                                       ]
+                                      "errorMessage": "409 CONFLICT",
+                                      "violations": [
+                                        {
+                                          "fieldName": "text",
+                                          "message": "size must be between 3 and 500"
+                                        }
+                                      ]
                                     }
                                     """)))
     })
@@ -331,13 +390,40 @@ public interface CommentOpenApi {
                               "message": "Comment with ID 191 was successfully deleted"
                             }
                             """))),
+            @ApiResponse(responseCode = "401", description = "Not Authenticated User",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "InsufficientAuthenticationException",
+                              "errorMessage": "Full authentication is required to access this resource",
+                              "errorCode": "401 UNAUTHORIZED"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "403", description = "Access denied for User with this role",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "AccessDeniedForThisRoleException",
+                              "errorMessage": "Access Denied for role: JOURNALIST",
+                              "errorCode": "403 FORBIDDEN"
+                            }
+                            """))),
             @ApiResponse(responseCode = "404", description = "Not Tag with this id to delete",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
-                               "exception": "NoSuchCommentException",
-                               "errorMessage": "There is no Comment with ID 456 to delete",
-                               "errorCode": "404 NOT_FOUND"
+                              "exception": "NoSuchCommentException",
+                              "errorMessage": "There is no Comment with ID 456 to delete",
+                              "errorCode": "404 NOT_FOUND"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "405", description = "User with this role does not have required permission",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "UserDoesNotHavePermissionException",
+                              "errorMessage": "With role SUBSCRIBER you can update or delete only your own news/comments",
+                              "errorCode": "405 METHOD_NOT_ALLOWED"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
