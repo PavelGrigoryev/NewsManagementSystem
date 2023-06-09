@@ -21,6 +21,10 @@ import ru.clevertec.userservice.repository.UserRepository;
 import ru.clevertec.userservice.service.JwtService;
 import ru.clevertec.userservice.service.UserService;
 
+/**
+ * The UserServiceImpl class implements UserService and provides the functionality for registering, authenticating,
+ * updating, and deleting users. It also includes methods for extracting and validating JWT tokens.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -32,6 +36,14 @@ public class UserServiceImpl implements UserService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * Registers a new {@link User} with the given information and returns a {@link UserResponse} containing the
+     * user's information and a JWT token.
+     *
+     * @param request The {@link RegisterRequest} containing the user's information.
+     * @return A UserResponse containing the user's information and a JWT token.
+     * @throws UniqueEmailException if the email is already registered by another user.
+     */
     @Override
     @Transactional
     public UserResponse register(RegisterRequest request) {
@@ -47,6 +59,14 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponse(user, jwtToken, jwtService.extractExpiration(jwtToken).toString());
     }
 
+    /**
+     * Authenticates a {@link User} with the given email and password and returns a {@link UserResponse} containing
+     * the user's information and a JWT token.
+     *
+     * @param request The {@link AuthenticationRequest} containing the user's email and password.
+     * @return A UserResponse containing the user's information and a JWT token.
+     * @throws NoSuchUserEmailException if there is no user registered with the given email.
+     */
     @Override
     public UserResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
@@ -56,6 +76,12 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponse(user, jwtToken, jwtService.extractExpiration(jwtToken).toString());
     }
 
+    /**
+     * Validates a JWT token and returns a {@link TokenValidationResponse} containing the user's email and role.
+     *
+     * @param token The JWT token to validate.
+     * @return A TokenValidationResponse containing the user's email and role.
+     */
     @Override
     public TokenValidationResponse tokenValidationCheck(String token) {
         String jwt = token.substring(7);
@@ -68,6 +94,16 @@ public class UserServiceImpl implements UserService {
         return new TokenValidationResponse(role, email);
     }
 
+
+    /**
+     * Updates a user's information with the given {@link UpdateRequest} and returns a {@link UserResponse} containing
+     * the updated user's information and his JWT token.
+     *
+     * @param request The UpdateRequest containing the user's to update information.
+     * @param token   The JWT token of the user to update.
+     * @return A UserResponse containing the updated user's information and his JWT token.
+     * @throws NoSuchUserEmailException if there is no user registered with the email in the JWT token.
+     */
     @Override
     @Transactional
     public UserResponse updateByToken(UpdateRequest request, String token) {
@@ -82,6 +118,14 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponse(updatedUser, jwt, jwtService.extractExpiration(jwt).toString());
     }
 
+    /**
+     * Deletes a {@link User} with the email in the given JWT token and returns a {@link DeleteResponse} indicating that
+     * the user was successfully deleted.
+     *
+     * @param token The JWT token of the user to delete.
+     * @return A DeleteResponse object indicating that the user was successfully deleted.
+     * @throws NoSuchUserEmailException if there is no user registered with the email in the JWT token.
+     */
     @Override
     @Transactional
     public DeleteResponse deleteByToken(String token) {

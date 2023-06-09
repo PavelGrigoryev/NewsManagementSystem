@@ -26,6 +26,9 @@ import ru.clevertec.userservice.service.JwtService;
 
 import java.io.IOException;
 
+/**
+ * JwtAuthenticationFilter class extends OncePerRequestFilter and provides implementation for doFilterInternal.
+ */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -35,6 +38,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private final ObjectMapper objectMapper;
 
+    /**
+     * Filters incoming requests for JWT authentication.
+     *
+     * @param request     HttpServletRequest.
+     * @param response    HttpServletResponse.
+     * @param filterChain FilterChain.
+     * @throws ServletException if a servlet error occurs.
+     * @throws IOException      if an I/O error occurs.
+     */
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
@@ -64,6 +76,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
+    /**
+     * Handles exceptions related to JWT authentication and sends an unauthorized response.
+     *
+     * @param response  HttpServletResponse
+     * @param exception Exception
+     * @throws IOException if an I/O error occurs
+     */
     public void handleException(HttpServletResponse response, Exception exception) throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setHeader("content-type", MediaType.APPLICATION_JSON.toString());

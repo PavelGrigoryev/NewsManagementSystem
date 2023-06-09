@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * The JwtService interface provides generating, validating, and extracting information from JSON Web Tokens .
+ */
 public interface JwtService {
 
     String extractUsername(String token);

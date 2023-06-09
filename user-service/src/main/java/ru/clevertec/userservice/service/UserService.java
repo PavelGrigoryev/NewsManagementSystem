@@ -7,6 +7,9 @@ import ru.clevertec.userservice.dto.TokenValidationResponse;
 import ru.clevertec.userservice.dto.UpdateRequest;
 import ru.clevertec.userservice.dto.UserResponse;
 
+/**
+ * The UserService interface provides the functionality for registering, authenticating, updating, and deleting users.
+ */
 public interface UserService {
 
     UserResponse register(RegisterRequest request);
