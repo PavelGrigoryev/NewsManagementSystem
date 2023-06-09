@@ -56,7 +56,8 @@ public class CommentController implements CommentOpenApi {
     @Override
     @PostMapping
     public ResponseEntity<CommentResponse> save(@RequestBody CommentWithNewsRequest commentWithNewsRequest,
-                                                @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+                                                @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
+                                                String token) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(commentWithNewsRequest, token));
     }
 
@@ -64,14 +65,16 @@ public class CommentController implements CommentOpenApi {
     @PutMapping("/{id}")
     public ResponseEntity<CommentResponse> updateById(@PathVariable Long id,
                                                       @RequestBody CommentRequest commentRequest,
-                                                      @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+                                                      @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
+                                                          String token) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.updateById(id, commentRequest, token));
     }
 
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteResponse> deleteById(@PathVariable Long id,
-                                                     @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+                                                     @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
+                                                     String token) {
         return ResponseEntity.ok(commentService.deleteById(id, token));
     }
 

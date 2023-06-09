@@ -27,8 +27,8 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(
-                        ((request, response, authException) -> jwtAuthenticationFilter.handleException(response, authException))))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(((request, response, authException)
+                        -> jwtAuthenticationFilter.handleException(response, authException))))
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

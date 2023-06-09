@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -34,10 +35,11 @@ public interface NewsOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = NewsResponse.class), examples = @ExampleObject("""
                             {
-                               "id": 19,
-                               "time": "2023-05-27T10:55:59",
-                               "title": "В Беларуси прошли массовые акции протеста против алкоголизма",
-                               "text": "В Беларуси прошли массовые акции протеста против алкоголизма, который удерживает власть над алкоголиками более 40 лет."
+                              "id": 19,
+                              "time": "2023-05-27T10:55:59",
+                              "title": "В Беларуси прошли массовые акции протеста против алкоголизма",
+                              "text": "В Беларуси прошли массовые акции протеста против алкоголизма, который удерживает власть над алкоголиками более 40 лет.",
+                              "email": "rrogers19@hotmail.com"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No News with this id in database",
@@ -77,36 +79,41 @@ public interface NewsOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = NewsResponse.class), examples = @ExampleObject("""
                             [
-                               {
-                                 "id": 6,
-                                 "time": "2023-05-22T14:12:59",
-                                 "title": "В США произошло крупнейшее нарушение данных в истории",
-                                 "text": "В США произошло крупнейшее нарушение данных в истории, когда хакеры получили доступ к личной информации миллионов пользователей."
-                               },
-                               {
-                                 "id": 7,
-                                 "time": "2023-05-23T12:55:59",
-                                 "title": "Европейский союз заключил сделку о свободной торговле с Великобританией",
-                                 "text": "Европейский союз и Великобритания заключили сделку о свободной торговле, которая позволит сохранить экономические связи после Brexit."
-                               },
-                               {
-                                 "id": 8,
-                                 "time": "2023-05-23T19:46:59",
-                                 "title": "В Китае началась строительство самой высокой в мире башни",
-                                 "text": "В Китае началось строительство самой высокой в мире башни, которая будет иметь высоту более 1 километра."
-                               },
-                               {
-                                 "id": 9,
-                                 "time": "2023-05-23T23:33:59",
-                                 "title": "Сирийская армия начала операцию против террористов в Идлибе",
-                                 "text": "Сирийская армия начала операцию против террористов в Идлибе, где находится последний оплот боевиков в стране."
-                               },
-                               {
-                                 "id": 10,
-                                 "time": "2023-05-24T11:16:59",
-                                 "title": "В Индии установлен новый рекорд по числу зараженных COVID-19 за сутки",
-                                 "text": "В Индии за сутки было зафиксировано более 300 тысяч новых случаев заражения COVID-19, что стало новым рекордом"
-                               }
+                              {
+                                "id": 6,
+                                "time": "2023-05-22T14:12:59",
+                                "title": "В США произошло крупнейшее нарушение данных в истории",
+                                "text": "В США произошло крупнейшее нарушение данных в истории, когда хакеры получили доступ к личной информации миллионов пользователей.",
+                                "email": "dwhite06@yahoo.com"
+                              },
+                              {
+                                "id": 7,
+                                "time": "2023-05-23T12:55:59",
+                                "title": "Европейский союз заключил сделку о свободной торговле с Великобританией",
+                                "text": "Европейский союз и Великобритания заключили сделку о свободной торговле, которая позволит сохранить экономические связи после Brexit.",
+                                "email": "erobinson07@hotmail.com"
+                              },
+                              {
+                                "id": 8,
+                                "time": "2023-05-23T19:46:59",
+                                "title": "В Китае началась строительство самой высокой в мире башни",
+                                "text": "В Китае началось строительство самой высокой в мире башни, которая будет иметь высоту более 1 километра.",
+                                "email": "fclark08@outlook.com"
+                              },
+                              {
+                                "id": 9,
+                                "time": "2023-05-23T23:33:59",
+                                "title": "Сирийская армия начала операцию против террористов в Идлибе",
+                                "text": "Сирийская армия начала операцию против террористов в Идлибе, где находится последний оплот боевиков в стране.",
+                                "email": "ghall09@gmail.com"
+                              },
+                              {
+                                "id": 10,
+                                "time": "2023-05-24T11:16:59",
+                                "title": "В Индии установлен новый рекорд по числу зараженных COVID-19 за сутки",
+                                "text": "В Индии за сутки было зафиксировано более 300 тысяч новых случаев заражения COVID-19, что стало новым рекордом",
+                                "email": "iharris10@yahoo.com"
+                              }
                             ]
                             """))),
             @ApiResponse(responseCode = "406", description = "Pageable wrong sort params",
@@ -135,18 +142,20 @@ public interface NewsOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = NewsResponse.class), examples = @ExampleObject("""
                             [
-                               {
-                                 "id": 13,
-                                 "time": "2023-05-25T10:30:59",
-                                 "title": "В России запущен новый спутник для наблюдения за климатом",
-                                 "text": "В России запущен новый спутник для наблюдения за климатом, который поможет улучшить прогнозы погоды и изменения климата."
-                               },
-                               {
-                                 "id": 4,
-                                 "time": "2023-05-22T10:30:59",
-                                 "title": "В России началась вакцинация от COVID-19",
-                                 "text": "В России началась массовая вакцинация населения от COVID-19, которая проводится бесплатно для всех желающих."
-                               }
+                              {
+                                "id": 13,
+                                "time": "2023-05-25T10:30:59",
+                                "title": "В России запущен новый спутник для наблюдения за климатом",
+                                "text": "В России запущен новый спутник для наблюдения за климатом, который поможет улучшить прогнозы погоды и изменения климата.",
+                                "email": "lcollins13@gmail.com"
+                              },
+                              {
+                                "id": 4,
+                                "time": "2023-05-22T10:30:59",
+                                "title": "В России началась вакцинация от COVID-19",
+                                "text": "В России началась массовая вакцинация населения от COVID-19, которая проводится бесплатно для всех желающих.",
+                                "email": "bjohnson04@outlook.com"
+                              }
                             ]
                             """))),
             @ApiResponse(responseCode = "406", description = "Pageable wrong sort params",
@@ -177,6 +186,7 @@ public interface NewsOpenApi {
                                                                    @ParameterObject Pageable pageable);
 
     @Operation(summary = "Save new News.", tags = "News",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
             requestBody = @RequestBody(description = "RequestBody for NewsRequest",
                     content = @Content(schema = @Schema(implementation = NewsRequest.class),
                             examples = @ExampleObject("""
@@ -190,30 +200,50 @@ public interface NewsOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = NewsResponse.class), examples = @ExampleObject("""
                             {
-                               "id": 21,
-                               "time": "2023-05-28T15:00:37",
-                               "title": "Привет из Беларуси",
-                               "text": "Беларусь - великая страна!"
-                             }
+                              "id": 21,
+                              "time": "2023-05-28T15:00:37",
+                              "title": "Привет из Беларуси",
+                              "text": "Беларусь - великая страна!"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "401", description = "Not Authenticated User",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "InsufficientAuthenticationException",
+                              "errorMessage": "Full authentication is required to access this resource",
+                              "errorCode": "401 UNAUTHORIZED"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "403", description = "Access denied for User with this role",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "AccessDeniedForThisRoleException",
+                              "errorMessage": "Access Denied for role: SUBSCRIBER",
+                              "errorCode": "403 FORBIDDEN"
+                            }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                       "errorMessage": "409 CONFLICT",
-                                       "violations": [
-                                         {
-                                           "fieldName": "text",
-                                           "message": "must not be blank"
-                                         }
-                                       ]
+                                      "errorMessage": "409 CONFLICT",
+                                      "violations": [
+                                        {
+                                          "fieldName": "text",
+                                          "message": "must not be blank"
+                                        }
+                                      ]
                                     }
                                     """)))
     })
-    ResponseEntity<NewsResponse> save(@Valid NewsRequest newsRequest, String token);
+    ResponseEntity<NewsResponse> save(@Valid NewsRequest newsRequest,
+                                      @Parameter(hidden = true) String token);
 
     @Operation(summary = "Update News by id.", tags = "News",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
             parameters = @Parameter(name = "id", description = "Enter id here", example = "21"),
             requestBody = @RequestBody(description = "RequestBody for NewsRequest",
                     content = @Content(schema = @Schema(implementation = NewsRequest.class),
@@ -228,11 +258,30 @@ public interface NewsOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = NewsResponse.class), examples = @ExampleObject("""
                             {
-                               "id": 21,
-                               "time": "2023-05-28T15:03:28",
-                               "title": "До свидания от Беларуси",
-                               "text": "Беларусь прощается с вами"
-                             }
+                              "id": 21,
+                              "time": "2023-06-09T14:34:41",
+                              "title": "До свидания от Беларуси",
+                              "text": "Беларусь прощается с вами",
+                              "email": "Shwarsz@yahoo.com"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "401", description = "Not Authenticated User",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "InsufficientAuthenticationException",
+                              "errorMessage": "Full authentication is required to access this resource",
+                              "errorCode": "401 UNAUTHORIZED"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "403", description = "Access denied for User with this role",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "AccessDeniedForThisRoleException",
+                              "errorMessage": "Access Denied for role: SUBSCRIBER",
+                              "errorCode": "403 FORBIDDEN"
+                            }
                             """))),
             @ApiResponse(responseCode = "404", description = "No News with this id in database",
                     content = @Content(mediaType = "application/json",
@@ -241,6 +290,15 @@ public interface NewsOpenApi {
                                "exception": "NoSuchNewsException",
                                "errorMessage": "There is no News with ID 211 to update",
                                "errorCode": "404 NOT_FOUND"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "405", description = "User with this role does not have required permission",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "UserDoesNotHavePermissionException",
+                              "errorMessage": "With role JOURNALIST you can update or delete only your own news/comments",
+                              "errorCode": "405 METHOD_NOT_ALLOWED"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -258,25 +316,55 @@ public interface NewsOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<NewsResponse> updateById(@Positive Long id, @Valid NewsRequest newsRequest, String token);
+    ResponseEntity<NewsResponse> updateById(@Positive Long id,
+                                            @Valid NewsRequest newsRequest,
+                                            @Parameter(hidden = true) String token);
 
     @Operation(summary = "Delete News by id with related Comments.", tags = "News",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
             parameters = @Parameter(name = "id", description = "Enter id here", example = "21"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "News deleted successfully",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = DeleteResponse.class), examples = @ExampleObject("""
                             {
-                               "message": "News with ID 21 was successfully deleted"
+                              "message": "News with ID 21 was successfully deleted"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "401", description = "Not Authenticated User",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "InsufficientAuthenticationException",
+                              "errorMessage": "Full authentication is required to access this resource",
+                              "errorCode": "401 UNAUTHORIZED"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "403", description = "Access denied for User with this role",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "AccessDeniedForThisRoleException",
+                              "errorMessage": "Access Denied for role: SUBSCRIBER",
+                              "errorCode": "403 FORBIDDEN"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "Not News with this id to delete",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
-                               "exception": "NoSuchNewsException",
-                               "errorMessage": "There is no News with ID 222 to delete",
-                               "errorCode": "404 NOT_FOUND"
+                              "exception": "NoSuchNewsException",
+                              "errorMessage": "There is no News with ID 222 to delete",
+                              "errorCode": "404 NOT_FOUND"
+                            }
+                            """))),
+            @ApiResponse(responseCode = "405", description = "User with this role does not have required permission",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
+                            {
+                              "exception": "UserDoesNotHavePermissionException",
+                              "errorMessage": "With role JOURNALIST you can update or delete only your own news/comments",
+                              "errorCode": "405 METHOD_NOT_ALLOWED"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -284,16 +372,17 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                       "errorMessage": "409 CONFLICT",
-                                       "violations": [
-                                         {
-                                           "fieldName": "deleteById.id",
-                                           "message": "must be greater than 0"
-                                         }
-                                       ]
+                                      "errorMessage": "409 CONFLICT",
+                                      "violations": [
+                                        {
+                                          "fieldName": "deleteById.id",
+                                          "message": "must be greater than 0"
+                                        }
+                                      ]
                                     }
                                     """)))
     })
-    ResponseEntity<DeleteResponse> deleteById(@Positive Long id, String token);
+    ResponseEntity<DeleteResponse> deleteById(@Positive Long id,
+                                              @Parameter(hidden = true) String token);
 
 }

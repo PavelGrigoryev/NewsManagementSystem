@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -240,6 +241,7 @@ public interface CommentOpenApi {
                                                                       @ParameterObject Pageable pageable);
 
     @Operation(summary = "Save new Comment and related it with News by newsId.", tags = "Comment",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
             requestBody = @RequestBody(description = "RequestBody for CommentWithNewsRequest",
                     content = @Content(schema = @Schema(implementation = CommentWithNewsRequest.class),
                             examples = @ExampleObject("""
@@ -303,9 +305,11 @@ public interface CommentOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<CommentResponse> save(@Valid CommentWithNewsRequest commentWithNewsRequest, String token);
+    ResponseEntity<CommentResponse> save(@Valid CommentWithNewsRequest commentWithNewsRequest,
+                                         @Parameter(hidden = true) String token);
 
     @Operation(summary = "Update Comment by id.", tags = "Comment",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
             parameters = @Parameter(name = "id", description = "Enter id here", example = "191"),
             requestBody = @RequestBody(description = "RequestBody for CommentWithNewsRequest",
                     content = @Content(schema = @Schema(implementation = CommentRequest.class),
@@ -378,9 +382,12 @@ public interface CommentOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<CommentResponse> updateById(@Positive Long id, @Valid CommentRequest commentRequest, String token);
+    ResponseEntity<CommentResponse> updateById(@Positive Long id,
+                                               @Valid CommentRequest commentRequest,
+                                               @Parameter(hidden = true) String token);
 
     @Operation(summary = "Delete Comment by id.", tags = "Comment",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
             parameters = @Parameter(name = "id", description = "Enter id here", example = "191"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Comment deleted successfully",
@@ -441,6 +448,7 @@ public interface CommentOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<DeleteResponse> deleteById(@Positive Long id, String token);
+    ResponseEntity<DeleteResponse> deleteById(@Positive Long id,
+                                              @Parameter(hidden = true) String token);
 
 }

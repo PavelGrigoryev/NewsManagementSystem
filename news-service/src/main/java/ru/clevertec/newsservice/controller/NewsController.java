@@ -53,7 +53,8 @@ public class NewsController implements NewsOpenApi {
     @Override
     @PostMapping
     public ResponseEntity<NewsResponse> save(@RequestBody NewsRequest newsRequest,
-                                             @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+                                             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
+                                             String token) {
         return ResponseEntity.status(HttpStatus.CREATED).body(newsService.save(newsRequest, token));
     }
 
@@ -61,14 +62,16 @@ public class NewsController implements NewsOpenApi {
     @PutMapping("/{id}")
     public ResponseEntity<NewsResponse> updateById(@PathVariable Long id,
                                                    @RequestBody NewsRequest newsRequest,
-                                                   @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+                                                   @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
+                                                   String token) {
         return ResponseEntity.status(HttpStatus.CREATED).body(newsService.updateById(id, newsRequest, token));
     }
 
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteResponse> deleteById(@PathVariable Long id,
-                                                     @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+                                                     @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
+                                                     String token) {
         return ResponseEntity.ok(newsService.deleteById(id, token));
     }
 
