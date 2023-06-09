@@ -1,6 +1,5 @@
 package ru.clevertec.newsservice.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,19 +30,19 @@ public class AuthenticationController implements AuthenticationOpenApi {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody @Valid RegisterRequest request) {
+    public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userApiClient.register(request));
     }
 
     @Override
     @PostMapping("/authenticate")
-    public ResponseEntity<UserResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) {
+    public ResponseEntity<UserResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(userApiClient.authenticate(request));
     }
 
     @Override
     @PutMapping
-    public ResponseEntity<UserResponse> updateByToken(@RequestBody @Valid UpdateRequest request,
+    public ResponseEntity<UserResponse> updateByToken(@RequestBody UpdateRequest request,
                                                       @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
                                                       String token) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userApiClient.updateByToken(request, token));
