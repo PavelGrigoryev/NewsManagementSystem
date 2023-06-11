@@ -139,6 +139,7 @@ public class CommentServiceImpl implements CommentService {
                 response.role(), Role.SUBSCRIBER, response.email(), comment.getEmail());
         comment.setText(commentRequest.text());
         comment.setUsername(commentRequest.username());
+        comment.setEmail(response.email());
         Comment saved = commentRepository.saveAndFlush(comment);
         return commentMapper.toResponse(saved);
     }

@@ -166,21 +166,7 @@ public interface NewsOpenApi {
                                "errorMessage": "No property 'i' found for type 'News'; Did you mean 'id'",
                                "errorCode": "406 NOT_ACCEPTABLE"
                             }
-                            """))),
-            @ApiResponse(responseCode = "409", description = "Validation error",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ValidationErrorResponse.class),
-                            examples = @ExampleObject("""
-                                    {
-                                       "errorMessage": "409 CONFLICT",
-                                       "violations": [
-                                         {
-                                           "fieldName": "text",
-                                           "message": "must not be blank"
-                                         }
-                                       ]
-                                    }
-                                    """)))
+                            """)))
     })
     ResponseEntity<List<NewsResponse>> findAllByMatchingTextParams(@ParameterObject NewsRequest newsRequest,
                                                                    @ParameterObject Pageable pageable);

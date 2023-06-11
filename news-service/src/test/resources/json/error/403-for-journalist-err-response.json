@@ -1,0 +1,5 @@
+{
+  "exception": "AccessDeniedForThisRoleException",
+  "errorMessage": "Access Denied for role: JOURNALIST",
+  "errorCode": "403 FORBIDDEN"
+}

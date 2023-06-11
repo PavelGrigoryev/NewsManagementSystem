@@ -1,0 +1,5 @@
+{
+  "exception": "AccessDeniedForThisRoleException",
+  "errorMessage": "Access Denied for role: SUBSCRIBER",
+  "errorCode": "403 FORBIDDEN"
+}

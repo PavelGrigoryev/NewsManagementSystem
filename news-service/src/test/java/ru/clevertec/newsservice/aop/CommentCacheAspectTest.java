@@ -132,6 +132,7 @@ class CommentCacheAspectTest {
         void testAspectShouldReturnExpectedValue() {
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().build();
             CommentWithNewsRequest mockedRequest = CommentWithNewsRequestTestBuilder.aCommentWithNewsRequest().build();
+            String token = "jwt";
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -139,11 +140,11 @@ class CommentCacheAspectTest {
 
             doReturn(expectedValue)
                     .when(commentService)
-                    .save(mockedRequest);
+                    .save(mockedRequest, token);
 
             CommentService proxy = factory.getProxy();
 
-            CommentResponse actualValue = proxy.save(mockedRequest);
+            CommentResponse actualValue = proxy.save(mockedRequest, token);
 
             assertThat(actualValue).isEqualTo(expectedValue);
         }
@@ -153,6 +154,7 @@ class CommentCacheAspectTest {
         void testAspectShouldPutInCache() {
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().withId(2L).build();
             CommentWithNewsRequest mockedRequest = CommentWithNewsRequestTestBuilder.aCommentWithNewsRequest().build();
+            String token = "jwt";
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -160,11 +162,11 @@ class CommentCacheAspectTest {
 
             doReturn(expectedValue)
                     .when(commentService)
-                    .save(mockedRequest);
+                    .save(mockedRequest, token);
 
             CommentService proxy = factory.getProxy();
 
-            proxy.save(mockedRequest);
+            proxy.save(mockedRequest, token);
 
             assertThat(cache.get(2L)).isEqualTo(expectedValue);
         }
@@ -179,6 +181,7 @@ class CommentCacheAspectTest {
         void testAspectShouldReturnExpectedValue() {
             long id = 1L;
             DeleteResponse expectedValue = new DeleteResponse("There is no Comment with ID " + id + " to delete");
+            String token = "jwt";
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -186,11 +189,11 @@ class CommentCacheAspectTest {
 
             doReturn(expectedValue)
                     .when(commentService)
-                    .deleteById(id);
+                    .deleteById(id, token);
 
             CommentService proxy = factory.getProxy();
 
-            DeleteResponse actualValue = proxy.deleteById(id);
+            DeleteResponse actualValue = proxy.deleteById(id, token);
 
             assertThat(actualValue).isEqualTo(expectedValue);
         }
@@ -199,6 +202,7 @@ class CommentCacheAspectTest {
         @DisplayName("test aspect should remove from cache")
         void testAspectShouldRemoveFromCache() {
             long id = 1L;
+            String token = "jwt";
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -206,7 +210,7 @@ class CommentCacheAspectTest {
 
             CommentService proxy = factory.getProxy();
 
-            proxy.deleteById(id);
+            proxy.deleteById(id, token);
 
             assertThat(cache.toString()).contains("cache={}, frequencies={}");
         }

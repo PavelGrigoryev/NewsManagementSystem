@@ -221,21 +221,7 @@ public interface CommentOpenApi {
                               "errorMessage": "No property 'tex' found for type 'Comment'; Did you mean 'text'",
                               "errorCode": "406 NOT_ACCEPTABLE"
                             }
-                            """))),
-            @ApiResponse(responseCode = "409", description = "Validation error",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ValidationErrorResponse.class),
-                            examples = @ExampleObject("""
-                                    {
-                                      "errorMessage": "409 CONFLICT",
-                                      "violations": [
-                                        {
-                                          "fieldName": "username",
-                                          "message": "This field must contain only letters of the Russian and English alphabets, numbers, symbols(@ _ -) without spaces in any case"
-                                        }
-                                      ]
-                                    }
-                                    """)))
+                            """)))
     })
     ResponseEntity<List<CommentResponse>> findAllByMatchingTextParams(@ParameterObject CommentRequest commentRequest,
                                                                       @ParameterObject Pageable pageable);

@@ -124,6 +124,7 @@ public class NewsServiceImpl implements NewsService {
                 response.role(), Role.JOURNALIST, response.email(), news.getEmail());
         news.setTitle(newsRequest.title());
         news.setText(newsRequest.text());
+        news.setEmail(response.email());
         News saved = newsRepository.saveAndFlush(news);
         return newsMapper.toResponse(saved);
     }

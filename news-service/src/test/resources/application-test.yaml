@@ -1,4 +1,7 @@
 spring:
+  cloud:
+    config:
+      enabled: false
   datasource:
     username: test
     password: test
@@ -20,3 +23,12 @@ spring:
 cache:
   algorithm: LFU
   capacity: 5
+aop:
+  logging:
+    enabled: true
+exception:
+  handling:
+    enabled: true
+base:
+  url:
+    users: http://localhost:7070/users
