@@ -26,7 +26,7 @@ public class JwtServiceImpl implements JwtService {
     private String secretKey;
 
     @Value("${security.jwt.expiration}")
-    public Long jwtExpiration;
+    private Long jwtExpiration;
 
     /**
      * Extracts the username from a JWT.
