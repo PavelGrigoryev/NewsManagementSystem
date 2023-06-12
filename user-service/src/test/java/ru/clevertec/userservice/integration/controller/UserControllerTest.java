@@ -38,6 +38,7 @@ class UserControllerTest extends BaseIntegrationTest {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
+    private static final String BEARER = "Bearer ";
 
     @Nested
     class RegisterPostEndpointTest {
@@ -182,7 +183,7 @@ class UserControllerTest extends BaseIntegrationTest {
             String json = objectMapper.writeValueAsString(response);
 
             mockMvc.perform(post("/users/validate")
-                            .header(AUTHORIZATION, "Bearer " + token))
+                            .header(AUTHORIZATION, BEARER + token))
                     .andExpect(status().isOk())
                     .andExpect(content().json(json));
         }
@@ -194,7 +195,7 @@ class UserControllerTest extends BaseIntegrationTest {
             String json = UserJsonSupplier.getMalformedErrorResponse();
 
             mockMvc.perform(post("/users/validate")
-                            .header(AUTHORIZATION, "Bearer " + token))
+                            .header(AUTHORIZATION, BEARER + token))
                     .andExpect(status().isUnauthorized())
                     .andExpect(content().json(json));
         }
@@ -206,7 +207,7 @@ class UserControllerTest extends BaseIntegrationTest {
             String json = UserJsonSupplier.getSignatureErrorResponse();
 
             mockMvc.perform(post("/users/validate")
-                            .header(AUTHORIZATION, "Bearer " + token))
+                            .header(AUTHORIZATION, BEARER + token))
                     .andExpect(status().isUnauthorized())
                     .andExpect(content().json(json));
         }
@@ -219,7 +220,7 @@ class UserControllerTest extends BaseIntegrationTest {
             String token = TokenTxtSupplier.getExpiredTokenRequest();
 
             mockMvc.perform(post("/users/validate")
-                            .header(AUTHORIZATION, "Bearer " + token))
+                            .header(AUTHORIZATION, BEARER + token))
                     .andExpect(status().isUnauthorized())
                     .andExpect(jsonPath("$.exception").value(expectedException))
                     .andExpect(jsonPath("$.errorMessage").isNotEmpty())
@@ -241,7 +242,7 @@ class UserControllerTest extends BaseIntegrationTest {
             String token = TokenTxtSupplier.getToken2048Request();
 
             mockMvc.perform(put("/users")
-                            .header(AUTHORIZATION, "Bearer " + token)
+                            .header(AUTHORIZATION, BEARER + token)
                             .content(content)
                             .contentType(APPLICATION_JSON))
                     .andExpect(status().isCreated())
@@ -264,7 +265,7 @@ class UserControllerTest extends BaseIntegrationTest {
             String content = objectMapper.writeValueAsString(request);
 
             mockMvc.perform(put("/users")
-                            .header(AUTHORIZATION, "Bearer " + token)
+                            .header(AUTHORIZATION, BEARER + token)
                             .content(content)
                             .contentType(APPLICATION_JSON))
                     .andExpect(status().isUnauthorized())
@@ -280,7 +281,7 @@ class UserControllerTest extends BaseIntegrationTest {
             String content = objectMapper.writeValueAsString(request);
 
             mockMvc.perform(put("/users")
-                            .header(AUTHORIZATION, "Bearer " + token)
+                            .header(AUTHORIZATION, BEARER + token)
                             .content(content)
                             .contentType(APPLICATION_JSON))
                     .andExpect(status().isNotFound())
@@ -298,7 +299,7 @@ class UserControllerTest extends BaseIntegrationTest {
             String content = objectMapper.writeValueAsString(request);
 
             mockMvc.perform(put("/users")
-                            .header(AUTHORIZATION, "Bearer " + token)
+                            .header(AUTHORIZATION, BEARER + token)
                             .content(content)
                             .contentType(APPLICATION_JSON))
                     .andExpect(status().isConflict())
@@ -319,7 +320,7 @@ class UserControllerTest extends BaseIntegrationTest {
             String token = TokenTxtSupplier.getToken2048Request();
 
             mockMvc.perform(delete("/users")
-                            .header(AUTHORIZATION, "Bearer " + token))
+                            .header(AUTHORIZATION, BEARER + token))
                     .andExpect(status().isOk())
                     .andExpect(content().json(json));
         }
@@ -331,7 +332,7 @@ class UserControllerTest extends BaseIntegrationTest {
             String token = TokenTxtSupplier.getBadSignatureTokenRequest();
 
             mockMvc.perform(delete("/users")
-                            .header(AUTHORIZATION, "Bearer " + token))
+                            .header(AUTHORIZATION, BEARER + token))
                     .andExpect(status().isUnauthorized())
                     .andExpect(content().json(json));
         }
@@ -343,7 +344,7 @@ class UserControllerTest extends BaseIntegrationTest {
             String token = TokenTxtSupplier.getDeletedEmailTokenRequest();
 
             mockMvc.perform(delete("/users")
-                            .header(AUTHORIZATION, "Bearer " + token))
+                            .header(AUTHORIZATION, BEARER + token))
                     .andExpect(status().isNotFound())
                     .andExpect(content().json(json));
         }

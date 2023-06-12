@@ -85,13 +85,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
     public void handleException(HttpServletResponse response, Exception exception) throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setHeader("content-type", MediaType.APPLICATION_JSON.toString());
+        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
         response.setCharacterEncoding("utf-8");
         IncorrectData incorrectData = new IncorrectData(
                 exception.getClass().getSimpleName(),
                 exception.getMessage(),
-                HttpStatus.UNAUTHORIZED.toString()
-        );
+                HttpStatus.UNAUTHORIZED.toString());
         String responseMessage = objectMapper.writeValueAsString(incorrectData);
         log.error(incorrectData.toString());
         response.getWriter().write(responseMessage);
