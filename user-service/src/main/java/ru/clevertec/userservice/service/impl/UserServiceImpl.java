@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchUserEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
-import ru.clevertec.userservice.dto.AuthenticationRequest;
+import ru.clevertec.userservice.dto.UserAuthenticationRequest;
 import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.RegisterRequest;
+import ru.clevertec.userservice.dto.UserRegisterRequest;
 import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UpdateRequest;
+import ru.clevertec.userservice.dto.UserUpdateRequest;
 import ru.clevertec.userservice.dto.UserResponse;
 import ru.clevertec.userservice.mapper.UserMapper;
 import ru.clevertec.userservice.model.User;
@@ -40,13 +40,13 @@ public class UserServiceImpl implements UserService {
      * Registers a new {@link User} with the given information and returns a {@link UserResponse} containing the
      * user's information and a JWT token.
      *
-     * @param request The {@link RegisterRequest} containing the user's information.
+     * @param request The {@link UserRegisterRequest} containing the user's information.
      * @return A UserResponse containing the user's information and a JWT token.
      * @throws UniqueEmailException if the email is already registered by another user.
      */
     @Override
     @Transactional
-    public UserResponse register(RegisterRequest request) {
+    public UserResponse register(UserRegisterRequest request) {
         User user = userMapper.fromRequest(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         try {
@@ -63,12 +63,12 @@ public class UserServiceImpl implements UserService {
      * Authenticates a {@link User} with the given email and password and returns a {@link UserResponse} containing
      * the user's information and a JWT token.
      *
-     * @param request The {@link AuthenticationRequest} containing the user's email and password.
+     * @param request The {@link UserAuthenticationRequest} containing the user's email and password.
      * @return A UserResponse containing the user's information and a JWT token.
      * @throws NoSuchUserEmailException if there is no user registered with the given email.
      */
     @Override
-    public UserResponse authenticate(AuthenticationRequest request) {
+    public UserResponse authenticate(UserAuthenticationRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new NoSuchUserEmailException("User with email " + request.email() + " is not exist"));
@@ -96,17 +96,17 @@ public class UserServiceImpl implements UserService {
 
 
     /**
-     * Updates a user's information with the given {@link UpdateRequest} and returns a {@link UserResponse} containing
+     * Updates a user's information with the given {@link UserUpdateRequest} and returns a {@link UserResponse} containing
      * the updated user's information and his JWT token.
      *
-     * @param request The UpdateRequest containing the user's to update information.
+     * @param request The UserUpdateRequest containing the user's to update information.
      * @param token   The JWT token of the user to update.
      * @return A UserResponse containing the updated user's information and his JWT token.
      * @throws NoSuchUserEmailException if there is no user registered with the email in the JWT token.
      */
     @Override
     @Transactional
-    public UserResponse updateByToken(UpdateRequest request, String token) {
+    public UserResponse updateByToken(UserUpdateRequest request, String token) {
         String jwt = token.substring(7);
         String email = jwtService.extractUsername(jwt);
         User user = userRepository.findByEmail(email)

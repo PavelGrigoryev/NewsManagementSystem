@@ -6,8 +6,8 @@ import java.nio.file.Paths;
 
 public interface CommonErrorJsonSupplier {
 
-    static String getNotBlankErrorResponse() throws IOException {
-        return Files.readString(Paths.get("src/test/resources/json/error/not-blank-err-response.json"));
+    static String getSizeErrorResponse() throws IOException {
+        return Files.readString(Paths.get("src/test/resources/json/error/size-err-response.json"));
     }
 
     static String getPositiveErrorGetResponse() throws IOException {

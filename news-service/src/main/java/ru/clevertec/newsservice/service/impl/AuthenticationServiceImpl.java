@@ -50,7 +50,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public Boolean isObjectOwnedByEmailAndRole(String userRole, Role expectedRole, String userEmail, String objectEmail) {
         Role role = Role.valueOf(userRole);
         if (role.equals(expectedRole) && !userEmail.equals(objectEmail)) {
-            throw new UserDoesNotHavePermissionException("With role " + userRole + " you can update or delete only your own news/comments");
+            throw new UserDoesNotHavePermissionException("With role " + userRole
+                                                         + " you can update or delete only your own news/comments");
         }
         return Boolean.TRUE;
     }

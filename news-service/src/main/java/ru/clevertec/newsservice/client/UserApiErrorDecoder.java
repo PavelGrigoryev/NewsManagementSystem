@@ -39,7 +39,7 @@ public class UserApiErrorDecoder implements ErrorDecoder {
             try (InputStream responseBody = response.body().asInputStream()) {
                 JsonNode jsonNode = objectMapper.readTree(responseBody);
                 exceptionName = jsonNode.at("/exception").asText();
-                errorMessage = jsonNode.at("/errorMessage").asText();
+                errorMessage = jsonNode.at("/error_message").asText();
             } catch (IOException e) {
                 log.error(e.getMessage());
             }

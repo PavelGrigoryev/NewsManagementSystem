@@ -8,26 +8,26 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.user.AuthenticationRequest;
-import ru.clevertec.newsservice.dto.user.RegisterRequest;
+import ru.clevertec.newsservice.dto.user.UserAuthenticationRequest;
+import ru.clevertec.newsservice.dto.user.UserRegisterRequest;
 import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
-import ru.clevertec.newsservice.dto.user.UpdateRequest;
+import ru.clevertec.newsservice.dto.user.UserUpdateRequest;
 import ru.clevertec.newsservice.dto.user.UserResponse;
 
 @FeignClient(name = "UserApiClient", url = "${base.url.users}")
 public interface UserApiClient {
 
     @PostMapping("/register")
-    UserResponse register(@RequestBody RegisterRequest request);
+    UserResponse register(@RequestBody UserRegisterRequest request);
 
     @PostMapping("/authenticate")
-    UserResponse authenticate(@RequestBody AuthenticationRequest request);
+    UserResponse authenticate(@RequestBody UserAuthenticationRequest request);
 
     @PostMapping("/validate")
     TokenValidationResponse tokenValidationCheck(@RequestHeader(HttpHeaders.AUTHORIZATION) String token);
 
     @PutMapping
-    UserResponse updateByToken(@RequestBody UpdateRequest request,
+    UserResponse updateByToken(@RequestBody UserUpdateRequest request,
                                @RequestHeader(HttpHeaders.AUTHORIZATION) String token);
 
     @DeleteMapping

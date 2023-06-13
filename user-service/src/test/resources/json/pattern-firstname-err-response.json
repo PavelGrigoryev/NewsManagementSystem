@@ -1,9 +1,9 @@
 {
-  "errorMessage": "409 CONFLICT",
+  "error_code": "409 CONFLICT",
   "violations": [
     {
-      "fieldName": "firstname",
-      "message": "Firstname must contain only letters of the Russian and English alphabets without spaces in any case"
+      "field_name": "firstname",
+      "error_message": "Firstname must contain only letters of the Russian and English alphabets without spaces in any case"
     }
   ]
 }

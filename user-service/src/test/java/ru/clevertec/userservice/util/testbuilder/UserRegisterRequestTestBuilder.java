@@ -3,14 +3,14 @@ package ru.clevertec.userservice.util.testbuilder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.With;
-import ru.clevertec.userservice.dto.RegisterRequest;
+import ru.clevertec.userservice.dto.UserRegisterRequest;
 import ru.clevertec.userservice.model.Role;
 import ru.clevertec.userservice.util.TestBuilder;
 
 @AllArgsConstructor
-@NoArgsConstructor(staticName = "aRegisterRequest")
+@NoArgsConstructor(staticName = "aUserRegisterRequest")
 @With
-public class RegisterRequestTestBuilder implements TestBuilder<RegisterRequest> {
+public class UserRegisterRequestTestBuilder implements TestBuilder<UserRegisterRequest> {
 
     private String firstname = "Брюс";
     private String lastname = "Ли";
@@ -19,8 +19,8 @@ public class RegisterRequestTestBuilder implements TestBuilder<RegisterRequest> 
     private String role = Role.ADMIN.name();
 
     @Override
-    public RegisterRequest build() {
-        return new RegisterRequest(firstname, lastname, email, password, role);
+    public UserRegisterRequest build() {
+        return new UserRegisterRequest(firstname, lastname, email, password, role);
     }
 
 }

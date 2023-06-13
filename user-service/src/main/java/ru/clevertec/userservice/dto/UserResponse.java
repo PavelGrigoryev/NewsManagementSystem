@@ -1,38 +1,24 @@
 package ru.clevertec.userservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import ru.clevertec.userservice.model.Role;
 
 import java.time.LocalDateTime;
 
-@JsonPropertyOrder({
-        "id",
-        "firstname",
-        "lastname",
-        "email",
-        "role",
-        "token",
-        "token_expiration",
-        "created_time",
-        "updated_time"
-})
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record UserResponse(Long id,
                            String firstname,
                            String lastname,
                            String email,
                            Role role,
                            String token,
-
-                           @JsonProperty("token_expiration")
                            String tokenExpiration,
 
-                           @JsonProperty("created_time")
                            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
                            LocalDateTime createdTime,
 
-                           @JsonProperty("updated_time")
                            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
                            LocalDateTime updatedTime
 ) {

@@ -49,8 +49,8 @@ class NewsCacheAspectTest {
         @Test
         @DisplayName("test aspect should return expected value after finding in service")
         void testAspectShouldReturnExpectedValueAfterFindingInService() {
-            NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().withId(2L).build();
             long id = 2L;
+            NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().withId(id).build();
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -70,8 +70,8 @@ class NewsCacheAspectTest {
         @Test
         @DisplayName("test aspect should put in cache")
         void testAspectShouldPutInCache() {
-            NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().withId(2L).build();
             long id = 2L;
+            NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().withId(id).build();
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -85,11 +85,11 @@ class NewsCacheAspectTest {
 
             proxy.findById(id);
 
-            assertThat(cache.get(2L)).isEqualTo(expectedValue);
+            assertThat(cache.get(id)).isEqualTo(expectedValue);
         }
 
         @Test
-        @DisplayName("test aspect should return expected value without finding ins service")
+        @DisplayName("test aspect should return expected value without finding in service")
         void testAspectShouldReturnExpectedValueWithoutFindingInService() {
             NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().build();
             long id = 1L;
@@ -119,7 +119,7 @@ class NewsCacheAspectTest {
 
             proxy.findById(id);
 
-            assertThat(cache.get(1L)).isEqualTo(expectedValue);
+            assertThat(cache.get(id)).isEqualTo(expectedValue);
         }
 
     }

@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.userservice.controller.openapi.UserOpenApi;
-import ru.clevertec.userservice.dto.AuthenticationRequest;
+import ru.clevertec.userservice.dto.UserAuthenticationRequest;
 import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.RegisterRequest;
+import ru.clevertec.userservice.dto.UserRegisterRequest;
 import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UpdateRequest;
+import ru.clevertec.userservice.dto.UserUpdateRequest;
 import ru.clevertec.userservice.dto.UserResponse;
 import ru.clevertec.userservice.service.UserService;
 
@@ -31,13 +31,13 @@ public class UserController implements UserOpenApi {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<UserResponse> register(@RequestBody UserRegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(request));
     }
 
     @Override
     @PostMapping("/authenticate")
-    public ResponseEntity<UserResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<UserResponse> authenticate(@RequestBody UserAuthenticationRequest request) {
         return ResponseEntity.ok(userService.authenticate(request));
     }
 
@@ -50,7 +50,7 @@ public class UserController implements UserOpenApi {
 
     @Override
     @PutMapping
-    public ResponseEntity<UserResponse> updateByToken(@RequestBody UpdateRequest request,
+    public ResponseEntity<UserResponse> updateByToken(@RequestBody UserUpdateRequest request,
                                                       @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
                                                       String token) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.updateByToken(request, token));

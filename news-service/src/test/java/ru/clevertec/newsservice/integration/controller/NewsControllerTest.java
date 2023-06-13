@@ -241,11 +241,11 @@ class NewsControllerTest extends BaseIntegrationTest {
         }
 
         @Test
-        @DisplayName("test should return expected json and status 409 if text is blank")
-        void testShouldReturnExpectedJsonAndStatus409IfTitleIsBlank() throws Exception {
+        @DisplayName("test should return expected json and status 409 if text size is less then 3")
+        void testShouldReturnExpectedJsonAndStatus409IfTextSizeIsLessThenThree() throws Exception {
             NewsRequest newsRequest = NewsRequestTestBuilder.aNewsRequest().withText("").build();
             String content = objectMapper.writeValueAsString(newsRequest);
-            String json = CommonErrorJsonSupplier.getNotBlankErrorResponse();
+            String json = CommonErrorJsonSupplier.getSizeErrorResponse();
 
             mockMvc.perform(post("/news")
                             .content(content)
@@ -378,12 +378,12 @@ class NewsControllerTest extends BaseIntegrationTest {
         }
 
         @Test
-        @DisplayName("test should return expected json and status 409 if text is blank")
-        void testShouldReturnExpectedJsonAndStatus409IfTitleIsBlank() throws Exception {
+        @DisplayName("test should return expected json and status 409 if text size is less then 3")
+        void testShouldReturnExpectedJsonAndStatus409IfTextSizeIsLessThenThree() throws Exception {
             long id = 5;
             NewsRequest newsRequest = NewsRequestTestBuilder.aNewsRequest().withText("").build();
             String content = objectMapper.writeValueAsString(newsRequest);
-            String json = CommonErrorJsonSupplier.getNotBlankErrorResponse();
+            String json = CommonErrorJsonSupplier.getSizeErrorResponse();
 
             mockMvc.perform(put("/news/" + id)
                             .content(content)

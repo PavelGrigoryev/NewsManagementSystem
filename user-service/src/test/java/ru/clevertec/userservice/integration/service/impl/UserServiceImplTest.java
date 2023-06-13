@@ -10,19 +10,19 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchUserEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
-import ru.clevertec.userservice.dto.AuthenticationRequest;
+import ru.clevertec.userservice.dto.UserAuthenticationRequest;
 import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.RegisterRequest;
+import ru.clevertec.userservice.dto.UserRegisterRequest;
 import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UpdateRequest;
+import ru.clevertec.userservice.dto.UserUpdateRequest;
 import ru.clevertec.userservice.dto.UserResponse;
 import ru.clevertec.userservice.integration.BaseIntegrationTest;
 import ru.clevertec.userservice.service.UserService;
 import ru.clevertec.userservice.util.json.TokenTxtSupplier;
-import ru.clevertec.userservice.util.testbuilder.AuthenticationRequestTestBuilder;
-import ru.clevertec.userservice.util.testbuilder.RegisterRequestTestBuilder;
+import ru.clevertec.userservice.util.testbuilder.UserAuthenticationRequestTestBuilder;
+import ru.clevertec.userservice.util.testbuilder.UserRegisterRequestTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.TokenValidationResponseTestBuilder;
-import ru.clevertec.userservice.util.testbuilder.UpdateRequestTestBuilder;
+import ru.clevertec.userservice.util.testbuilder.UserUpdateRequestTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserResponseTestBuilder;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return expected UserResponse")
         void testShouldReturnExpectedUserResponse() {
-            RegisterRequest request = RegisterRequestTestBuilder.aRegisterRequest()
+            UserRegisterRequest request = UserRegisterRequestTestBuilder.aUserRegisterRequest()
                     .withEmail("new@eamil.ru")
                     .build();
             UserResponse expectedValue = UserResponseTestBuilder.aUserResponse()
@@ -72,7 +72,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should throw UniqueEmailException with expected message")
         void testShouldThrowUniqueEmailExceptionWithExpectedMessage() {
-            RegisterRequest request = RegisterRequestTestBuilder.aRegisterRequest().build();
+            UserRegisterRequest request = UserRegisterRequestTestBuilder.aUserRegisterRequest().build();
             String expectedMessage = "Email " + request.email()
                                      + " is occupied! Another user is already registered by this email!";
 
@@ -90,7 +90,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return expected UserResponse")
         void testShouldReturnExpectedUserResponse() {
-            AuthenticationRequest request = AuthenticationRequestTestBuilder.aAuthenticationRequest().build();
+            UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest().build();
             UserResponse expectedValue = UserResponseTestBuilder.aUserResponse().build();
 
             UserResponse actualValue = userService.authenticate(request);
@@ -111,7 +111,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should throw BadCredentialsException with expected message")
         void testShouldThrowBadCredentialsExceptionWithExpectedMessage() {
-            AuthenticationRequest request = AuthenticationRequestTestBuilder.aAuthenticationRequest()
+            UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest()
                     .withPassword("Bad pass").build();
             String expectedMessage = "Bad credentials";
 
@@ -124,7 +124,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should throw InternalAuthenticationServiceException with expected message")
         void testShouldThrowInternalAuthenticationServiceExceptionWithExpectedMessage() {
-            AuthenticationRequest request = AuthenticationRequestTestBuilder.aAuthenticationRequest()
+            UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest()
                     .withEmail("NotExist@email.by").build();
             String expectedMessage = "User with email " + request.email() + " is not exist";
 
@@ -188,7 +188,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         @DisplayName("test should return expected UserResponse")
         void testShouldReturnExpectedUserResponse() throws IOException {
             String token = TokenTxtSupplier.getToken2048Request();
-            UpdateRequest request = UpdateRequestTestBuilder.aUpdateRequest().build();
+            UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest().build();
             UserResponse expectedValue = UserResponseTestBuilder.aUserResponse()
                     .withFirstname(request.firstname())
                     .withLastname(request.lastname())
@@ -217,7 +217,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         @DisplayName("test should throw NoSuchUserEmailException with expected message")
         void testShouldThrowNoSuchUserEmailExceptionWithExpectedMessage() throws IOException {
             String token = TokenTxtSupplier.getDeletedEmailTokenRequest();
-            UpdateRequest request = UpdateRequestTestBuilder.aUpdateRequest().build();
+            UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest().build();
             String expectedMessage = "There is no User with email Bad@email.com to update";
 
             Exception exception = assertThrows(NoSuchUserEmailException.class,
@@ -231,7 +231,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         @DisplayName("test should throw SignatureException with expected message")
         void testShouldThrowSignatureExceptionWithExpectedMessage() throws IOException {
             String token = TokenTxtSupplier.getBadSignatureTokenRequest();
-            UpdateRequest request = UpdateRequestTestBuilder.aUpdateRequest().build();
+            UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest().build();
             String expectedMessage = "JWT signature does not match locally computed signature." +
                                      " JWT validity cannot be asserted and should not be trusted.";
 
@@ -246,7 +246,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         @DisplayName("test should throw ExpiredJwtException with expected message")
         void testShouldThrowExpiredJwtExceptionWithExpectedMessage() throws IOException {
             String token = TokenTxtSupplier.getExpiredTokenRequest();
-            UpdateRequest request = UpdateRequestTestBuilder.aUpdateRequest().build();
+            UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest().build();
             String expectedMessage = "JWT expired at";
 
             Exception exception = assertThrows(ExpiredJwtException.class,

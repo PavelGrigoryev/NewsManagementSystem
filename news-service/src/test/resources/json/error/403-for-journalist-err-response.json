@@ -1,5 +1,5 @@
 {
   "exception": "AccessDeniedForThisRoleException",
-  "errorMessage": "Access Denied for role: JOURNALIST",
-  "errorCode": "403 FORBIDDEN"
+  "error_message": "Access Denied for role: JOURNALIST",
+  "error_code": "403 FORBIDDEN"
 }

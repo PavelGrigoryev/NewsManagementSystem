@@ -1,9 +1,9 @@
 {
-  "errorMessage": "409 CONFLICT",
+  "error_code": "409 CONFLICT",
   "violations": [
     {
-      "fieldName": "email",
-      "message": "must be a well-formed email address"
+      "field_name": "email",
+      "error_message": "must be a well-formed email address"
     }
   ]
 }

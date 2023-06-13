@@ -66,7 +66,7 @@ public class CommentController implements CommentOpenApi {
     public ResponseEntity<CommentResponse> updateById(@PathVariable Long id,
                                                       @RequestBody CommentRequest commentRequest,
                                                       @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
-                                                          String token) {
+                                                      String token) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.updateById(id, commentRequest, token));
     }
 

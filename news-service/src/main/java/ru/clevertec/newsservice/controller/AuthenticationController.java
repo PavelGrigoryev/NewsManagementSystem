@@ -15,9 +15,9 @@ import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.newsservice.client.UserApiClient;
 import ru.clevertec.newsservice.controller.openapi.AuthenticationOpenApi;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.user.AuthenticationRequest;
-import ru.clevertec.newsservice.dto.user.RegisterRequest;
-import ru.clevertec.newsservice.dto.user.UpdateRequest;
+import ru.clevertec.newsservice.dto.user.UserAuthenticationRequest;
+import ru.clevertec.newsservice.dto.user.UserRegisterRequest;
+import ru.clevertec.newsservice.dto.user.UserUpdateRequest;
 import ru.clevertec.newsservice.dto.user.UserResponse;
 
 @Loggable
@@ -30,19 +30,19 @@ public class AuthenticationController implements AuthenticationOpenApi {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<UserResponse> register(@RequestBody UserRegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userApiClient.register(request));
     }
 
     @Override
     @PostMapping("/authenticate")
-    public ResponseEntity<UserResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<UserResponse> authenticate(@RequestBody UserAuthenticationRequest request) {
         return ResponseEntity.ok(userApiClient.authenticate(request));
     }
 
     @Override
     @PutMapping
-    public ResponseEntity<UserResponse> updateByToken(@RequestBody UpdateRequest request,
+    public ResponseEntity<UserResponse> updateByToken(@RequestBody UserUpdateRequest request,
                                                       @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
                                                       String token) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userApiClient.updateByToken(request, token));

@@ -3,21 +3,21 @@ package ru.clevertec.userservice.util.testbuilder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.With;
-import ru.clevertec.userservice.dto.UpdateRequest;
+import ru.clevertec.userservice.dto.UserUpdateRequest;
 import ru.clevertec.userservice.util.TestBuilder;
 
 @AllArgsConstructor
-@NoArgsConstructor(staticName = "aUpdateRequest")
+@NoArgsConstructor(staticName = "aUserUpdateRequest")
 @With
-public class UpdateRequestTestBuilder implements TestBuilder<UpdateRequest> {
+public class UserUpdateRequestTestBuilder implements TestBuilder<UserUpdateRequest> {
 
     private String firstname = "Samuel";
     private String lastname = "Ilf";
     private String password = "1984";
 
     @Override
-    public UpdateRequest build() {
-        return new UpdateRequest(firstname, lastname, password);
+    public UserUpdateRequest build() {
+        return new UserUpdateRequest(firstname, lastname, password);
     }
 
 }

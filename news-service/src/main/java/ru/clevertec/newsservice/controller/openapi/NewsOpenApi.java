@@ -47,8 +47,8 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "NoSuchNewsException",
-                              "errorMessage": "News with ID 122 does not exist",
-                              "errorCode": "404 NOT_FOUND"
+                              "error_message": "News with ID 122 does not exist",
+                              "error_code": "404 NOT_FOUND"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -56,11 +56,11 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                      "errorMessage": "409 CONFLICT",
+                                      "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "fieldName": "findById.id",
-                                          "message": "must be greater than 0"
+                                          "field_name": "findById.id",
+                                          "error_message": "must be greater than 0"
                                         }
                                       ]
                                     }
@@ -121,8 +121,8 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                                "exception": "PropertyReferenceException",
-                               "errorMessage": "No property 'tit' found for type 'News'; Did you mean 'id','text','time','title'",
-                               "errorCode": "406 NOT_ACCEPTABLE"
+                               "error_message": "No property 'tit' found for type 'News'; Did you mean 'id','text','time','title'",
+                               "error_code": "406 NOT_ACCEPTABLE"
                             }
                             """))),
     })
@@ -163,8 +163,8 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                                "exception": "PropertyReferenceException",
-                               "errorMessage": "No property 'i' found for type 'News'; Did you mean 'id'",
-                               "errorCode": "406 NOT_ACCEPTABLE"
+                               "error_message": "No property 'i' found for type 'News'; Did you mean 'id'",
+                               "error_code": "406 NOT_ACCEPTABLE"
                             }
                             """)))
     })
@@ -197,8 +197,8 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "InsufficientAuthenticationException",
-                              "errorMessage": "Full authentication is required to access this resource",
-                              "errorCode": "401 UNAUTHORIZED"
+                              "error_message": "Full authentication is required to access this resource",
+                              "error_code": "401 UNAUTHORIZED"
                             }
                             """))),
             @ApiResponse(responseCode = "403", description = "Access denied for User with this role",
@@ -206,8 +206,8 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "AccessDeniedForThisRoleException",
-                              "errorMessage": "Access Denied for role: SUBSCRIBER",
-                              "errorCode": "403 FORBIDDEN"
+                              "error_message": "Access Denied for role: SUBSCRIBER",
+                              "error_code": "403 FORBIDDEN"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -215,11 +215,11 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                      "errorMessage": "409 CONFLICT",
+                                      "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "fieldName": "text",
-                                          "message": "must not be blank"
+                                          "field_name": "text",
+                                          "error_message": "must not be blank"
                                         }
                                       ]
                                     }
@@ -256,8 +256,8 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "InsufficientAuthenticationException",
-                              "errorMessage": "Full authentication is required to access this resource",
-                              "errorCode": "401 UNAUTHORIZED"
+                              "error_message": "Full authentication is required to access this resource",
+                              "error_code": "401 UNAUTHORIZED"
                             }
                             """))),
             @ApiResponse(responseCode = "403", description = "Access denied for User with this role",
@@ -265,8 +265,8 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "AccessDeniedForThisRoleException",
-                              "errorMessage": "Access Denied for role: SUBSCRIBER",
-                              "errorCode": "403 FORBIDDEN"
+                              "error_message": "Access Denied for role: SUBSCRIBER",
+                              "error_code": "403 FORBIDDEN"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No News with this id in database",
@@ -274,8 +274,8 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                                "exception": "NoSuchNewsException",
-                               "errorMessage": "There is no News with ID 211 to update",
-                               "errorCode": "404 NOT_FOUND"
+                               "error_message": "There is no News with ID 211 to update",
+                               "error_code": "404 NOT_FOUND"
                             }
                             """))),
             @ApiResponse(responseCode = "405", description = "User with this role does not have required permission",
@@ -283,8 +283,8 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "UserDoesNotHavePermissionException",
-                              "errorMessage": "With role JOURNALIST you can update or delete only your own news/comments",
-                              "errorCode": "405 METHOD_NOT_ALLOWED"
+                              "error_message": "With role JOURNALIST you can update or delete only your own news/comments",
+                              "error_code": "405 METHOD_NOT_ALLOWED"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -292,11 +292,11 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                       "errorMessage": "409 CONFLICT",
+                                       "error_code": "409 CONFLICT",
                                        "violations": [
                                          {
-                                           "fieldName": "title",
-                                           "message": "must not be blank"
+                                           "field_name": "title",
+                                           "error_message": "must not be blank"
                                          }
                                        ]
                                     }
@@ -322,8 +322,8 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "InsufficientAuthenticationException",
-                              "errorMessage": "Full authentication is required to access this resource",
-                              "errorCode": "401 UNAUTHORIZED"
+                              "error_message": "Full authentication is required to access this resource",
+                              "error_code": "401 UNAUTHORIZED"
                             }
                             """))),
             @ApiResponse(responseCode = "403", description = "Access denied for User with this role",
@@ -331,8 +331,8 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "AccessDeniedForThisRoleException",
-                              "errorMessage": "Access Denied for role: SUBSCRIBER",
-                              "errorCode": "403 FORBIDDEN"
+                              "error_message": "Access Denied for role: SUBSCRIBER",
+                              "error_code": "403 FORBIDDEN"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "Not News with this id to delete",
@@ -340,8 +340,8 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "NoSuchNewsException",
-                              "errorMessage": "There is no News with ID 222 to delete",
-                              "errorCode": "404 NOT_FOUND"
+                              "error_message": "There is no News with ID 222 to delete",
+                              "error_code": "404 NOT_FOUND"
                             }
                             """))),
             @ApiResponse(responseCode = "405", description = "User with this role does not have required permission",
@@ -349,8 +349,8 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "UserDoesNotHavePermissionException",
-                              "errorMessage": "With role JOURNALIST you can update or delete only your own news/comments",
-                              "errorCode": "405 METHOD_NOT_ALLOWED"
+                              "error_message": "With role JOURNALIST you can update or delete only your own news/comments",
+                              "error_code": "405 METHOD_NOT_ALLOWED"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -358,11 +358,11 @@ public interface NewsOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                      "errorMessage": "409 CONFLICT",
+                                      "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "fieldName": "deleteById.id",
-                                          "message": "must be greater than 0"
+                                          "field_name": "deleteById.id",
+                                          "error_message": "must be greater than 0"
                                         }
                                       ]
                                     }

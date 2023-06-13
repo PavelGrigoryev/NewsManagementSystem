@@ -49,8 +49,8 @@ class CommentCacheAspectTest {
         @Test
         @DisplayName("test aspect should return expected value after finding in service")
         void testAspectShouldReturnExpectedValueAfterFindingInService() {
-            CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().withId(2L).build();
             long id = 2L;
+            CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().withId(id).build();
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -70,8 +70,8 @@ class CommentCacheAspectTest {
         @Test
         @DisplayName("test aspect should put in cache")
         void testAspectShouldPutInCache() {
-            CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().withId(2L).build();
             long id = 2L;
+            CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().withId(id).build();
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -85,11 +85,11 @@ class CommentCacheAspectTest {
 
             proxy.findById(id);
 
-            assertThat(cache.get(2L)).isEqualTo(expectedValue);
+            assertThat(cache.get(id)).isEqualTo(expectedValue);
         }
 
         @Test
-        @DisplayName("test aspect should return expected value without finding ins service")
+        @DisplayName("test aspect should return expected value without finding in service")
         void testAspectShouldReturnExpectedValueWithoutFindingInService() {
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().build();
             long id = 1L;
@@ -119,7 +119,7 @@ class CommentCacheAspectTest {
 
             proxy.findById(id);
 
-            assertThat(cache.get(1L)).isEqualTo(expectedValue);
+            assertThat(cache.get(id)).isEqualTo(expectedValue);
         }
 
     }

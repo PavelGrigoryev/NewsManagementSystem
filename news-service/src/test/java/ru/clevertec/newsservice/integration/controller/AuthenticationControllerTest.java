@@ -9,16 +9,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.user.AuthenticationRequest;
-import ru.clevertec.newsservice.dto.user.RegisterRequest;
-import ru.clevertec.newsservice.dto.user.UpdateRequest;
+import ru.clevertec.newsservice.dto.user.UserAuthenticationRequest;
+import ru.clevertec.newsservice.dto.user.UserRegisterRequest;
+import ru.clevertec.newsservice.dto.user.UserUpdateRequest;
 import ru.clevertec.newsservice.dto.user.UserResponse;
 import ru.clevertec.newsservice.integration.BaseIntegrationTest;
 import ru.clevertec.newsservice.util.json.AuthenticationJsonSupplier;
 import ru.clevertec.newsservice.util.json.CommonErrorJsonSupplier;
-import ru.clevertec.newsservice.util.testbuilder.user.AuthenticationRequestTestBuilder;
-import ru.clevertec.newsservice.util.testbuilder.user.RegisterRequestTestBuilder;
-import ru.clevertec.newsservice.util.testbuilder.user.UpdateRequestTestBuilder;
+import ru.clevertec.newsservice.util.testbuilder.user.UserAuthenticationRequestTestBuilder;
+import ru.clevertec.newsservice.util.testbuilder.user.UserRegisterRequestTestBuilder;
+import ru.clevertec.newsservice.util.testbuilder.user.UserUpdateRequestTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.user.UserResponseTestBuilder;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -44,7 +44,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
     @DisplayName("test register should return expected json and status 201")
     void testRegisterShouldReturnExpectedJsonAndStatus201() throws Exception {
         UserResponse response = UserResponseTestBuilder.aUserResponse().build();
-        RegisterRequest request = RegisterRequestTestBuilder.aRegisterRequest().build();
+        UserRegisterRequest request = UserRegisterRequestTestBuilder.aUserRegisterRequest().build();
         String content = objectMapper.writeValueAsString(request);
         String json = objectMapper.writeValueAsString(response);
 
@@ -64,7 +64,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("test register should return expected json and status 406 if email is occupied")
     void testRegisterShouldReturnExpectedJsonAndStatus406IfEmailIsOccupied() throws Exception {
-        RegisterRequest request = RegisterRequestTestBuilder.aRegisterRequest().build();
+        UserRegisterRequest request = UserRegisterRequestTestBuilder.aUserRegisterRequest().build();
         String content = objectMapper.writeValueAsString(request);
         String json = AuthenticationJsonSupplier.getUniqueEmailErrorResponse();
 
@@ -84,7 +84,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("test register should return expected json and status 409 if role is out of pattern")
     void testRegisterShouldReturnExpectedJsonAndStatus409IfRoleIsOutOfPattern() throws Exception {
-        RegisterRequest request = RegisterRequestTestBuilder.aRegisterRequest().withRole("SUPER_ADMIN").build();
+        UserRegisterRequest request = UserRegisterRequestTestBuilder.aUserRegisterRequest().withRole("SUPER_ADMIN").build();
         String content = objectMapper.writeValueAsString(request);
         String json = AuthenticationJsonSupplier.getPatternRoleErrorResponse();
 
@@ -99,7 +99,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
     @DisplayName("test authenticate should return expected json and status 200")
     void testAuthenticateShouldReturnExpectedJsonAndStatus200() throws Exception {
         UserResponse response = UserResponseTestBuilder.aUserResponse().build();
-        AuthenticationRequest request = AuthenticationRequestTestBuilder.aAuthenticationRequest().build();
+        UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest().build();
         String content = objectMapper.writeValueAsString(request);
         String json = objectMapper.writeValueAsString(response);
 
@@ -119,7 +119,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("test authenticate should return expected json and status 401 if user has wrong password")
     void testAuthenticateShouldReturnExpectedJsonAndStatus401IfUserHasWrongPassword() throws Exception {
-        AuthenticationRequest request = AuthenticationRequestTestBuilder.aAuthenticationRequest()
+        UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest()
                 .withPassword("wrong").build();
         String content = objectMapper.writeValueAsString(request);
         String json = AuthenticationJsonSupplier.getWrongPasswordErrorResponse();
@@ -140,7 +140,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("test authenticate should return expected json and status 404 if user is not exist")
     void testAuthenticateShouldReturnExpectedJsonAndStatus404IfUserIsNotExist() throws Exception {
-        AuthenticationRequest request = AuthenticationRequestTestBuilder.aAuthenticationRequest()
+        UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest()
                 .withEmail("Bad@email.com").build();
         String content = objectMapper.writeValueAsString(request);
         String json = AuthenticationJsonSupplier.getNotFoundErrorResponse();
@@ -161,7 +161,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("test authenticate should return expected json and status 409 if email is out of pattern")
     void testAuthenticateShouldReturnExpectedJsonAndStatus409IfEmailIsOutOfPattern() throws Exception {
-        AuthenticationRequest request = AuthenticationRequestTestBuilder.aAuthenticationRequest()
+        UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest()
                 .withEmail("Bad email").build();
         String content = objectMapper.writeValueAsString(request);
         String json = AuthenticationJsonSupplier.getPatternEmailErrorResponse();
@@ -176,7 +176,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("test updateByToken should return expected json and status 201")
     void testUpdateByTokenShouldReturnExpectedJsonAndStatus201() throws Exception {
-        UpdateRequest request = UpdateRequestTestBuilder.aUpdateRequest().build();
+        UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest().build();
         UserResponse response = UserResponseTestBuilder.aUserResponse()
                 .withFirstname(request.firstname())
                 .withLastname(request.lastname())
@@ -200,7 +200,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("test updateByToken should return expected json and status 401 if user has not valid token")
     void testUpdateByTokenShouldReturnExpectedJsonAndStatus401IfUserHasNotValidToken() throws Exception {
-        UpdateRequest request = UpdateRequestTestBuilder.aUpdateRequest().build();
+        UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest().build();
         String content = objectMapper.writeValueAsString(request);
         String json = AuthenticationJsonSupplier.getWrongPasswordErrorResponse();
 
@@ -220,7 +220,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("test updateByToken should return expected json and status 404 if user is not exist")
     void testUpdateByTokenShouldReturnExpectedJsonAndStatus404IfUserIsNotExist() throws Exception {
-        UpdateRequest request = UpdateRequestTestBuilder.aUpdateRequest().build();
+        UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest().build();
         String content = objectMapper.writeValueAsString(request);
         String json = AuthenticationJsonSupplier.getNotFoundErrorResponse();
 
@@ -240,7 +240,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("test updateByToken should return expected json and status 409 if firstname is out of pattern")
     void testUpdateByTokenShouldReturnExpectedJsonAndStatus409IfFirstnameIsOutOfPattern() throws Exception {
-        UpdateRequest request = UpdateRequestTestBuilder.aUpdateRequest()
+        UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest()
                 .withFirstname("Али - Баба").build();
         String content = objectMapper.writeValueAsString(request);
         String json = AuthenticationJsonSupplier.getPatternFirstNameErrorResponse();

@@ -1,5 +1,5 @@
 {
   "exception": "NoSuchUserEmailException",
-  "errorMessage": "User with email Bad@email.com is not exist",
-  "errorCode": "404 NOT_FOUND"
+  "error_message": "User with email Bad@email.com is not exist",
+  "error_code": "404 NOT_FOUND"
 }

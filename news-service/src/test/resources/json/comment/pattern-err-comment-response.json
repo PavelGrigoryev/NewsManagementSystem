@@ -1,9 +1,9 @@
 {
-  "errorMessage": "409 CONFLICT",
+  "error_code": "409 CONFLICT",
   "violations": [
     {
-      "fieldName": "username",
-      "message": "This field must contain only letters of the Russian and English alphabets, numbers, symbols(@ _ -) without spaces in any case"
+      "field_name": "username",
+      "error_message": "This field must contain only letters of the Russian and English alphabets, numbers, symbols(@ _ -) without spaces in any case"
     }
   ]
 }

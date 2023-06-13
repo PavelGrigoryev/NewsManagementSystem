@@ -15,17 +15,17 @@ import org.springframework.http.ResponseEntity;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
 import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.user.AuthenticationRequest;
-import ru.clevertec.newsservice.dto.user.RegisterRequest;
-import ru.clevertec.newsservice.dto.user.UpdateRequest;
+import ru.clevertec.newsservice.dto.user.UserAuthenticationRequest;
+import ru.clevertec.newsservice.dto.user.UserRegisterRequest;
+import ru.clevertec.newsservice.dto.user.UserUpdateRequest;
 import ru.clevertec.newsservice.dto.user.UserResponse;
 
 @Tag(name = "Authentication", description = "The Authentication Api")
 public interface AuthenticationOpenApi {
 
     @Operation(summary = "Register, save new User and get jwt token.", tags = "Authentication",
-            requestBody = @RequestBody(description = "RequestBody for RegisterRequest",
-                    content = @Content(schema = @Schema(implementation = RegisterRequest.class),
+            requestBody = @RequestBody(description = "RequestBody for UserRegisterRequest",
+                    content = @Content(schema = @Schema(implementation = UserRegisterRequest.class),
                             examples = @ExampleObject("""
                                     {
                                       "firstname": "Pavel",
@@ -56,8 +56,8 @@ public interface AuthenticationOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "UniqueEmailException",
-                              "errorMessage": "Email Green@mail.com is occupied! Another user is already registered by this email!",
-                              "errorCode": "406 NOT_ACCEPTABLE"
+                              "error_message": "Email Green@mail.com is occupied! Another user is already registered by this email!",
+                              "error_code": "406 NOT_ACCEPTABLE"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -65,21 +65,21 @@ public interface AuthenticationOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                      "errorMessage": "409 CONFLICT",
+                                      "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "fieldName": "role",
-                                          "message": "Acceptable roles are only: ADMIN, JOURNALIST, SUBSCRIBER"
+                                          "field_name": "role",
+                                          "error_message": "Acceptable roles are only: ADMIN, JOURNALIST, SUBSCRIBER"
                                         }
                                       ]
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> register(@Valid RegisterRequest request);
+    ResponseEntity<UserResponse> register(@Valid UserRegisterRequest request);
 
     @Operation(summary = "Authenticate User and get jwt token.", tags = "Authentication",
-            requestBody = @RequestBody(description = "RequestBody for AuthenticationRequest",
-                    content = @Content(schema = @Schema(implementation = AuthenticationRequest.class),
+            requestBody = @RequestBody(description = "RequestBody for UserAuthenticationRequest",
+                    content = @Content(schema = @Schema(implementation = UserAuthenticationRequest.class),
                             examples = @ExampleObject("""
                                     {
                                       "email": "ChakcNunChuck@gmail.com",
@@ -107,8 +107,8 @@ public interface AuthenticationOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "UserApiClientException",
-                              "errorMessage": "Bad credentials",
-                              "errorCode": "401 UNAUTHORIZED"
+                              "error_message": "Bad credentials",
+                              "error_code": "401 UNAUTHORIZED"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No User with this email in database",
@@ -116,8 +116,8 @@ public interface AuthenticationOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "NoSuchUserEmailException",
-                              "errorMessage": "User with email ChakcNunChuck@1gmail.com is not exist",
-                              "errorCode": "404 NOT_FOUND"
+                              "error_message": "User with email ChakcNunChuck@1gmail.com is not exist",
+                              "error_code": "404 NOT_FOUND"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -125,22 +125,22 @@ public interface AuthenticationOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                      "errorMessage": "409 CONFLICT",
+                                      "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "fieldName": "email",
-                                          "message": "must be a well-formed email address"
+                                          "field_name": "email",
+                                          "error_message": "must be a well-formed email address"
                                         }
                                       ]
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> authenticate(@Valid AuthenticationRequest request);
+    ResponseEntity<UserResponse> authenticate(@Valid UserAuthenticationRequest request);
 
     @Operation(summary = "Update User by token.", tags = "Authentication",
             security = @SecurityRequirement(name = "Bearer Authentication"),
-            requestBody = @RequestBody(description = "RequestBody for UpdateRequest",
-                    content = @Content(schema = @Schema(implementation = UpdateRequest.class),
+            requestBody = @RequestBody(description = "RequestBody for UserUpdateRequest",
+                    content = @Content(schema = @Schema(implementation = UserUpdateRequest.class),
                             examples = @ExampleObject("""
                                     {
                                       "firstname": "Igor",
@@ -169,8 +169,8 @@ public interface AuthenticationOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "UserApiClientException",
-                              "errorMessage": "Bad credentials",
-                              "errorCode": "401 UNAUTHORIZED"
+                              "error_message": "Bad credentials",
+                              "error_code": "401 UNAUTHORIZED"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No User with this email in database",
@@ -178,8 +178,8 @@ public interface AuthenticationOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "NoSuchUserEmailException",
-                              "errorMessage": "User with email ChakcNunChuck@1gmail.com is not exist",
-                              "errorCode": "404 NOT_FOUND"
+                              "error_message": "User with email ChakcNunChuck@1gmail.com is not exist",
+                              "error_code": "404 NOT_FOUND"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -187,17 +187,17 @@ public interface AuthenticationOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                      "errorMessage": "409 CONFLICT",
+                                      "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "fieldName": "firstname",
-                                          "message": "Firstname must contain only letters of the Russian and English alphabets without spaces in any case"
+                                          "field_name": "firstname",
+                                          "error_message": "Firstname must contain only letters of the Russian and English alphabets without spaces in any case"
                                         }
                                       ]
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> updateByToken(@Valid UpdateRequest request,
+    ResponseEntity<UserResponse> updateByToken(@Valid UserUpdateRequest request,
                                                @Parameter(hidden = true) String token);
 
     @Operation(summary = "Delete User by token.", tags = "Authentication",
@@ -215,8 +215,8 @@ public interface AuthenticationOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "InsufficientAuthenticationException",
-                              "errorMessage": "Full authentication is required to access this resource",
-                              "errorCode": "401 UNAUTHORIZED"
+                              "error_message": "Full authentication is required to access this resource",
+                              "error_code": "401 UNAUTHORIZED"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No User with this email in database",
@@ -224,8 +224,8 @@ public interface AuthenticationOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "NoSuchUserEmailException",
-                              "errorMessage": "User with email ChakcNunChuck@1gmail.com is not exist",
-                              "errorCode": "404 NOT_FOUND"
+                              "error_message": "User with email ChakcNunChuck@1gmail.com is not exist",
+                              "error_code": "404 NOT_FOUND"
                             }
                             """)))
     })

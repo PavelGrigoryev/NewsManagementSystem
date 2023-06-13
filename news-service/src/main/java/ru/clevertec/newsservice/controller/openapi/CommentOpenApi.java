@@ -49,8 +49,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "NoSuchCommentException",
-                              "errorMessage": "Comment with ID 233 does not exist",
-                              "errorCode": "404 NOT_FOUND"
+                              "error_message": "Comment with ID 233 does not exist",
+                              "error_code": "404 NOT_FOUND"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -58,11 +58,11 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                      "errorMessage": "409 CONFLICT",
+                                      "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "fieldName": "findById.id",
-                                          "message": "must be greater than 0"
+                                          "field_name": "findById.id",
+                                          "error_message": "must be greater than 0"
                                         }
                                       ]
                                     }
@@ -131,8 +131,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "NoSuchNewsException",
-                              "errorMessage": "News with ID 22 does not exist",
-                              "errorCode": "404 NOT_FOUND"
+                              "error_message": "News with ID 22 does not exist",
+                              "error_code": "404 NOT_FOUND"
                             }
                             """))),
             @ApiResponse(responseCode = "406", description = "Pageable wrong sort params",
@@ -140,8 +140,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "PropertyReferenceException",
-                              "errorMessage": "No property 'usename' found for type 'Comment'; Did you mean 'username'",
-                              "errorCode": "406 NOT_ACCEPTABLE"
+                              "error_message": "No property 'usename' found for type 'Comment'; Did you mean 'username'",
+                              "error_code": "406 NOT_ACCEPTABLE"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -149,11 +149,11 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                       "errorMessage": "409 CONFLICT",
+                                       "error_code": "409 CONFLICT",
                                        "violations": [
                                          {
-                                           "fieldName": "findNewsByNewsIdWithComments.newsId",
-                                           "message": "must be greater than 0"
+                                           "field_name": "findNewsByNewsIdWithComments.newsId",
+                                           "error_message": "must be greater than 0"
                                          }
                                        ]
                                     }
@@ -218,8 +218,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "PropertyReferenceException",
-                              "errorMessage": "No property 'tex' found for type 'Comment'; Did you mean 'text'",
-                              "errorCode": "406 NOT_ACCEPTABLE"
+                              "error_message": "No property 'tex' found for type 'Comment'; Did you mean 'text'",
+                              "error_code": "406 NOT_ACCEPTABLE"
                             }
                             """)))
     })
@@ -254,8 +254,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "InsufficientAuthenticationException",
-                              "errorMessage": "Full authentication is required to access this resource",
-                              "errorCode": "401 UNAUTHORIZED"
+                              "error_message": "Full authentication is required to access this resource",
+                              "error_code": "401 UNAUTHORIZED"
                             }
                             """))),
             @ApiResponse(responseCode = "403", description = "Access denied for User with this role",
@@ -263,8 +263,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "AccessDeniedForThisRoleException",
-                              "errorMessage": "Access Denied for role: JOURNALIST",
-                              "errorCode": "403 FORBIDDEN"
+                              "error_message": "Access Denied for role: JOURNALIST",
+                              "error_code": "403 FORBIDDEN"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No News with this newsId in database",
@@ -272,8 +272,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "NoSuchNewsException",
-                              "errorMessage": "News with ID 22 does not exist",
-                              "errorCode": "404 NOT_FOUND"
+                              "error_message": "News with ID 22 does not exist",
+                              "error_code": "404 NOT_FOUND"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -281,11 +281,11 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                      "errorMessage": "409 CONFLICT",
+                                      "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "fieldName": "text",
-                                          "message": "size must be between 3 and 500"
+                                          "field_name": "text",
+                                          "error_message": "size must be between 3 and 500"
                                         }
                                       ]
                                     }
@@ -322,8 +322,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "InsufficientAuthenticationException",
-                              "errorMessage": "Full authentication is required to access this resource",
-                              "errorCode": "401 UNAUTHORIZED"
+                              "error_message": "Full authentication is required to access this resource",
+                              "error_code": "401 UNAUTHORIZED"
                             }
                             """))),
             @ApiResponse(responseCode = "403", description = "Access denied for User with this role",
@@ -331,8 +331,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "AccessDeniedForThisRoleException",
-                              "errorMessage": "Access Denied for role: JOURNALIST",
-                              "errorCode": "403 FORBIDDEN"
+                              "error_message": "Access Denied for role: JOURNALIST",
+                              "error_code": "403 FORBIDDEN"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No Comment with this id in database",
@@ -340,8 +340,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "NoSuchCommentException",
-                              "errorMessage": "There is no Comment with ID 333 to update",
-                              "errorCode": "404 NOT_FOUND"
+                              "error_message": "There is no Comment with ID 333 to update",
+                              "error_code": "404 NOT_FOUND"
                             }
                             """))),
             @ApiResponse(responseCode = "405", description = "User with this role does not have required permission",
@@ -349,8 +349,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "UserDoesNotHavePermissionException",
-                              "errorMessage": "With role SUBSCRIBER you can update or delete only your own news/comments",
-                              "errorCode": "405 METHOD_NOT_ALLOWED"
+                              "error_message": "With role SUBSCRIBER you can update or delete only your own news/comments",
+                              "error_code": "405 METHOD_NOT_ALLOWED"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -358,11 +358,11 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                      "errorMessage": "409 CONFLICT",
+                                      "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "fieldName": "text",
-                                          "message": "size must be between 3 and 500"
+                                          "field_name": "text",
+                                          "error_message": "size must be between 3 and 500"
                                         }
                                       ]
                                     }
@@ -388,8 +388,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "InsufficientAuthenticationException",
-                              "errorMessage": "Full authentication is required to access this resource",
-                              "errorCode": "401 UNAUTHORIZED"
+                              "error_message": "Full authentication is required to access this resource",
+                              "error_code": "401 UNAUTHORIZED"
                             }
                             """))),
             @ApiResponse(responseCode = "403", description = "Access denied for User with this role",
@@ -397,8 +397,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "AccessDeniedForThisRoleException",
-                              "errorMessage": "Access Denied for role: JOURNALIST",
-                              "errorCode": "403 FORBIDDEN"
+                              "error_message": "Access Denied for role: JOURNALIST",
+                              "error_code": "403 FORBIDDEN"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "Not Tag with this id to delete",
@@ -406,8 +406,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "NoSuchCommentException",
-                              "errorMessage": "There is no Comment with ID 456 to delete",
-                              "errorCode": "404 NOT_FOUND"
+                              "error_message": "There is no Comment with ID 456 to delete",
+                              "error_code": "404 NOT_FOUND"
                             }
                             """))),
             @ApiResponse(responseCode = "405", description = "User with this role does not have required permission",
@@ -415,8 +415,8 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "UserDoesNotHavePermissionException",
-                              "errorMessage": "With role SUBSCRIBER you can update or delete only your own news/comments",
-                              "errorCode": "405 METHOD_NOT_ALLOWED"
+                              "error_message": "With role SUBSCRIBER you can update or delete only your own news/comments",
+                              "error_code": "405 METHOD_NOT_ALLOWED"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -424,11 +424,11 @@ public interface CommentOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                      "errorMessage": "409 CONFLICT",
+                                      "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "fieldName": "deleteById.id",
-                                          "message": "must be greater than 0"
+                                          "field_name": "deleteById.id",
+                                          "error_message": "must be greater than 0"
                                         }
                                       ]
                                     }

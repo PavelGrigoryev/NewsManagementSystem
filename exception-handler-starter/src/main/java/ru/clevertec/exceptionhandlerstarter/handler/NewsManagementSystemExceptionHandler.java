@@ -20,11 +20,11 @@ import ru.clevertec.exceptionhandlerstarter.model.Violation;
 import java.util.List;
 
 /**
- * This NewsServiceExceptionHandler class handles exceptions and returns appropriate error responses.
+ * This NewsManagementSystemExceptionHandler class handles exceptions and returns appropriate error responses.
  */
 @Loggable
 @ControllerAdvice
-public class NewsServiceExceptionHandler {
+public class NewsManagementSystemExceptionHandler {
 
     /**
      * Handles {@link AccessDeniedForThisRoleException} and returns a 403 Forbidden response with an error message.
@@ -55,7 +55,7 @@ public class NewsServiceExceptionHandler {
      * @return A ResponseEntity containing an {@link IncorrectData} object and a 405 status code.
      */
     @ExceptionHandler(UserDoesNotHavePermissionException.class)
-    public ResponseEntity<IncorrectData> cantChangeException(UserDoesNotHavePermissionException exception) {
+    public ResponseEntity<IncorrectData> userDoesNotHavePermissionException(UserDoesNotHavePermissionException exception) {
         return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
     }
 

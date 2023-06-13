@@ -14,19 +14,19 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
 import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
-import ru.clevertec.userservice.dto.AuthenticationRequest;
+import ru.clevertec.userservice.dto.UserAuthenticationRequest;
 import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.RegisterRequest;
+import ru.clevertec.userservice.dto.UserRegisterRequest;
 import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UpdateRequest;
+import ru.clevertec.userservice.dto.UserUpdateRequest;
 import ru.clevertec.userservice.dto.UserResponse;
 
 @Tag(name = "User", description = "The User Api")
 public interface UserOpenApi {
 
     @Operation(summary = "Register, save new User and get jwt token.", tags = "User",
-            requestBody = @RequestBody(description = "RequestBody for RegisterRequest",
-                    content = @Content(schema = @Schema(implementation = RegisterRequest.class),
+            requestBody = @RequestBody(description = "RequestBody for UserRegisterRequest",
+                    content = @Content(schema = @Schema(implementation = UserRegisterRequest.class),
                             examples = @ExampleObject("""
                                     {
                                       "firstname": "Pavel",
@@ -57,8 +57,8 @@ public interface UserOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "UniqueEmailException",
-                              "errorMessage": "Email Green@mail.com is occupied! Another user is already registered by this email!",
-                              "errorCode": "406 NOT_ACCEPTABLE"
+                              "error_message": "Email Green@mail.com is occupied! Another user is already registered by this email!",
+                              "error_code": "406 NOT_ACCEPTABLE"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -66,21 +66,21 @@ public interface UserOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                      "errorMessage": "409 CONFLICT",
+                                      "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "fieldName": "role",
-                                          "message": "Acceptable roles are only: ADMIN, JOURNALIST, SUBSCRIBER"
+                                          "field_name": "role",
+                                          "error_message": "Acceptable roles are only: ADMIN, JOURNALIST, SUBSCRIBER"
                                         }
                                       ]
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> register(@Valid RegisterRequest request);
+    ResponseEntity<UserResponse> register(@Valid UserRegisterRequest request);
 
     @Operation(summary = "Authenticate User and get jwt token.", tags = "User",
-            requestBody = @RequestBody(description = "RequestBody for AuthenticationRequest",
-                    content = @Content(schema = @Schema(implementation = AuthenticationRequest.class),
+            requestBody = @RequestBody(description = "RequestBody for UserAuthenticationRequest",
+                    content = @Content(schema = @Schema(implementation = UserAuthenticationRequest.class),
                             examples = @ExampleObject("""
                                     {
                                       "email": "ChakcNunChuck@gmail.com",
@@ -108,8 +108,8 @@ public interface UserOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "BadCredentialsException",
-                              "errorMessage": "Bad credentials",
-                              "errorCode": "401 UNAUTHORIZED"
+                              "error_message": "Bad credentials",
+                              "error_code": "401 UNAUTHORIZED"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No User with this email in database",
@@ -117,8 +117,8 @@ public interface UserOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "NoSuchUserEmailException",
-                              "errorMessage": "User with email ChakcNunChuck@1gmail.com is not exist",
-                              "errorCode": "404 NOT_FOUND"
+                              "error_message": "User with email ChakcNunChuck@1gmail.com is not exist",
+                              "error_code": "404 NOT_FOUND"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -126,17 +126,17 @@ public interface UserOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                      "errorMessage": "409 CONFLICT",
+                                      "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "fieldName": "email",
-                                          "message": "must be a well-formed email address"
+                                          "field_name": "email",
+                                          "error_message": "must be a well-formed email address"
                                         }
                                       ]
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> authenticate(@Valid AuthenticationRequest request);
+    ResponseEntity<UserResponse> authenticate(@Valid UserAuthenticationRequest request);
 
     @Operation(summary = "Check validation of token for User, if valid - returns his role and email.", tags = "User",
             security = @SecurityRequirement(name = "Bearer Authentication"))
@@ -154,8 +154,8 @@ public interface UserOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "SignatureException",
-                              "errorMessage": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
-                              "errorCode": "401 UNAUTHORIZED"
+                              "error_message": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
+                              "error_code": "401 UNAUTHORIZED"
                             }
                             """)))
     })
@@ -163,8 +163,8 @@ public interface UserOpenApi {
 
     @Operation(summary = "Update User by token.", tags = "User",
             security = @SecurityRequirement(name = "Bearer Authentication"),
-            requestBody = @RequestBody(description = "RequestBody for UpdateRequest",
-                    content = @Content(schema = @Schema(implementation = UpdateRequest.class),
+            requestBody = @RequestBody(description = "RequestBody for UserUpdateRequest",
+                    content = @Content(schema = @Schema(implementation = UserUpdateRequest.class),
                             examples = @ExampleObject("""
                                     {
                                       "firstname": "Igor",
@@ -193,8 +193,8 @@ public interface UserOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                                "exception": "SignatureException",
-                               "errorMessage": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
-                               "errorCode": "401 UNAUTHORIZED"
+                               "error_message": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
+                               "error_code": "401 UNAUTHORIZED"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No User with this email in database",
@@ -202,8 +202,8 @@ public interface UserOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "NoSuchUserEmailException",
-                              "errorMessage": "User with email ChakcNunChuck@1gmail.com is not exist",
-                              "errorCode": "404 NOT_FOUND"
+                              "error_message": "User with email ChakcNunChuck@1gmail.com is not exist",
+                              "error_code": "404 NOT_FOUND"
                             }
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
@@ -211,17 +211,17 @@ public interface UserOpenApi {
                             schema = @Schema(implementation = ValidationErrorResponse.class),
                             examples = @ExampleObject("""
                                     {
-                                      "errorMessage": "409 CONFLICT",
+                                      "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "fieldName": "firstname",
-                                          "message": "Firstname must contain only letters of the Russian and English alphabets without spaces in any case"
+                                          "field_name": "firstname",
+                                          "error_message": "Firstname must contain only letters of the Russian and English alphabets without spaces in any case"
                                         }
                                       ]
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> updateByToken(@Valid UpdateRequest request, @Parameter(hidden = true) String token);
+    ResponseEntity<UserResponse> updateByToken(@Valid UserUpdateRequest request, @Parameter(hidden = true) String token);
 
     @Operation(summary = "Delete User by token.", tags = "User",
             security = @SecurityRequirement(name = "Bearer Authentication"))
@@ -238,8 +238,8 @@ public interface UserOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "InsufficientAuthenticationException",
-                              "errorMessage": "Full authentication is required to access this resource",
-                              "errorCode": "401 UNAUTHORIZED"
+                              "error_message": "Full authentication is required to access this resource",
+                              "error_code": "401 UNAUTHORIZED"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No User with this email in database",
@@ -247,8 +247,8 @@ public interface UserOpenApi {
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
                               "exception": "NoSuchUserEmailException",
-                              "errorMessage": "User with email ChakcNunChuck@1gmail.com is not exist",
-                              "errorCode": "404 NOT_FOUND"
+                              "error_message": "User with email ChakcNunChuck@1gmail.com is not exist",
+                              "error_code": "404 NOT_FOUND"
                             }
                             """)))
     })

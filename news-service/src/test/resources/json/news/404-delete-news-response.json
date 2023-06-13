@@ -1,5 +1,5 @@
 {
   "exception": "NoSuchNewsException",
-  "errorMessage": "There is no News with ID 122 to delete",
-  "errorCode": "404 NOT_FOUND"
+  "error_message": "There is no News with ID 122 to delete",
+  "error_code": "404 NOT_FOUND"
 }

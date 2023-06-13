@@ -1,15 +1,15 @@
-package ru.clevertec.newsservice.dto.user;
+package ru.clevertec.userservice.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record AuthenticationRequest(@Email
+public record UserAuthenticationRequest(@Email
                                     @NotBlank
                                     @Size(max = 64)
                                     String email,
 
-                                    @NotBlank
+                                        @NotBlank
                                     @Size(max = 64)
                                     String password) {
 }

@@ -1,9 +1,0 @@
-{
-  "errorMessage": "409 CONFLICT",
-  "violations": [
-    {
-      "fieldName": "text",
-      "message": "must not be blank"
-    }
-  ]
-}
