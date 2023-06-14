@@ -9,5 +9,6 @@ public record NewsWithCommentsResponse(Long id,
                                        LocalDateTime time,
                                        String title,
                                        String text,
+                                       String email,
                                        List<CommentResponse> comments) {
 }

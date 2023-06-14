@@ -18,10 +18,10 @@ public interface NewsService {
 
     List<NewsResponse> findAllByMatchingTextParams(NewsRequest newsRequest, Pageable pageable);
 
-    NewsResponse save(NewsRequest newsRequest);
+    NewsResponse save(NewsRequest newsRequest, String token);
 
-    NewsResponse updateById(Long id, NewsRequest newsRequest);
+    NewsResponse updateById(Long id, NewsRequest newsRequest, String token);
 
-    DeleteResponse deleteById(Long id);
+    DeleteResponse deleteById(Long id, String token);
 
 }

@@ -49,8 +49,8 @@ class NewsCacheAspectTest {
         @Test
         @DisplayName("test aspect should return expected value after finding in service")
         void testAspectShouldReturnExpectedValueAfterFindingInService() {
-            NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().withId(2L).build();
             long id = 2L;
+            NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().withId(id).build();
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -70,8 +70,8 @@ class NewsCacheAspectTest {
         @Test
         @DisplayName("test aspect should put in cache")
         void testAspectShouldPutInCache() {
-            NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().withId(2L).build();
             long id = 2L;
+            NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().withId(id).build();
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -85,11 +85,11 @@ class NewsCacheAspectTest {
 
             proxy.findById(id);
 
-            assertThat(cache.get(2L)).isEqualTo(expectedValue);
+            assertThat(cache.get(id)).isEqualTo(expectedValue);
         }
 
         @Test
-        @DisplayName("test aspect should return expected value without finding ins service")
+        @DisplayName("test aspect should return expected value without finding in service")
         void testAspectShouldReturnExpectedValueWithoutFindingInService() {
             NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().build();
             long id = 1L;
@@ -119,7 +119,7 @@ class NewsCacheAspectTest {
 
             proxy.findById(id);
 
-            assertThat(cache.get(1L)).isEqualTo(expectedValue);
+            assertThat(cache.get(id)).isEqualTo(expectedValue);
         }
 
     }
@@ -132,6 +132,7 @@ class NewsCacheAspectTest {
         void testAspectShouldReturnExpectedValue() {
             NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().build();
             NewsRequest mockedNewsRequest = NewsRequestTestBuilder.aNewsRequest().build();
+            String token = "jwt";
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -139,11 +140,11 @@ class NewsCacheAspectTest {
 
             doReturn(expectedValue)
                     .when(newsService)
-                    .save(mockedNewsRequest);
+                    .save(mockedNewsRequest, token);
 
             NewsService proxy = factory.getProxy();
 
-            NewsResponse actualValue = proxy.save(mockedNewsRequest);
+            NewsResponse actualValue = proxy.save(mockedNewsRequest, token);
 
             assertThat(actualValue).isEqualTo(expectedValue);
         }
@@ -153,6 +154,7 @@ class NewsCacheAspectTest {
         void testAspectShouldPutInCache() {
             NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().withId(2L).build();
             NewsRequest mockedNewsRequest = NewsRequestTestBuilder.aNewsRequest().build();
+            String token = "jwt";
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -160,11 +162,11 @@ class NewsCacheAspectTest {
 
             doReturn(expectedValue)
                     .when(newsService)
-                    .save(mockedNewsRequest);
+                    .save(mockedNewsRequest, token);
 
             NewsService proxy = factory.getProxy();
 
-            proxy.save(mockedNewsRequest);
+            proxy.save(mockedNewsRequest, token);
 
             assertThat(cache.get(2L)).isEqualTo(expectedValue);
         }
@@ -179,6 +181,7 @@ class NewsCacheAspectTest {
         void testAspectShouldReturnExpectedValue() {
             long id = 1L;
             DeleteResponse expectedValue = new DeleteResponse("News with ID " + id + " was successfully deleted");
+            String token = "jwt";
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -186,11 +189,11 @@ class NewsCacheAspectTest {
 
             doReturn(expectedValue)
                     .when(newsService)
-                    .deleteById(id);
+                    .deleteById(id, token);
 
             NewsService proxy = factory.getProxy();
 
-            DeleteResponse actualValue = proxy.deleteById(id);
+            DeleteResponse actualValue = proxy.deleteById(id, token);
 
             assertThat(actualValue).isEqualTo(expectedValue);
         }
@@ -199,6 +202,7 @@ class NewsCacheAspectTest {
         @DisplayName("test aspect should remove from cache")
         void testAspectShouldRemoveFromCache() {
             long id = 1L;
+            String token = "jwt";
 
             doReturn(cache)
                     .when(cacheFactory)
@@ -206,7 +210,7 @@ class NewsCacheAspectTest {
 
             NewsService proxy = factory.getProxy();
 
-            proxy.deleteById(id);
+            proxy.deleteById(id, token);
 
             assertThat(cache).hasToString("{}");
         }

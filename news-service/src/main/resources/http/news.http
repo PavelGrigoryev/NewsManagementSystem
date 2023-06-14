@@ -13,6 +13,7 @@ Accept: application/json
 ###save
 POST http://localhost:8080/news
 Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
 
 {
   "title": "Привет из Беларуси",
@@ -22,6 +23,7 @@ Content-Type: application/json
 ###update
 PUT http://localhost:8080/news/21
 Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
 
 {
   "title": "До свидания от Беларуси",
@@ -31,3 +33,4 @@ Content-Type: application/json
 ###delete
 DELETE http://localhost:8080/news/21
 Content-Type: application/json
+Authorization: Bearer {{jwt_token}}

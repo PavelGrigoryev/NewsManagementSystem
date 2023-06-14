@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/test-ddl.sql
+  - include:
+      file: db/changelog/test-dml.sql

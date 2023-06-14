@@ -1,11 +1,15 @@
 package ru.clevertec.newsservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.clevertec.exceptionhandlerstarter.exception.NoSuchCommentException;
 import ru.clevertec.newsservice.aop.annotation.GetCacheable;
 import ru.clevertec.newsservice.aop.annotation.PutCacheable;
 import ru.clevertec.newsservice.aop.annotation.RemoveCacheable;
@@ -15,12 +19,14 @@ import ru.clevertec.newsservice.dto.comment.CommentResponse;
 import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
-import ru.clevertec.exceptionhandlerstarter.exception.NoSuchCommentException;
+import ru.clevertec.newsservice.dto.user.Role;
+import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
 import ru.clevertec.newsservice.mapper.CommentMapper;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.Comment;
 import ru.clevertec.newsservice.model.News;
 import ru.clevertec.newsservice.repository.CommentRepository;
+import ru.clevertec.newsservice.service.AuthenticationService;
 import ru.clevertec.newsservice.service.CommentService;
 import ru.clevertec.newsservice.service.NewsService;
 
@@ -38,6 +44,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
     private final NewsService newsService;
     private final NewsMapper newsMapper;
+    private final AuthenticationService authenticationService;
 
     /**
      * Finds one {@link Comment} by ID.
@@ -48,6 +55,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     @GetCacheable
+    @Cacheable(value = "comment")
     public CommentResponse findById(Long id) {
         return commentRepository.findById(id)
                 .map(commentMapper::toResponse)
@@ -92,15 +100,19 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param commentWithNewsRequest the {@link CommentWithNewsRequest} which will be mapped to {@link CommentResponse}
      *                               and saved in database by repository.
+     * @param token                  jwt token.
      * @return the CommentResponse which was mapped from saved Comment entity.
      */
     @Override
     @PutCacheable
     @Transactional
-    public CommentResponse save(CommentWithNewsRequest commentWithNewsRequest) {
+    @CachePut(value = "comment", key = "#result.id()")
+    public CommentResponse save(CommentWithNewsRequest commentWithNewsRequest, String token) {
+        TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.SUBSCRIBER);
         NewsResponse newsResponse = newsService.findById(commentWithNewsRequest.newsId());
         Comment comment = commentMapper.fromWithNewsRequest(commentWithNewsRequest);
         News news = newsMapper.fromResponse(newsResponse);
+        comment.setEmail(response.email());
         comment.setNews(news);
         Comment saved = commentRepository.save(comment);
         return commentMapper.toResponse(saved);
@@ -110,18 +122,24 @@ public class CommentServiceImpl implements CommentService {
      * Updates one {@link Comment} by ID.
      *
      * @param id             the ID of the Comment.
-     * @param commentRequest the {@link CommentRequest} which will be mapped to {@link CommentResponse}.
+     * @param commentRequest the {@link CommentRequest}.
+     * @param token          jwt token.
      * @return the CommentResponse which was mapped from updated Comment entity.
      * @throws NoSuchCommentException if Comment is not exists by finding it by ID.
      */
     @Override
     @PutCacheable
     @Transactional
-    public CommentResponse updateById(Long id, CommentRequest commentRequest) {
+    @CachePut(value = "comment", key = "#result.id()")
+    public CommentResponse updateById(Long id, CommentRequest commentRequest, String token) {
+        TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.SUBSCRIBER);
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchCommentException("There is no Comment with ID " + id + " to update"));
+        authenticationService.isObjectOwnedByEmailAndRole(
+                response.role(), Role.SUBSCRIBER, response.email(), comment.getEmail());
         comment.setText(commentRequest.text());
         comment.setUsername(commentRequest.username());
+        comment.setEmail(response.email());
         Comment saved = commentRepository.saveAndFlush(comment);
         return commentMapper.toResponse(saved);
     }
@@ -129,16 +147,21 @@ public class CommentServiceImpl implements CommentService {
     /**
      * Deletes one {@link Comment} by ID.
      *
-     * @param id the ID of the Comment.
+     * @param id    the ID of the Comment.
+     * @param token jwt token.
      * @return the {@link DeleteResponse} with message that Comment was deleted.
      * @throws NoSuchCommentException if Comment is not exists by finding it by ID.
      */
     @Override
     @Transactional
     @RemoveCacheable
-    public DeleteResponse deleteById(Long id) {
+    @CacheEvict(value = "comment", key = "#id")
+    public DeleteResponse deleteById(Long id, String token) {
+        TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.SUBSCRIBER);
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchCommentException("There is no Comment with ID " + id + " to delete"));
+        authenticationService.isObjectOwnedByEmailAndRole(
+                response.role(), Role.SUBSCRIBER, response.email(), comment.getEmail());
         commentRepository.delete(comment);
         return new DeleteResponse("Comment with ID " + id + " was successfully deleted");
     }

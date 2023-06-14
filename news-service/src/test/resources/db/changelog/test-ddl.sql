@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS news
     id    BIGSERIAL PRIMARY KEY,
     time  TIMESTAMP    NOT NULL,
     title VARCHAR(255) NOT NULL,
-    text  VARCHAR      NOT NULL
+    text  VARCHAR      NOT NULL,
+    email VARCHAR(64)  NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS comments
@@ -15,5 +16,6 @@ CREATE TABLE IF NOT EXISTS comments
     time     TIMESTAMP   NOT NULL,
     text     VARCHAR     NOT NULL,
     username VARCHAR(64) NOT NULL,
+    email    VARCHAR(64) NOT NULL,
     news_id  BIGINT REFERENCES news (id)
 );

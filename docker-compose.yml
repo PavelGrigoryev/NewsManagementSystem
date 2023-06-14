@@ -1,16 +1,38 @@
 version: '3.9'
 services:
+
   postgres:
     container_name: postgres
     image: "postgres:14.5"
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_PASSWORD=enter your password here
-      - POSTGRES_USER=enter your username here
-      - POSTGRES_DB=news
+      - POSTGRES_PASSWORD=pavel
+      - POSTGRES_USER=pavel
+      - POSTGRES_MULTIPLE_DATABASES=news,users
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
     networks:
       - backend
+
+  redis:
+    container_name: redis
+    image: "redis:7.2-rc"
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+  spring-cloud-config:
+    container_name: spring-cloud-config
+    image: spring-cloud-config
+    build:
+      dockerfile: spring-cloud-config/Dockerfile
+    ports:
+      - "8888:8888"
+    networks:
+      - backend
+
   news-service:
     container_name: news-service
     image: news-service
@@ -20,10 +42,29 @@ services:
       - "8080:8080"
     depends_on:
       - postgres
+      - spring-cloud-config
+      - redis
+    links:
+      - postgres
+      - redis
+    networks:
+      - backend
+
+  user-service:
+    container_name: user-service
+    image: user-service
+    build:
+      dockerfile: user-service/Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+      - spring-cloud-config
     links:
       - postgres
     networks:
       - backend
+
 networks:
   backend:
     driver: bridge

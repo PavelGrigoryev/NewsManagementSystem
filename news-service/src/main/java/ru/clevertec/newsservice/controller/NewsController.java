@@ -2,6 +2,7 @@ package ru.clevertec.newsservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.loggingstarter.annotation.Loggable;
@@ -41,7 +43,6 @@ public class NewsController implements NewsOpenApi {
         return ResponseEntity.ok(newsService.findAll(pageable));
     }
 
-
     @Override
     @GetMapping("/params")
     public ResponseEntity<List<NewsResponse>> findAllByMatchingTextParams(NewsRequest newsRequest,
@@ -51,21 +52,27 @@ public class NewsController implements NewsOpenApi {
 
     @Override
     @PostMapping
-    public ResponseEntity<NewsResponse> save(@RequestBody NewsRequest newsRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(newsService.save(newsRequest));
+    public ResponseEntity<NewsResponse> save(@RequestBody NewsRequest newsRequest,
+                                             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
+                                             String token) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(newsService.save(newsRequest, token));
     }
 
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<NewsResponse> updateById(@PathVariable Long id,
-                                                   @RequestBody NewsRequest newsRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(newsService.updateById(id, newsRequest));
+                                                   @RequestBody NewsRequest newsRequest,
+                                                   @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
+                                                   String token) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(newsService.updateById(id, newsRequest, token));
     }
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<DeleteResponse> deleteById(@PathVariable Long id) {
-        return ResponseEntity.ok(newsService.deleteById(id));
+    public ResponseEntity<DeleteResponse> deleteById(@PathVariable Long id,
+                                                     @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
+                                                     String token) {
+        return ResponseEntity.ok(newsService.deleteById(id, token));
     }
 
 }

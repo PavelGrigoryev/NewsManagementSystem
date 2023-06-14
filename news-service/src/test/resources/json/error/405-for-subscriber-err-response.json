@@ -1,0 +1,5 @@
+{
+  "exception": "UserDoesNotHavePermissionException",
+  "error_message": "With role SUBSCRIBER you can update or delete only your own news/comments",
+  "error_code": "405 METHOD_NOT_ALLOWED"
+}

@@ -1,0 +1,5 @@
+{
+  "exception": "NoSuchUserEmailException",
+  "error_message": "There is no User with email Bad@email.com to update",
+  "error_code": "404 NOT_FOUND"
+}

@@ -18,18 +18,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import ru.clevertec.exceptionhandlerstarter.exception.NoSuchCommentException;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
 import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
-import ru.clevertec.exceptionhandlerstarter.exception.NoSuchCommentException;
+import ru.clevertec.newsservice.dto.user.Role;
+import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
 import ru.clevertec.newsservice.mapper.CommentMapper;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.Comment;
 import ru.clevertec.newsservice.model.News;
 import ru.clevertec.newsservice.repository.CommentRepository;
+import ru.clevertec.newsservice.service.AuthenticationService;
 import ru.clevertec.newsservice.service.NewsService;
 import ru.clevertec.newsservice.util.testbuilder.ExampleMatcherTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.comment.CommentRequestTestBuilder;
@@ -39,6 +42,7 @@ import ru.clevertec.newsservice.util.testbuilder.comment.CommentWithNewsRequestT
 import ru.clevertec.newsservice.util.testbuilder.news.NewsResponseTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.news.NewsTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.news.NewsWithCommentsResponseTestBuilder;
+import ru.clevertec.newsservice.util.testbuilder.user.TokenValidationResponseTestBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +63,8 @@ class CommentServiceImplTest {
     private CommentServiceImpl commentService;
     @Mock
     private CommentRepository commentRepository;
+    @Mock
+    private AuthenticationService authenticationService;
     @Mock
     private CommentMapper commentMapper;
     @Mock
@@ -331,6 +337,12 @@ class CommentServiceImplTest {
             CommentWithNewsRequest mockedRequest = CommentWithNewsRequestTestBuilder.aCommentWithNewsRequest().build();
             NewsResponse mockedNewsResponse = NewsResponseTestBuilder.aNewsResponse().build();
             News mockedNews = NewsTestBuilder.aNews().build();
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.SUBSCRIBER);
 
             doReturn(mockedNewsResponse)
                     .when(newsService)
@@ -352,7 +364,7 @@ class CommentServiceImplTest {
                     .when(commentMapper)
                     .toResponse(expectedValue);
 
-            commentService.save(mockedRequest);
+            commentService.save(mockedRequest, token);
             verify(commentRepository).save(captor.capture());
 
             Comment captorValue = captor.getValue();
@@ -371,6 +383,12 @@ class CommentServiceImplTest {
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().build();
             CommentRequest mockedCommentRequest = CommentRequestTestBuilder.aCommentRequest().build();
             long id = mockedComment.getId();
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.SUBSCRIBER);
 
             doReturn(Optional.of(mockedComment))
                     .when(commentRepository)
@@ -384,7 +402,7 @@ class CommentServiceImplTest {
                     .when(commentMapper)
                     .toResponse(mockedComment);
 
-            CommentResponse actualValue = commentService.updateById(id, mockedCommentRequest);
+            CommentResponse actualValue = commentService.updateById(id, mockedCommentRequest, token);
 
             assertThat(actualValue).isEqualTo(expectedValue);
         }
@@ -394,12 +412,18 @@ class CommentServiceImplTest {
         void testShouldThrowNoSuchCommentException() {
             CommentRequest mockedCommentRequest = CommentRequestTestBuilder.aCommentRequest().build();
             long id = 2L;
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.SUBSCRIBER);
 
             doThrow(new NoSuchCommentException(""))
                     .when(commentRepository)
                     .findById(id);
 
-            assertThrows(NoSuchCommentException.class, () -> commentService.updateById(id, mockedCommentRequest));
+            assertThrows(NoSuchCommentException.class, () -> commentService.updateById(id, mockedCommentRequest, token));
         }
 
         @Test
@@ -408,9 +432,15 @@ class CommentServiceImplTest {
             CommentRequest mockedCommentRequest = CommentRequestTestBuilder.aCommentRequest().build();
             long id = 1L;
             String expectedMessage = "There is no Comment with ID " + id + " to update";
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.SUBSCRIBER);
 
             Exception exception = assertThrows(NoSuchCommentException.class,
-                    () -> commentService.updateById(id, mockedCommentRequest));
+                    () -> commentService.updateById(id, mockedCommentRequest, token));
             String actualMessage = exception.getMessage();
 
             assertThat(actualMessage).isEqualTo(expectedMessage);
@@ -427,6 +457,12 @@ class CommentServiceImplTest {
             Comment mockedComment = CommentTestBuilder.aComment().build();
             long id = mockedComment.getId();
             DeleteResponse expectedValue = new DeleteResponse("Comment with ID " + id + " was successfully deleted");
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.SUBSCRIBER);
 
             doReturn(Optional.of(mockedComment))
                     .when(commentRepository)
@@ -436,7 +472,7 @@ class CommentServiceImplTest {
                     .when(commentRepository)
                     .delete(mockedComment);
 
-            DeleteResponse actualValue = commentService.deleteById(id);
+            DeleteResponse actualValue = commentService.deleteById(id, token);
 
             assertThat(actualValue).isEqualTo(expectedValue);
         }
@@ -446,6 +482,12 @@ class CommentServiceImplTest {
         void testShouldInvokeOneTime() {
             Comment mockedComment = CommentTestBuilder.aComment().build();
             long id = mockedComment.getId();
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.SUBSCRIBER);
 
             doReturn(Optional.of(mockedComment))
                     .when(commentRepository)
@@ -455,7 +497,7 @@ class CommentServiceImplTest {
                     .when(commentRepository)
                     .delete(mockedComment);
 
-            commentService.deleteById(id);
+            commentService.deleteById(id, token);
 
             verify(commentRepository, times(1))
                     .delete(mockedComment);
@@ -465,12 +507,18 @@ class CommentServiceImplTest {
         @DisplayName("test should throw NoSuchCommentException")
         void testShouldThrowNoSuchCommentException() {
             long id = 2L;
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.SUBSCRIBER);
 
             doThrow(new NoSuchCommentException(""))
                     .when(commentRepository)
                     .findById(id);
 
-            assertThrows(NoSuchCommentException.class, () -> commentService.deleteById(id));
+            assertThrows(NoSuchCommentException.class, () -> commentService.deleteById(id, token));
         }
 
         @Test
@@ -478,8 +526,14 @@ class CommentServiceImplTest {
         void testShouldThrowNoSuchCommentExceptionWithExpectedMessage() {
             long id = 1L;
             String expectedMessage = "There is no Comment with ID " + id + " to delete";
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
 
-            Exception exception = assertThrows(NoSuchCommentException.class, () -> commentService.deleteById(id));
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.SUBSCRIBER);
+
+            Exception exception = assertThrows(NoSuchCommentException.class, () -> commentService.deleteById(id, token));
             String actualMessage = exception.getMessage();
 
             assertThat(actualMessage).isEqualTo(expectedMessage);

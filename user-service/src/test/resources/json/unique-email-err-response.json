@@ -1,0 +1,5 @@
+{
+  "exception": "UniqueEmailException",
+  "error_message": "Email BruceLee@shazam.com is occupied! Another user is already registered by this email!",
+  "error_code": "406 NOT_ACCEPTABLE"
+}

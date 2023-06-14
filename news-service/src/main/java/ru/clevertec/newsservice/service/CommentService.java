@@ -20,10 +20,10 @@ public interface CommentService {
 
     List<CommentResponse> findAllByMatchingTextParams(CommentRequest commentRequest, Pageable pageable);
 
-    CommentResponse save(CommentWithNewsRequest commentWithNewsRequest);
+    CommentResponse save(CommentWithNewsRequest commentWithNewsRequest, String token);
 
-    CommentResponse updateById(Long id, CommentRequest commentRequest);
+    CommentResponse updateById(Long id, CommentRequest commentRequest, String token);
 
-    DeleteResponse deleteById(Long id);
+    DeleteResponse deleteById(Long id, String token);
 
 }

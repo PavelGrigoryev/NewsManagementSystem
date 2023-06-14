@@ -1,0 +1,9 @@
+{
+  "error_code": "409 CONFLICT",
+  "violations": [
+    {
+      "field_name": "role",
+      "error_message": "Acceptable roles are only: ADMIN, JOURNALIST, SUBSCRIBER"
+    }
+  ]
+}

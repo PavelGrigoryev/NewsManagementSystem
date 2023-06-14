@@ -7,6 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import ru.clevertec.exceptionhandlerstarter.exception.AccessDeniedForThisRoleException;
+import ru.clevertec.exceptionhandlerstarter.exception.UserDoesNotHavePermissionException;
+import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
+import ru.clevertec.exceptionhandlerstarter.exception.UserApiClientException;
 import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.exceptionhandlerstarter.exception.NotFoundException;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
@@ -16,11 +20,22 @@ import ru.clevertec.exceptionhandlerstarter.model.Violation;
 import java.util.List;
 
 /**
- * This NewsServiceExceptionHandler class handles exceptions and returns appropriate error responses.
+ * This NewsManagementSystemExceptionHandler class handles exceptions and returns appropriate error responses.
  */
 @Loggable
 @ControllerAdvice
-public class NewsServiceExceptionHandler {
+public class NewsManagementSystemExceptionHandler {
+
+    /**
+     * Handles {@link AccessDeniedForThisRoleException} and returns a 403 Forbidden response with an error message.
+     *
+     * @param exception The AccessDeniedForThisRoleException to handle.
+     * @return A ResponseEntity containing an {@link IncorrectData} object and a 403 status code.
+     */
+    @ExceptionHandler(AccessDeniedForThisRoleException.class)
+    public ResponseEntity<IncorrectData> accessDeniedForThisRoleException(AccessDeniedForThisRoleException exception) {
+        return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.FORBIDDEN);
+    }
 
     /**
      * Handles {@link NotFoundException} and returns a 404 Not Found response with an error message.
@@ -34,6 +49,17 @@ public class NewsServiceExceptionHandler {
     }
 
     /**
+     * Handles {@link UserDoesNotHavePermissionException} and returns a 405 Method Not Allowed response with an error message.
+     *
+     * @param exception The UserDoesNotHavePermissionException to handle.
+     * @return A ResponseEntity containing an {@link IncorrectData} object and a 405 status code.
+     */
+    @ExceptionHandler(UserDoesNotHavePermissionException.class)
+    public ResponseEntity<IncorrectData> userDoesNotHavePermissionException(UserDoesNotHavePermissionException exception) {
+        return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    /**
      * Handles {@link PropertyReferenceException} and returns a 406 Not Acceptable response with an error message.
      *
      * @param exception The PropertyReferenceException to handle.
@@ -42,6 +68,29 @@ public class NewsServiceExceptionHandler {
     @ExceptionHandler(PropertyReferenceException.class)
     public ResponseEntity<IncorrectData> propertyReferenceException(PropertyReferenceException exception) {
         return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    /**
+     * Handles {@link UniqueEmailException} and returns a 406 Not Acceptable response with an error message.
+     *
+     * @param exception The UniqueEmailException to handle.
+     * @return A ResponseEntity containing an {@link IncorrectData} object and a 406 status code.
+     */
+    @ExceptionHandler(UniqueEmailException.class)
+    public ResponseEntity<IncorrectData> uniqueEmailException(UniqueEmailException exception) {
+        return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    /**
+     * Handles {@link UserApiClientException} and returns the status code depending on the status of the UserApi
+     * with an error message.
+     *
+     * @param exception The UserApiClientException to handle.
+     * @return A ResponseEntity containing an {@link IncorrectData} object and UserApi status code.
+     */
+    @ExceptionHandler(UserApiClientException.class)
+    public ResponseEntity<IncorrectData> userApiClientException(UserApiClientException exception) {
+        return getResponse(exception.getExceptionName(), exception.getMessage(), HttpStatus.valueOf(exception.getErrorCode()));
     }
 
     /**

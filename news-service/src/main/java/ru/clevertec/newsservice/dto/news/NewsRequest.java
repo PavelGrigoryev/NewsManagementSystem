@@ -1,10 +1,10 @@
 package ru.clevertec.newsservice.dto.news;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-public record NewsRequest(@NotBlank
+public record NewsRequest(@Size(min = 3, max = 255)
                           String title,
 
-                          @NotBlank
+                          @Size(min = 3, max = 2000)
                           String text) {
 }

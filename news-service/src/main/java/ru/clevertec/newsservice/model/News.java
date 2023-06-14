@@ -39,6 +39,7 @@ public class News {
     private LocalDateTime time;
     private String title;
     private String text;
+    private String email;
 
     @OneToMany(mappedBy = "news", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @ToString.Exclude

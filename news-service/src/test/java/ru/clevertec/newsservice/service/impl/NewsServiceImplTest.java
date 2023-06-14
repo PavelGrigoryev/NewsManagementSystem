@@ -18,17 +18,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import ru.clevertec.exceptionhandlerstarter.exception.NoSuchNewsException;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
-import ru.clevertec.exceptionhandlerstarter.exception.NoSuchNewsException;
+import ru.clevertec.newsservice.dto.user.Role;
+import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.News;
 import ru.clevertec.newsservice.repository.NewsRepository;
+import ru.clevertec.newsservice.service.AuthenticationService;
 import ru.clevertec.newsservice.util.testbuilder.ExampleMatcherTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.news.NewsRequestTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.news.NewsResponseTestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.news.NewsTestBuilder;
+import ru.clevertec.newsservice.util.testbuilder.user.TokenValidationResponseTestBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +53,8 @@ class NewsServiceImplTest {
     private NewsServiceImpl newsService;
     @Mock
     private NewsRepository newsRepository;
+    @Mock
+    private AuthenticationService authenticationService;
     @Mock
     private NewsMapper newsMapper;
     @Captor
@@ -262,6 +268,12 @@ class NewsServiceImplTest {
                     .withText(expectedValue.getText())
                     .build();
             NewsRequest mockedNewsRequest = NewsRequestTestBuilder.aNewsRequest().build();
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.JOURNALIST);
 
             doReturn(expectedValue)
                     .when(newsMapper)
@@ -275,7 +287,7 @@ class NewsServiceImplTest {
                     .when(newsMapper)
                     .toResponse(expectedValue);
 
-            newsService.save(mockedNewsRequest);
+            newsService.save(mockedNewsRequest, token);
             verify(newsRepository).save(captor.capture());
 
             News captorValue = captor.getValue();
@@ -294,6 +306,12 @@ class NewsServiceImplTest {
             NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().build();
             NewsRequest mockedNewsRequest = NewsRequestTestBuilder.aNewsRequest().build();
             long id = mockedNews.getId();
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.JOURNALIST);
 
             doReturn(Optional.of(mockedNews))
                     .when(newsRepository)
@@ -307,7 +325,7 @@ class NewsServiceImplTest {
                     .when(newsMapper)
                     .toResponse(mockedNews);
 
-            NewsResponse actualValue = newsService.updateById(id, mockedNewsRequest);
+            NewsResponse actualValue = newsService.updateById(id, mockedNewsRequest, token);
 
             assertThat(actualValue).isEqualTo(expectedValue);
         }
@@ -317,12 +335,18 @@ class NewsServiceImplTest {
         void testShouldThrowNoSuchNewsException() {
             NewsRequest mockedNewsRequest = NewsRequestTestBuilder.aNewsRequest().build();
             long id = 2L;
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.JOURNALIST);
 
             doThrow(new NoSuchNewsException(""))
                     .when(newsRepository)
                     .findById(id);
 
-            assertThrows(NoSuchNewsException.class, () -> newsService.updateById(id, mockedNewsRequest));
+            assertThrows(NoSuchNewsException.class, () -> newsService.updateById(id, mockedNewsRequest, token));
         }
 
         @Test
@@ -331,9 +355,15 @@ class NewsServiceImplTest {
             NewsRequest mockedNewsRequest = NewsRequestTestBuilder.aNewsRequest().build();
             long id = 1L;
             String expectedMessage = "There is no News with ID " + id + " to update";
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.JOURNALIST);
 
             Exception exception = assertThrows(NoSuchNewsException.class,
-                    () -> newsService.updateById(id, mockedNewsRequest));
+                    () -> newsService.updateById(id, mockedNewsRequest, token));
             String actualMessage = exception.getMessage();
 
             assertThat(actualMessage).isEqualTo(expectedMessage);
@@ -350,6 +380,12 @@ class NewsServiceImplTest {
             News mockedNews = NewsTestBuilder.aNews().build();
             long id = mockedNews.getId();
             DeleteResponse expectedValue = new DeleteResponse("News with ID " + id + " was successfully deleted");
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.JOURNALIST);
 
             doReturn(Optional.of(mockedNews))
                     .when(newsRepository)
@@ -359,7 +395,7 @@ class NewsServiceImplTest {
                     .when(newsRepository)
                     .delete(mockedNews);
 
-            DeleteResponse actualValue = newsService.deleteById(id);
+            DeleteResponse actualValue = newsService.deleteById(id, token);
 
             assertThat(actualValue).isEqualTo(expectedValue);
         }
@@ -369,6 +405,12 @@ class NewsServiceImplTest {
         void testShouldInvokeOneTime() {
             News mockedNews = NewsTestBuilder.aNews().build();
             long id = mockedNews.getId();
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.JOURNALIST);
 
             doReturn(Optional.of(mockedNews))
                     .when(newsRepository)
@@ -378,7 +420,7 @@ class NewsServiceImplTest {
                     .when(newsRepository)
                     .delete(mockedNews);
 
-            newsService.deleteById(id);
+            newsService.deleteById(id, token);
 
             verify(newsRepository, times(1))
                     .delete(mockedNews);
@@ -388,12 +430,18 @@ class NewsServiceImplTest {
         @DisplayName("test should throw NoSuchNewsException")
         void testShouldThrowNoSuchNewsException() {
             long id = 2L;
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
+
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.JOURNALIST);
 
             doThrow(new NoSuchNewsException(""))
                     .when(newsRepository)
                     .findById(id);
 
-            assertThrows(NoSuchNewsException.class, () -> newsService.deleteById(id));
+            assertThrows(NoSuchNewsException.class, () -> newsService.deleteById(id, token));
         }
 
         @Test
@@ -401,8 +449,14 @@ class NewsServiceImplTest {
         void testShouldThrowNoSuchNewsExceptionWithExpectedMessage() {
             long id = 1L;
             String expectedMessage = "There is no News with ID " + id + " to delete";
+            TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
+            String token = "jwt";
 
-            Exception exception = assertThrows(NoSuchNewsException.class, () -> newsService.deleteById(id));
+            doReturn(response)
+                    .when(authenticationService)
+                    .checkTokenValidationForRole(token, Role.JOURNALIST);
+
+            Exception exception = assertThrows(NoSuchNewsException.class, () -> newsService.deleteById(id, token));
             String actualMessage = exception.getMessage();
 
             assertThat(actualMessage).isEqualTo(expectedMessage);
