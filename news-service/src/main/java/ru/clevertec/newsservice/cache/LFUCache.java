@@ -77,10 +77,13 @@ public class LFUCache<K, V> implements Cache<K, V> {
             return null;
         }
 
-        if (cache.containsKey(key)) {
-            V oldValue = cache.get(key);
+        V oldValue = cache.computeIfPresent(key, (k, v) -> {
             cache.put(key, value);
             get(key);
+            return v;
+        });
+
+        if (oldValue != null) {
             return oldValue;
         }
 
