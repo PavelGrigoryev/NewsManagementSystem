@@ -14,9 +14,9 @@ import ru.clevertec.newsservice.aop.annotation.GetCacheable;
 import ru.clevertec.newsservice.aop.annotation.PutCacheable;
 import ru.clevertec.newsservice.aop.annotation.RemoveCacheable;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.comment.CommentRequest;
+import ru.clevertec.newsservice.dto.proto.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.dto.user.Role;
@@ -76,17 +76,17 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.toWithCommentsResponse(newsResponse, comments);
     }
 
-
     /**
      * Finds all {@link Comment} by matching it through {@link ExampleMatcher} with pagination.
      *
-     * @param commentRequest the {@link CommentRequest} which will be mapped to {@link CommentResponse}.
-     * @param pageable       {@link Pageable} Comments will be sorted by its parameters and divided into pages.
+     * @param text     the title to match against Comment.
+     * @param username the text to match against Comment.
+     * @param pageable {@link Pageable} Comments will be sorted by its parameters and divided into pages.
      * @return sorted by pageable, filtered by ExampleMatcher and mapped from entity to dto list of all CommentResponse.
      */
     @Override
-    public List<CommentResponse> findAllByMatchingTextParams(CommentRequest commentRequest, Pageable pageable) {
-        Comment comment = commentMapper.fromRequest(commentRequest);
+    public List<CommentResponse> findAllByMatchingTextParams(String text, String username, Pageable pageable) {
+        Comment comment = commentMapper.fromParams(text, username);
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
                 .withIgnoreNullValues()
                 .withIgnoreCase()
@@ -109,7 +109,7 @@ public class CommentServiceImpl implements CommentService {
     @CachePut(value = "comment", key = "#result.id()")
     public CommentResponse save(CommentWithNewsRequest commentWithNewsRequest, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.SUBSCRIBER);
-        NewsResponse newsResponse = newsService.findById(commentWithNewsRequest.newsId());
+        NewsResponse newsResponse = newsService.findById(commentWithNewsRequest.getNewsId());
         Comment comment = commentMapper.fromWithNewsRequest(commentWithNewsRequest);
         News news = newsMapper.fromResponse(newsResponse);
         comment.setEmail(response.email());
@@ -137,8 +137,8 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new NoSuchCommentException("There is no Comment with ID " + id + " to update"));
         authenticationService.isObjectOwnedByEmailAndRole(
                 response.role(), Role.SUBSCRIBER, response.email(), comment.getEmail());
-        comment.setText(commentRequest.text());
-        comment.setUsername(commentRequest.username());
+        comment.setText(commentRequest.getText());
+        comment.setUsername(commentRequest.getUsername());
         comment.setEmail(response.email());
         Comment saved = commentRepository.saveAndFlush(comment);
         return commentMapper.toResponse(saved);

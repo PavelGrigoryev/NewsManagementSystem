@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "validate/validate.proto";
+
+option java_package = "ru.clevertec.newsservice.dto.proto";
+option java_multiple_files = true;
+
+message CommentRequest {
+  string text = 1 [(validate.rules).string = {min_len: 3, max_len: 500}];
+  string username = 2 [(validate.rules).string = {
+    pattern: "^[a-zA-Zа-яА-ЯёЁ0-9@_-]+$",
+    min_len: 2,
+    max_len: 30,
+  }];
+}
+
+message CommentWithNewsRequest {
+  string text = 1 [(validate.rules).string = {min_len: 3, max_len: 500}];
+  string username = 2 [(validate.rules).string = {
+    pattern: "^[a-zA-Zа-яА-ЯёЁ0-9@_-]+$",
+    min_len: 2,
+    max_len: 30,
+  }];
+  int64 news_id = 3 [(validate.rules).int64.gt = 0];
+}

@@ -7,7 +7,7 @@ GET http://localhost:8080/news?page=1&size=5
 Accept: application/json
 
 ###findAllByMatchingTextParams
-GET http://localhost:8080/news/params?text=в России&title=в россии&page=0&size=2&sort=id,desc
+GET http://localhost:8080/news/params?title=в России&text=в россии&page=0&size=2&sort=id,desc
 Accept: application/json
 
 ###save

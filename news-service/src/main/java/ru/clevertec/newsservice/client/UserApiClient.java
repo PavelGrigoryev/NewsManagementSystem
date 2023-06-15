@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.user.UserAuthenticationRequest;
-import ru.clevertec.newsservice.dto.user.UserRegisterRequest;
+import ru.clevertec.newsservice.dto.proto.UserAuthenticationRequest;
+import ru.clevertec.newsservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.newsservice.dto.proto.UserUpdateRequest;
 import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
-import ru.clevertec.newsservice.dto.user.UserUpdateRequest;
 import ru.clevertec.newsservice.dto.user.UserResponse;
 
 @FeignClient(name = "UserApiClient", url = "${base.url.users}")

@@ -10,16 +10,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
 import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
-import ru.clevertec.userservice.dto.UserAuthenticationRequest;
 import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.UserRegisterRequest;
 import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UserUpdateRequest;
 import ru.clevertec.userservice.dto.UserResponse;
+import ru.clevertec.userservice.dto.proto.UserAuthenticationRequest;
+import ru.clevertec.userservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.userservice.dto.proto.UserUpdateRequest;
 
 @Tag(name = "User", description = "The User Api")
 public interface UserOpenApi {
@@ -76,7 +75,7 @@ public interface UserOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> register(@Valid UserRegisterRequest request);
+    ResponseEntity<UserResponse> register(UserRegisterRequest request);
 
     @Operation(summary = "Authenticate User and get jwt token.", tags = "User",
             requestBody = @RequestBody(description = "RequestBody for UserAuthenticationRequest",
@@ -136,7 +135,7 @@ public interface UserOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> authenticate(@Valid UserAuthenticationRequest request);
+    ResponseEntity<UserResponse> authenticate(UserAuthenticationRequest request);
 
     @Operation(summary = "Check validation of token for User, if valid - returns his role and email.", tags = "User",
             security = @SecurityRequirement(name = "Bearer Authentication"))
@@ -221,7 +220,7 @@ public interface UserOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> updateByToken(@Valid UserUpdateRequest request, @Parameter(hidden = true) String token);
+    ResponseEntity<UserResponse> updateByToken(UserUpdateRequest request, @Parameter(hidden = true) String token);
 
     @Operation(summary = "Delete User by token.", tags = "User",
             security = @SecurityRequirement(name = "Bearer Authentication"))

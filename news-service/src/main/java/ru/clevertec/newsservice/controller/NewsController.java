@@ -13,13 +13,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.newsservice.controller.openapi.NewsOpenApi;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.NewsRequest;
 import ru.clevertec.newsservice.service.NewsService;
+import ru.clevertec.newsservice.util.ProtobufValidator;
 
 import java.util.List;
 
@@ -45,9 +47,10 @@ public class NewsController implements NewsOpenApi {
 
     @Override
     @GetMapping("/params")
-    public ResponseEntity<List<NewsResponse>> findAllByMatchingTextParams(NewsRequest newsRequest,
+    public ResponseEntity<List<NewsResponse>> findAllByMatchingTextParams(@RequestParam(required = false) String title,
+                                                                          @RequestParam(required = false) String text,
                                                                           Pageable pageable) {
-        return ResponseEntity.ok(newsService.findAllByMatchingTextParams(newsRequest, pageable));
+        return ResponseEntity.ok(newsService.findAllByMatchingTextParams(title, text, pageable));
     }
 
     @Override
@@ -55,6 +58,7 @@ public class NewsController implements NewsOpenApi {
     public ResponseEntity<NewsResponse> save(@RequestBody NewsRequest newsRequest,
                                              @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
                                              String token) {
+        ProtobufValidator.validateProto(newsRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(newsService.save(newsRequest, token));
     }
 
@@ -64,6 +68,7 @@ public class NewsController implements NewsOpenApi {
                                                    @RequestBody NewsRequest newsRequest,
                                                    @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
                                                    String token) {
+        ProtobufValidator.validateProto(newsRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(newsService.updateById(id, newsRequest, token));
     }
 

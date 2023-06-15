@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -19,8 +18,8 @@ import org.springframework.validation.annotation.Validated;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
 import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.NewsRequest;
 
 import java.util.List;
 
@@ -130,8 +129,8 @@ public interface NewsOpenApi {
 
     @Operation(summary = "Find all News by matching text and title params with pagination.",
             tags = "News", parameters = {
-            @Parameter(name = "text", description = "Enter your text here", example = "в России"),
             @Parameter(name = "title", description = "Enter your title here", example = "в россии"),
+            @Parameter(name = "text", description = "Enter your text here", example = "в России"),
             @Parameter(name = "page", description = "Enter your page number here", example = "0"),
             @Parameter(name = "size", description = "Enter your page size here", example = "2"),
             @Parameter(name = "sort", description = "Enter your sort by(id, time, title or text) here",
@@ -168,7 +167,8 @@ public interface NewsOpenApi {
                             }
                             """)))
     })
-    ResponseEntity<List<NewsResponse>> findAllByMatchingTextParams(@ParameterObject NewsRequest newsRequest,
+    ResponseEntity<List<NewsResponse>> findAllByMatchingTextParams(String title,
+                                                                   String text,
                                                                    @ParameterObject Pageable pageable);
 
     @Operation(summary = "Save new News.", tags = "News",
@@ -225,7 +225,7 @@ public interface NewsOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<NewsResponse> save(@Valid NewsRequest newsRequest,
+    ResponseEntity<NewsResponse> save(NewsRequest newsRequest,
                                       @Parameter(hidden = true) String token);
 
     @Operation(summary = "Update News by id.", tags = "News",
@@ -303,7 +303,7 @@ public interface NewsOpenApi {
                                     """)))
     })
     ResponseEntity<NewsResponse> updateById(@Positive Long id,
-                                            @Valid NewsRequest newsRequest,
+                                            NewsRequest newsRequest,
                                             @Parameter(hidden = true) String token);
 
     @Operation(summary = "Delete News by id with related Comments.", tags = "News",

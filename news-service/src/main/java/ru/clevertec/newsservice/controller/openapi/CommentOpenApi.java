@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +18,10 @@ import org.springframework.validation.annotation.Validated;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
 import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
+import ru.clevertec.newsservice.dto.proto.CommentRequest;
+import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
 
 import java.util.List;
 
@@ -164,8 +163,8 @@ public interface CommentOpenApi {
 
     @Operation(summary = "Find all Comments by matching text and username params with pagination.",
             tags = "Comment", parameters = {
-            @Parameter(name = "username", description = "Enter your username here", example = "Анна"),
             @Parameter(name = "text", description = "Enter your text here", example = "Какая"),
+            @Parameter(name = "username", description = "Enter your username here", example = "Анна"),
             @Parameter(name = "page", description = "Enter your page number here", example = "0"),
             @Parameter(name = "size", description = "Enter your page size here", example = "10"),
             @Parameter(name = "sort", description = "Enter your sort by(id, time, text or username) here",
@@ -223,7 +222,8 @@ public interface CommentOpenApi {
                             }
                             """)))
     })
-    ResponseEntity<List<CommentResponse>> findAllByMatchingTextParams(@ParameterObject CommentRequest commentRequest,
+    ResponseEntity<List<CommentResponse>> findAllByMatchingTextParams(String text,
+                                                                      String username,
                                                                       @ParameterObject Pageable pageable);
 
     @Operation(summary = "Save new Comment and related it with News by newsId.", tags = "Comment",
@@ -291,7 +291,7 @@ public interface CommentOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<CommentResponse> save(@Valid CommentWithNewsRequest commentWithNewsRequest,
+    ResponseEntity<CommentResponse> save(CommentWithNewsRequest commentWithNewsRequest,
                                          @Parameter(hidden = true) String token);
 
     @Operation(summary = "Update Comment by id.", tags = "Comment",
@@ -369,7 +369,7 @@ public interface CommentOpenApi {
                                     """)))
     })
     ResponseEntity<CommentResponse> updateById(@Positive Long id,
-                                               @Valid CommentRequest commentRequest,
+                                               CommentRequest commentRequest,
                                                @Parameter(hidden = true) String token);
 
     @Operation(summary = "Delete Comment by id.", tags = "Comment",

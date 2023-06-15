@@ -2,9 +2,9 @@ package ru.clevertec.newsservice.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.clevertec.newsservice.dto.comment.CommentRequest;
+import ru.clevertec.newsservice.dto.proto.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.model.Comment;
@@ -17,6 +17,8 @@ public interface CommentMapper {
     CommentResponse toResponse(Comment comment);
 
     List<CommentResponse> toResponses(List<Comment> comments);
+
+    Comment fromParams(String title, String text);
 
     Comment fromRequest(CommentRequest commentRequest);
 

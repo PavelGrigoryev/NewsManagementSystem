@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "validate/validate.proto";
+
+option java_package = "ru.clevertec.newsservice.dto.proto";
+option java_multiple_files = true;
+
+message NewsRequest {
+  string title = 1 [(validate.rules).string = {min_len: 3, max_len: 255}];
+  string text = 2 [(validate.rules).string = {min_len: 3, max_len: 2000}];
+}

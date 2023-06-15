@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.clevertec.exceptionhandlerstarter.exception.AccessDeniedForThisRoleException;
+import ru.clevertec.exceptionhandlerstarter.exception.ProtoValidationException;
 import ru.clevertec.exceptionhandlerstarter.exception.UserDoesNotHavePermissionException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UserApiClientException;
@@ -91,6 +92,17 @@ public class NewsManagementSystemExceptionHandler {
     @ExceptionHandler(UserApiClientException.class)
     public ResponseEntity<IncorrectData> userApiClientException(UserApiClientException exception) {
         return getResponse(exception.getExceptionName(), exception.getMessage(), HttpStatus.valueOf(exception.getErrorCode()));
+    }
+
+    /**
+     * Handles {@link ProtoValidationException} and returns a 409 Conflict response with an error message.
+     *
+     * @param exception The ProtoValidationException to handle.
+     * @return A ResponseEntity containing an {@link IncorrectData} object and a 409 status code.
+     */
+    @ExceptionHandler(ProtoValidationException.class)
+    public ResponseEntity<IncorrectData> protoValidationException(ProtoValidationException exception) {
+        return getResponse(exception.getClass().getSimpleName(), exception.getMessage(), HttpStatus.CONFLICT);
     }
 
     /**

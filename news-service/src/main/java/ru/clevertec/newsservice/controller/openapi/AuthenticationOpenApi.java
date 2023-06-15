@@ -10,14 +10,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
 import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.user.UserAuthenticationRequest;
-import ru.clevertec.newsservice.dto.user.UserRegisterRequest;
-import ru.clevertec.newsservice.dto.user.UserUpdateRequest;
+import ru.clevertec.newsservice.dto.proto.UserAuthenticationRequest;
+import ru.clevertec.newsservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.newsservice.dto.proto.UserUpdateRequest;
 import ru.clevertec.newsservice.dto.user.UserResponse;
 
 @Tag(name = "Authentication", description = "The Authentication Api")
@@ -75,7 +74,7 @@ public interface AuthenticationOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> register(@Valid UserRegisterRequest request);
+    ResponseEntity<UserResponse> register(UserRegisterRequest request);
 
     @Operation(summary = "Authenticate User and get jwt token.", tags = "Authentication",
             requestBody = @RequestBody(description = "RequestBody for UserAuthenticationRequest",
@@ -135,7 +134,7 @@ public interface AuthenticationOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> authenticate(@Valid UserAuthenticationRequest request);
+    ResponseEntity<UserResponse> authenticate(UserAuthenticationRequest request);
 
     @Operation(summary = "Update User by token.", tags = "Authentication",
             security = @SecurityRequirement(name = "Bearer Authentication"),
@@ -197,7 +196,7 @@ public interface AuthenticationOpenApi {
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> updateByToken(@Valid UserUpdateRequest request,
+    ResponseEntity<UserResponse> updateByToken(UserUpdateRequest request,
                                                @Parameter(hidden = true) String token);
 
     @Operation(summary = "Delete User by token.", tags = "Authentication",

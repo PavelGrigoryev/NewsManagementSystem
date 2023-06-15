@@ -14,8 +14,8 @@ import ru.clevertec.newsservice.aop.annotation.GetCacheable;
 import ru.clevertec.newsservice.aop.annotation.PutCacheable;
 import ru.clevertec.newsservice.aop.annotation.RemoveCacheable;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.NewsRequest;
 import ru.clevertec.newsservice.dto.user.Role;
 import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
 import ru.clevertec.newsservice.mapper.NewsMapper;
@@ -68,13 +68,14 @@ public class NewsServiceImpl implements NewsService {
     /**
      * Finds all {@link News} by matching it through {@link ExampleMatcher} with pagination.
      *
-     * @param newsRequest the {@link NewsRequest} which will be mapped to {@link NewsResponse}.
-     * @param pageable    {@link Pageable} News will be sorted by its parameters and divided into pages.
+     * @param title    the title to match against News.
+     * @param text     the text to match against News.
+     * @param pageable {@link Pageable} News will be sorted by its parameters and divided into pages.
      * @return sorted by pageable, filtered by ExampleMatcher and mapped from entity to dto list of all NewsResponse.
      */
     @Override
-    public List<NewsResponse> findAllByMatchingTextParams(NewsRequest newsRequest, Pageable pageable) {
-        News news = newsMapper.fromRequest(newsRequest);
+    public List<NewsResponse> findAllByMatchingTextParams(String title, String text, Pageable pageable) {
+        News news = newsMapper.fromParams(title, text);
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
                 .withIgnoreNullValues()
                 .withIgnoreCase()
@@ -122,8 +123,8 @@ public class NewsServiceImpl implements NewsService {
                 .orElseThrow(() -> new NoSuchNewsException("There is no News with ID " + id + " to update"));
         authenticationService.isObjectOwnedByEmailAndRole(
                 response.role(), Role.JOURNALIST, response.email(), news.getEmail());
-        news.setTitle(newsRequest.title());
-        news.setText(newsRequest.text());
+        news.setTitle(newsRequest.getTitle());
+        news.setText(newsRequest.getText());
         news.setEmail(response.email());
         News saved = newsRepository.saveAndFlush(news);
         return newsMapper.toResponse(saved);

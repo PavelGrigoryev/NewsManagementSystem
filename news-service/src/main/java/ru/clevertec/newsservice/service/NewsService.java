@@ -2,8 +2,8 @@ package ru.clevertec.newsservice.service;
 
 import org.springframework.data.domain.Pageable;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.NewsRequest;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface NewsService {
 
     List<NewsResponse> findAll(Pageable pageable);
 
-    List<NewsResponse> findAllByMatchingTextParams(NewsRequest newsRequest, Pageable pageable);
+    List<NewsResponse> findAllByMatchingTextParams(String title, String text, Pageable pageable);
 
     NewsResponse save(NewsRequest newsRequest, String token);
 
