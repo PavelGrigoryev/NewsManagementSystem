@@ -1,6 +1,5 @@
 package ru.clevertec.userservice.integration;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -17,13 +16,9 @@ public abstract class BaseIntegrationTest {
 
     private static final PostgreSQLContainer<?> CONTAINER = new PostgreSQLContainer<>("postgres:14.5");
 
-    @BeforeAll
-    static void starContainer() {
-        CONTAINER.start();
-    }
-
     @DynamicPropertySource
     static void postgresProperties(DynamicPropertyRegistry registry) {
+        CONTAINER.start();
         registry.add("spring.datasource.url", CONTAINER::getJdbcUrl);
     }
 

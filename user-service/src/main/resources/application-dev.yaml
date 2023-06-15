@@ -3,31 +3,26 @@ spring:
     config:
       enabled: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/news
+    url: jdbc:postgresql://localhost:5432/users
     username: pavel
     password: pavel
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: true
+    open-in-view: false
     properties:
       hibernate:
         format_sql: true
-    open-in-view: false
-  data:
-    web:
-      pageable:
-        default-page-size: 20
-        max-page-size: 40
-cache:
-  algorithm: LFU
-  capacity: 5
+server:
+  port: 8081
+security:
+  jwt:
+    secret-key: 73357638792F423F4528482B4D6251655468576D5A7133743677397A24432646
+    expiration: 86400000 # 1 day (24 hours)
 aop:
   logging:
     enabled: true
 exception:
   handling:
     enabled: true
-base:
-  url:
-    users: http://localhost:8081/users
