@@ -18,7 +18,7 @@ public interface CommentMapper {
 
     List<CommentResponse> toResponses(List<Comment> comments);
 
-    Comment fromParams(String title, String text);
+    Comment fromParams(String text, String username);
 
     Comment fromRequest(CommentRequest commentRequest);
 

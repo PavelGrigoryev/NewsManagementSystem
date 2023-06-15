@@ -7,7 +7,7 @@ GET http://localhost:8080/comments/news/19?page=1&size=5&sort=username,desc
 Accept: application/json
 
 ###findAllByMatchingTextParams
-GET http://localhost:8080/comments/params?username=Анна&page=0&size=10&sort=username
+GET http://localhost:8080/comments/params?username=dino&page=0&size=10&sort=username
 Accept: application/json
 
 ###save
@@ -16,8 +16,8 @@ Content-Type: application/json
 Authorization: Bearer {{jwt_token}}
 
 {
-  "text": "Как то не очень :(",
-  "username": "Василий",
+  "text": "Not bad at all :(",
+  "username": "Vasiliy",
   "news_id": 20
 }
 
@@ -27,8 +27,8 @@ Content-Type: application/json
 Authorization: Bearer {{jwt_token}}
 
 {
-  "text": "Воу, это круто!",
-  "username": "Светка"
+  "text": "Wow, that's cool!",
+  "username": "Svetlana"
 }
 
 ###delete
