@@ -61,16 +61,12 @@ public interface AuthenticationOpenApi {
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ValidationErrorResponse.class),
+                            schema = @Schema(implementation = IncorrectData.class),
                             examples = @ExampleObject("""
                                     {
-                                      "error_code": "409 CONFLICT",
-                                      "violations": [
-                                        {
-                                          "field_name": "role",
-                                          "error_message": "Acceptable roles are only: ADMIN, JOURNALIST, SUBSCRIBER"
-                                        }
-                                      ]
+                                      "exception": "ProtoValidationException",
+                                      "error_message": ".UserRegisterRequest.role: must match pattern ADMIN|JOURNALIST|SUBSCRIBER - Got \\"SUPERMAN\\"",
+                                      "error_code": "409 CONFLICT"
                                     }
                                     """)))
     })
@@ -91,12 +87,12 @@ public interface AuthenticationOpenApi {
                             schema = @Schema(implementation = UserResponse.class), examples = @ExampleObject("""
                             {
                               "id": 1,
-                              "firstname": "Чак",
-                              "lastname": "Норрис",
+                              "firstname": "Chuck",
+                              "lastname": "Norris",
                               "email": "ChakcNunChuck@gmail.com",
                               "role": "SUBSCRIBER",
-                              "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiU1VCU0NSSUJFUiJ9XSwic3ViIjoiQ2hha2NOdW5DaHVja0BnbWFpbC5jb20iLCJpYXQiOjE2ODYzMTE3NjgsImV4cCI6MTY4NjM5ODE2OH0.HLYlRTR_sUcS9tngeR9XQUyYAHMnGvw-uCVrKwdTxWs",
-                              "token_expiration": "Sat Jun 10 14:56:08 MSK 2023",
+                              "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiU1VCU0NSSUJFUiJ9XSwic3ViIjoiQ2hha2NOdW5DaHVja0BnbWFpbC5jb20iLCJpYXQiOjE2ODY5MTUzNjcsImV4cCI6MTY4NzAwMTc2N30.zTK3gwck5_SSORSufAfbON8UO4cOcFe4-xJTAFS9dsc",
+                              "token_expiration": "Sat Jun 17 14:36:07 MSK 2023",
                               "created_time": "2023-06-06T16:45:59",
                               "updated_time": "2023-06-06T16:45:59"
                             }
@@ -121,16 +117,12 @@ public interface AuthenticationOpenApi {
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ValidationErrorResponse.class),
+                            schema = @Schema(implementation = IncorrectData.class),
                             examples = @ExampleObject("""
                                     {
-                                      "error_code": "409 CONFLICT",
-                                      "violations": [
-                                        {
-                                          "field_name": "email",
-                                          "error_message": "must be a well-formed email address"
-                                        }
-                                      ]
+                                      "exception": "ProtoValidationException",
+                                      "error_message": ".UserAuthenticationRequest.email: should be a valid email - Got \\"ChakcNunChuckgmail.com\\"",
+                                      "error_code": "409 CONFLICT"
                                     }
                                     """)))
     })
@@ -183,16 +175,12 @@ public interface AuthenticationOpenApi {
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ValidationErrorResponse.class),
+                            schema = @Schema(implementation = IncorrectData.class),
                             examples = @ExampleObject("""
                                     {
-                                      "error_code": "409 CONFLICT",
-                                      "violations": [
-                                        {
-                                          "field_name": "firstname",
-                                          "error_message": "Firstname must contain only letters of the Russian and English alphabets without spaces in any case"
-                                        }
-                                      ]
+                                      "exception": "ProtoValidationException",
+                                      "error_message": ".UserUpdateRequest.firstname: must match pattern ^[a-zA-Zа-яА-ЯёЁ]+$ - Got \\"Igor1\\"",
+                                      "error_code": "409 CONFLICT"
                                     }
                                     """)))
     })

@@ -4,19 +4,18 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.clevertec.exceptionhandlerstarter.exception.AccessDeniedForThisRoleException;
+import ru.clevertec.exceptionhandlerstarter.exception.NotFoundException;
 import ru.clevertec.exceptionhandlerstarter.exception.ProtoValidationException;
-import ru.clevertec.exceptionhandlerstarter.exception.UserDoesNotHavePermissionException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UserApiClientException;
-import ru.clevertec.loggingstarter.annotation.Loggable;
-import ru.clevertec.exceptionhandlerstarter.exception.NotFoundException;
+import ru.clevertec.exceptionhandlerstarter.exception.UserDoesNotHavePermissionException;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
 import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
 import ru.clevertec.exceptionhandlerstarter.model.Violation;
+import ru.clevertec.loggingstarter.annotation.Loggable;
 
 import java.util.List;
 
@@ -117,23 +116,6 @@ public class NewsManagementSystemExceptionHandler {
                 .stream()
                 .map(constraintViolation -> new Violation(constraintViolation.getPropertyPath().toString(),
                         constraintViolation.getMessage()))
-                .toList();
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(new ValidationErrorResponse(HttpStatus.CONFLICT.toString(), violations));
-    }
-
-    /**
-     * Handles {@link MethodArgumentNotValidException} and returns a 409 Conflict response with an error message.
-     *
-     * @param exception The MethodArgumentNotValidException to handle.
-     * @return A ResponseEntity containing an {@link ValidationErrorResponse} object and a 409 status code.
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErrorResponse> methodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        List<Violation> violations = exception.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(fieldError -> new Violation(fieldError.getField(), fieldError.getDefaultMessage()))
                 .toList();
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ValidationErrorResponse(HttpStatus.CONFLICT.toString(), violations));
