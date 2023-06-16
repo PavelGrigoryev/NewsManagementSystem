@@ -3,7 +3,7 @@ package ru.clevertec.newsservice.util.testbuilder.news;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.With;
-import ru.clevertec.newsservice.dto.news.NewsRequest;
+import ru.clevertec.newsservice.dto.proto.NewsRequest;
 import ru.clevertec.newsservice.util.TestBuilder;
 
 @AllArgsConstructor
@@ -16,7 +16,10 @@ public class NewsRequestTestBuilder implements TestBuilder<NewsRequest> {
 
     @Override
     public NewsRequest build() {
-        return new NewsRequest(title, text);
+        return NewsRequest.newBuilder()
+                .setTitle(title)
+                .setText(text)
+                .build();
     }
 
 }

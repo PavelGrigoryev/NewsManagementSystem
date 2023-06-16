@@ -15,8 +15,8 @@ import ru.clevertec.exceptionhandlerstarter.exception.AccessDeniedForThisRoleExc
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchNewsException;
 import ru.clevertec.exceptionhandlerstarter.exception.UserDoesNotHavePermissionException;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.NewsRequest;
 import ru.clevertec.newsservice.dto.user.Role;
 import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
 import ru.clevertec.newsservice.integration.BaseIntegrationTest;
@@ -72,10 +72,7 @@ class NewsServiceImplTest extends BaseIntegrationTest {
         @DisplayName("test should return expected NewsResponse")
         void testShouldReturnExpectedNewsResponse() {
             NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse()
-                    .withTime(LocalDateTime.of(2023, Month.MAY, 21, 11, 30, 59))
-                    .withTitle("Взрыв на нефтеперерабатывающем заводе в США")
-                    .withText("На нефтеперерабатывающем заводе в Техасе произошел мощный взрыв, который унес жизни нескольких рабочих.")
-                    .withEmail("jsmith01@gmail.com")
+                    .withId(3L)
                     .build();
 
             NewsResponse actualValue = newsService.findById(expectedValue.id());
@@ -103,10 +100,13 @@ class NewsServiceImplTest extends BaseIntegrationTest {
         @DisplayName("test should return List that contains expected value")
         void testShouldReturnListThatContainsExpectedValue() {
             NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse()
-                    .withTime(LocalDateTime.of(2023, Month.MAY, 21, 11, 30, 59))
-                    .withTitle("Взрыв на нефтеперерабатывающем заводе в США")
-                    .withText("На нефтеперерабатывающем заводе в Техасе произошел мощный взрыв, который унес жизни нескольких рабочих.")
-                    .withEmail("jsmith01@gmail.com")
+                    .withTime(LocalDateTime.of(2023, Month.JUNE, 14, 10, 30))
+                    .withTitle("Breaking: Volcano erupts in Hawaii")
+                    .withText("A massive volcanic eruption has occurred on the Big Island of Hawaii," +
+                              " spewing lava and ash into the air. The eruption was triggered by a series of earthquakes" +
+                              " that rocked the island in the past few days. Authorities have issued evacuation orders" +
+                              " for nearby residents and warned of possible tsunamis and landslides.")
+                    .withEmail("reporter@news.com")
                     .build();
             Pageable pageable = PageRequest.of(0, 1);
 
@@ -140,7 +140,7 @@ class NewsServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return sorted List by email")
         void testShouldReturnSortedListByEmail() {
-            String expectedEmail = "amiller02@yahoo.com";
+            String expectedEmail = "health@news.com";
             Sort sort = Sort.by("email");
             Pageable pageable = PageRequest.of(0, 1, sort);
 
@@ -157,14 +157,12 @@ class NewsServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return List of size 1")
         void testShouldReturnListOfSizeOne() {
-            NewsRequest request = NewsRequestTestBuilder.aNewsRequest()
-                    .withTitle("Китай")
-                    .withText("")
-                    .build();
             Pageable pageable = PageRequest.of(0, 5);
+            String title = "SpaceX";
+            String text = "SpaceX has successfully";
             int expectedSize = 1;
 
-            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(request, pageable);
+            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(title, text, pageable);
 
             assertThat(actualValues).hasSize(expectedSize);
         }
@@ -173,19 +171,21 @@ class NewsServiceImplTest extends BaseIntegrationTest {
         @DisplayName("test should return List that contains expected value matches by title")
         void testShouldReturnListThatContainsExpectedValueMatchesByTitle() {
             NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse()
-                    .withId(2L)
-                    .withTime(LocalDateTime.of(2023, Month.MAY, 21, 16, 45, 59))
-                    .withTitle("Китай и Россия подписали соглашение о торговле газом")
-                    .withText("Китай и Россия подписали соглашение о поставках газа из России в Китай на следующие 30 лет")
-                    .withEmail("amiller02@yahoo.com")
-                    .build();
-            NewsRequest request = NewsRequestTestBuilder.aNewsRequest()
-                    .withTitle("Китай")
-                    .withText("")
+                    .withId(4L)
+                    .withTime(LocalDateTime.of(2023, Month.JUNE, 14, 10, 45))
+                    .withTitle("World Cup kicks off in Qatar")
+                    .withText("The 2023 FIFA World Cup has officially begun in Qatar, with the host nation facing Brazil" +
+                              " in the opening match. The World Cup, which is held every four years, is the most" +
+                              " prestigious and popular soccer tournament in the world, attracting millions of fans" +
+                              " and viewers from around the globe. The World Cup will last for a month, with 32 teams" +
+                              " competing for the coveted trophy.")
+                    .withEmail("sports@news.com")
                     .build();
             Pageable pageable = PageRequest.of(0, 2);
+            String title = "World Cup";
+            String text = "";
 
-            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(request, pageable);
+            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(title, text, pageable);
 
             assertThat(actualValues).contains(expectedValue);
         }
@@ -193,15 +193,18 @@ class NewsServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return List that contains expected value matches by text")
         void testShouldReturnListThatContainsExpectedValueMatchesByText() {
-            String expectedText = "Олимпийские игры в Токио были отменены из-за пандемии COVID-19," +
-                                  " что стало большим разочарованием для спортсменов и болельщиков.";
-            NewsRequest request = NewsRequestTestBuilder.aNewsRequest()
-                    .withTitle("")
-                    .withText("Олимпийские игры")
-                    .build();
+            String expectedText = "A new study published in the journal Nature has revealed the secrets of longevity," +
+                                  " or how to live longer and healthier lives. The study, which involved analyzing " +
+                                  "the genomes of over 10,000 centenarians, or people who live past 100 years old," +
+                                  " found that they share certain genetic variants that protect them from age-related" +
+                                  " diseases such as cancer, diabetes, and Alzheimer's. The study also identified some" +
+                                  " lifestyle factors that contribute to longevity, such as eating a balanced diet," +
+                                  " exercising regularly, and maintaining social connections.";
             Pageable pageable = PageRequest.of(0, 2);
+            String title = "";
+            String text = "A new study";
 
-            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(request, pageable);
+            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(title, text, pageable);
 
             assertThat(actualValues.get(0).text()).isEqualTo(expectedText);
         }
@@ -209,13 +212,11 @@ class NewsServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return empty List")
         void testShouldReturnEmptyList() {
-            NewsRequest request = NewsRequestTestBuilder.aNewsRequest()
-                    .withTitle("Не существует")
-                    .withText("Таких новостей не существует")
-                    .build();
             Pageable pageable = PageRequest.of(0, 5);
+            String title = "title";
+            String text = "text";
 
-            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(request, pageable);
+            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(title, text, pageable);
 
             assertThat(actualValues).isEmpty();
         }
@@ -223,15 +224,13 @@ class NewsServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return sorted List by title")
         void testShouldReturnSortedListByTitle() {
-            String expectedTitle = "Взрыв на нефтеперерабатывающем заводе в США";
-            NewsRequest request = NewsRequestTestBuilder.aNewsRequest()
-                    .withText("")
-                    .withTitle("")
-                    .build();
+            String expectedTitle = "Apple unveils iPhone 15 with holographic display";
             Sort sort = Sort.by("title");
             Pageable pageable = PageRequest.of(0, 1, sort);
+            String title = "";
+            String text = "a";
 
-            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(request, pageable);
+            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(title, text, pageable);
 
             assertThat(actualValues.get(0).title()).isEqualTo(expectedTitle);
         }
@@ -251,8 +250,8 @@ class NewsServiceImplTest extends BaseIntegrationTest {
             String json = objectMapper.writeValueAsString(response);
             NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse()
                     .withTime(LocalDateTime.now())
-                    .withTitle(request.title())
-                    .withText(request.text())
+                    .withTitle(request.getTitle())
+                    .withText(request.getText())
                     .withEmail(response.email())
                     .build();
 
@@ -313,8 +312,8 @@ class NewsServiceImplTest extends BaseIntegrationTest {
             String json = objectMapper.writeValueAsString(response);
             NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse()
                     .withTime(LocalDateTime.now())
-                    .withTitle(request.title())
-                    .withText(request.text())
+                    .withTitle(request.getTitle())
+                    .withText(request.getText())
                     .withEmail(response.email())
                     .build();
 

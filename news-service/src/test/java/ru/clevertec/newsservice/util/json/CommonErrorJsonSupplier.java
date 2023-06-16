@@ -42,4 +42,8 @@ public interface CommonErrorJsonSupplier {
         return Files.readString(Paths.get("src/test/resources/json/error/405-for-journalist-err-response.json"));
     }
 
+    static String getIdErrorResponse() throws IOException {
+        return Files.readString(Paths.get("src/test/resources/json/error/id-err-response.json"));
+    }
+
 }

@@ -34,6 +34,10 @@ public interface CommentJsonSupplier {
         return Files.readString(Paths.get("src/test/resources/json/comment/matcher-comment-response.json"));
     }
 
+    static String getPatternCommentWithNewsErrorResponse() throws IOException {
+        return Files.readString(Paths.get("src/test/resources/json/comment/pattern-err-comment-with-news-response.json"));
+    }
+
     static String getPatternCommentErrorResponse() throws IOException {
         return Files.readString(Paths.get("src/test/resources/json/comment/pattern-err-comment-response.json"));
     }

@@ -1,9 +1,5 @@
 {
-  "error_code": "409 CONFLICT",
-  "violations": [
-    {
-      "field_name": "username",
-      "error_message": "This field must contain only letters of the Russian and English alphabets, numbers, symbols(@ _ -) without spaces in any case"
-    }
-  ]
+  "exception": "ProtoValidationException",
+  "error_message": ".CommentRequest.username: must match pattern ^[a-zA-Zа-яА-ЯёЁ0-9@_-]+$ - Got \"Ali - Muhammed\"",
+  "error_code": "409 CONFLICT"
 }

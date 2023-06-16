@@ -20,8 +20,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchNewsException;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.news.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.NewsRequest;
 import ru.clevertec.newsservice.dto.user.Role;
 import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
 import ru.clevertec.newsservice.mapper.NewsMapper;
@@ -179,16 +179,17 @@ class NewsServiceImplTest {
         void testShouldReturnListOfSizeOne() {
             NewsResponse mockedNewsResponse = NewsResponseTestBuilder.aNewsResponse().build();
             News mockedNews = NewsTestBuilder.aNews().build();
-            NewsRequest mockedNewsRequest = NewsRequestTestBuilder.aNewsRequest().build();
             ExampleMatcher exampleMatcher = ExampleMatcherTestBuilder.aExampleMatcher().build();
             Example<News> mockedNewsExample = Example.of(mockedNews, exampleMatcher);
             Page<News> mockedPage = new PageImpl<>(List.of(mockedNews));
             Pageable mockedPageable = PageRequest.of(1, 2);
+            String title = "title";
+            String text = "text";
             int expectedSize = 1;
 
             doReturn(mockedNews)
                     .when(newsMapper)
-                    .fromRequest(mockedNewsRequest);
+                    .fromParams(title, text);
 
             doReturn(List.of(mockedNewsResponse))
                     .when(newsMapper)
@@ -198,7 +199,7 @@ class NewsServiceImplTest {
                     .when(newsRepository)
                     .findAll(mockedNewsExample, mockedPageable);
 
-            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(mockedNewsRequest, mockedPageable);
+            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(title, text, mockedPageable);
 
             assertThat(actualValues).hasSize(expectedSize);
         }
@@ -208,15 +209,16 @@ class NewsServiceImplTest {
         void testShouldReturnListThatContainsExpectedValue() {
             NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().build();
             News mockedNews = NewsTestBuilder.aNews().build();
-            NewsRequest mockedNewsRequest = NewsRequestTestBuilder.aNewsRequest().build();
             ExampleMatcher exampleMatcher = ExampleMatcherTestBuilder.aExampleMatcher().build();
             Example<News> mockedNewsExample = Example.of(mockedNews, exampleMatcher);
             Page<News> mockedPage = new PageImpl<>(List.of(mockedNews));
             Pageable mockedPageable = PageRequest.of(1, 2);
+            String title = "title";
+            String text = "text";
 
             doReturn(mockedNews)
                     .when(newsMapper)
-                    .fromRequest(mockedNewsRequest);
+                    .fromParams(title, text);
 
             doReturn(List.of(expectedValue))
                     .when(newsMapper)
@@ -226,7 +228,7 @@ class NewsServiceImplTest {
                     .when(newsRepository)
                     .findAll(mockedNewsExample, mockedPageable);
 
-            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(mockedNewsRequest, mockedPageable);
+            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(title, text, mockedPageable);
 
             assertThat(actualValues).contains(expectedValue);
         }
@@ -236,19 +238,20 @@ class NewsServiceImplTest {
         void testShouldReturnEmptyList() {
             Pageable mockedPageable = PageRequest.of(1, 2);
             News mockedNews = NewsTestBuilder.aNews().build();
-            NewsRequest mockedNewsRequest = NewsRequestTestBuilder.aNewsRequest().build();
             ExampleMatcher exampleMatcher = ExampleMatcherTestBuilder.aExampleMatcher().build();
             Example<News> mockedNewsExample = Example.of(mockedNews, exampleMatcher);
+            String title = "title";
+            String text = "text";
 
             doReturn(mockedNews)
                     .when(newsMapper)
-                    .fromRequest(mockedNewsRequest);
+                    .fromParams(title, text);
 
             doReturn(Page.empty())
                     .when(newsRepository)
                     .findAll(mockedNewsExample, mockedPageable);
 
-            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(mockedNewsRequest, mockedPageable);
+            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(title, text, mockedPageable);
 
             assertThat(actualValues).isEmpty();
         }

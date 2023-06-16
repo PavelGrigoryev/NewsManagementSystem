@@ -13,7 +13,7 @@ import ru.clevertec.newsservice.cache.Cache;
 import ru.clevertec.newsservice.cache.LRUCache;
 import ru.clevertec.newsservice.cache.factory.CacheFactory;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.news.NewsRequest;
+import ru.clevertec.newsservice.dto.proto.NewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.newsservice.service.NewsService;
 import ru.clevertec.newsservice.service.impl.NewsServiceImpl;

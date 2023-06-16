@@ -15,10 +15,10 @@ import java.time.Month;
 public class CommentResponseTestBuilder implements TestBuilder<CommentResponse> {
 
     private Long id = 1L;
-    private LocalDateTime time = LocalDateTime.of(2023, Month.JUNE, 3, 19, 44, 11);
-    private String text = "Не очень понятно, надо бы больше примеров";
-    private String username = "Ольга";
-    private String email = "olga1989@yandex.ru";
+    private LocalDateTime time = LocalDateTime.of(2023, Month.JUNE, 14, 10, 31);
+    private String text = "Wow! That's scary! I hope everyone is safe!";
+    private String username = "LavaLover";
+    private String email = "lavalover@gmail.com";
 
     @Override
     public CommentResponse build() {

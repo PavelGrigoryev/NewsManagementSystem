@@ -16,10 +16,10 @@ import ru.clevertec.exceptionhandlerstarter.exception.NoSuchCommentException;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchNewsException;
 import ru.clevertec.exceptionhandlerstarter.exception.UserDoesNotHavePermissionException;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
+import ru.clevertec.newsservice.dto.proto.CommentRequest;
+import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.user.Role;
 import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
 import ru.clevertec.newsservice.integration.BaseIntegrationTest;
@@ -77,12 +77,7 @@ class CommentServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return expected CommentResponse")
         void testShouldReturnExpectedCommentResponse() {
-            CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse()
-                    .withTime(LocalDateTime.of(2023, Month.JUNE, 1, 12, 34, 56))
-                    .withText("Отличная новость, спасибо за информацию!")
-                    .withUsername("Иван")
-                    .withEmail("jsmith01@gmail.com")
-                    .build();
+            CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().build();
 
             CommentResponse actualValue = commentService.findById(expectedValue.id());
 
@@ -100,16 +95,19 @@ class CommentServiceImplTest extends BaseIntegrationTest {
             long newsId = 3L;
             NewsWithCommentsResponse expectedValue = NewsWithCommentsResponseTestBuilder.aNewsWithCommentsResponse()
                     .withId(newsId)
-                    .withTime(LocalDateTime.of(2023, Month.MAY, 21, 19, 30, 59))
-                    .withTitle("В Иране продолжаются протесты против правительства")
-                    .withText("В Иране продолжаются массовые протесты против правительства, которое обвиняют в коррупции и нарушении прав человека.")
-                    .withEmail("klee03@hotmail.com")
+                    .withTime(LocalDateTime.of(2023, Month.JUNE, 14, 10, 40))
+                    .withTitle("Apple unveils iPhone 15 with holographic display")
+                    .withText("Apple has announced its latest flagship smartphone, the iPhone 15, which features a " +
+                              "revolutionary holographic display that projects 3D images in mid-air. The iPhone 15 also" +
+                              " boasts a faster processor, a longer battery life, and a new design that is thinner " +
+                              "and lighter than ever. The iPhone 15 will be available in stores starting from July 1st.")
+                    .withEmail("tech@news.com")
                     .withComments(Collections.singletonList(CommentResponseTestBuilder.aCommentResponse()
                             .withId(11L)
-                            .withTime(LocalDateTime.of(2023, Month.JUNE, 11, 9, 34, 12))
-                            .withText("Не очень понятно, надо бы больше примеров")
-                            .withUsername("Максим")
-                            .withEmail("jjackson11@hotmail.com")
+                            .withTime(LocalDateTime.of(2023, Month.JUNE, 14, 10, 41))
+                            .withText("Wow! That's awesome! I want an iPhone 15!")
+                            .withUsername("AppleFan")
+                            .withEmail("applefan@gmail.com")
                             .build()))
                     .build();
             Pageable pageable = PageRequest.of(0, 1);
@@ -172,7 +170,7 @@ class CommentServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return NewsWithCommentsResponse with sorted List of comments by email")
         void testShouldReturnSortedListByEmail() {
-            String expectedEmail = "jjackson11@hotmail.com";
+            String expectedEmail = "androidfan@outlook.com";
             long newsId = 3L;
             Sort sort = Sort.by("email");
             Pageable pageable = PageRequest.of(0, 1, sort);
@@ -190,14 +188,12 @@ class CommentServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return List of size 1")
         void testShouldReturnListOfSizeOne() {
-            CommentRequest request = CommentRequestTestBuilder.aCommentRequest()
-                    .withUsername("Анна")
-                    .withText("")
-                    .build();
             Pageable pageable = PageRequest.of(0, 5);
+            String text = "Wow! That's awesome! I love soccer!";
+            String username = "SoccerFan";
             int expectedSize = 1;
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(request, pageable);
+            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
 
             assertThat(actualValues).hasSize(expectedSize);
         }
@@ -205,20 +201,12 @@ class CommentServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return List that contains expected value matches by username")
         void testShouldReturnListThatContainsExpectedValueMatchesByUsername() {
-            CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse()
-                    .withId(3L)
-                    .withTime(LocalDateTime.of(2023, Month.JUNE, 2, 9, 12, 8))
-                    .withText("Какая интересная статья, мне очень понравилось")
-                    .withUsername("Анна")
-                    .withEmail("klee03@hotmail.com")
-                    .build();
-            CommentRequest request = CommentRequestTestBuilder.aCommentRequest()
-                    .withUsername("Анна")
-                    .withText("")
-                    .build();
+            CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().build();
             Pageable pageable = PageRequest.of(0, 2);
+            String text = "Wow!";
+            String username = "LavaLover";
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(request, pageable);
+            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
 
             assertThat(actualValues).contains(expectedValue);
         }
@@ -226,14 +214,12 @@ class CommentServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return List that contains expected value matches by text")
         void testShouldReturnListThatContainsExpectedValueMatchesByText() {
-            String expectedText = "Все это бессмысленно, никто не будет использовать это";
-            CommentRequest request = CommentRequestTestBuilder.aCommentRequest()
-                    .withUsername("")
-                    .withText("Все")
-                    .build();
+            String expectedText = "This is so expensive. Who can afford this?";
             Pageable pageable = PageRequest.of(0, 2);
+            String text = "This is so expensive.";
+            String username = "";
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(request, pageable);
+            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
 
             assertThat(actualValues.get(0).text()).isEqualTo(expectedText);
         }
@@ -241,13 +227,11 @@ class CommentServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return empty List")
         void testShouldReturnEmptyList() {
-            CommentRequest request = CommentRequestTestBuilder.aCommentRequest()
-                    .withUsername("Noname")
-                    .withText("Меня не существует")
-                    .build();
             Pageable pageable = PageRequest.of(0, 5);
+            String text = "It's terrible what's going on...";
+            String username = "Evlampia";
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(request, pageable);
+            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
 
             assertThat(actualValues).isEmpty();
         }
@@ -255,15 +239,13 @@ class CommentServiceImplTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return sorted List by username")
         void testShouldReturnSortedListByUsername() {
-            String expectedUsername = "Анна";
-            CommentRequest request = CommentRequestTestBuilder.aCommentRequest()
-                    .withUsername("Анна")
-                    .withText("")
-                    .build();
+            String expectedUsername = "BrazilFan";
             Sort sort = Sort.by("username");
             Pageable pageable = PageRequest.of(0, 1, sort);
+            String text = "This is so cool!";
+            String username = "";
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(request, pageable);
+            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
 
             assertThat(actualValues.get(0).username()).isEqualTo(expectedUsername);
         }
@@ -283,8 +265,8 @@ class CommentServiceImplTest extends BaseIntegrationTest {
             String json = objectMapper.writeValueAsString(response);
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse()
                     .withTime(LocalDateTime.now())
-                    .withUsername(request.username())
-                    .withText(request.text())
+                    .withUsername(request.getUsername())
+                    .withText(request.getText())
                     .withEmail(response.email())
                     .build();
 
@@ -346,8 +328,8 @@ class CommentServiceImplTest extends BaseIntegrationTest {
             String json = objectMapper.writeValueAsString(response);
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse()
                     .withTime(LocalDateTime.now())
-                    .withUsername(request.username())
-                    .withText(request.text())
+                    .withUsername(request.getUsername())
+                    .withText(request.getText())
                     .withEmail(response.email())
                     .build();
 

@@ -16,8 +16,8 @@ import java.time.Month;
 public class UserResponseTestBuilder implements TestBuilder<UserResponse> {
 
     private Long id = 3L;
-    private String firstname = "Брюс";
-    private String lastname = "Ли";
+    private String firstname = "Bruce";
+    private String lastname = "Lee";
     private String email = "BruceLee@shazam.com";
     private Role role = Role.ADMIN;
     private String token = "jwt";

@@ -20,11 +20,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchCommentException;
 import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.comment.CommentRequest;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
+import ru.clevertec.newsservice.dto.proto.CommentRequest;
+import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
 import ru.clevertec.newsservice.dto.user.Role;
 import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
 import ru.clevertec.newsservice.mapper.CommentMapper;
@@ -246,16 +246,18 @@ class CommentServiceImplTest {
         void testShouldReturnListOfSizeOne() {
             CommentResponse mockedCommentResponse = CommentResponseTestBuilder.aCommentResponse().build();
             Comment mockedComment = CommentTestBuilder.aComment().build();
-            CommentRequest mockedCommentRequest = CommentRequestTestBuilder.aCommentRequest().build();
             ExampleMatcher exampleMatcher = ExampleMatcherTestBuilder.aExampleMatcher().build();
             Example<Comment> mockedCommentExample = Example.of(mockedComment, exampleMatcher);
             Page<Comment> mockedPage = new PageImpl<>(List.of(mockedComment));
             Pageable mockedPageable = PageRequest.of(1, 2);
+            String text = "It's terrible what's going on...";
+            String username = "Evlampia";
+
             int expectedSize = 1;
 
             doReturn(mockedComment)
                     .when(commentMapper)
-                    .fromRequest(mockedCommentRequest);
+                    .fromParams(text, username);
 
             doReturn(List.of(mockedCommentResponse))
                     .when(commentMapper)
@@ -265,7 +267,7 @@ class CommentServiceImplTest {
                     .when(commentRepository)
                     .findAll(mockedCommentExample, mockedPageable);
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(mockedCommentRequest, mockedPageable);
+            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, mockedPageable);
 
             assertThat(actualValues).hasSize(expectedSize);
         }
@@ -275,15 +277,16 @@ class CommentServiceImplTest {
         void testShouldReturnListThatContainsExpectedValue() {
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().build();
             Comment mockedComment = CommentTestBuilder.aComment().build();
-            CommentRequest mockedCommentRequest = CommentRequestTestBuilder.aCommentRequest().build();
             ExampleMatcher exampleMatcher = ExampleMatcherTestBuilder.aExampleMatcher().build();
             Example<Comment> mockedCommentExample = Example.of(mockedComment, exampleMatcher);
             Page<Comment> mockedPage = new PageImpl<>(List.of(mockedComment));
             Pageable mockedPageable = PageRequest.of(1, 2);
+            String text = "It's terrible what's going on...";
+            String username = "Evlampia";
 
             doReturn(mockedComment)
                     .when(commentMapper)
-                    .fromRequest(mockedCommentRequest);
+                    .fromParams(text, username);
 
             doReturn(List.of(expectedValue))
                     .when(commentMapper)
@@ -293,7 +296,7 @@ class CommentServiceImplTest {
                     .when(commentRepository)
                     .findAll(mockedCommentExample, mockedPageable);
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(mockedCommentRequest, mockedPageable);
+            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, mockedPageable);
 
             assertThat(actualValues).contains(expectedValue);
         }
@@ -303,19 +306,20 @@ class CommentServiceImplTest {
         void testShouldReturnEmptyList() {
             Pageable mockedPageable = PageRequest.of(1, 2);
             Comment mockedComment = CommentTestBuilder.aComment().build();
-            CommentRequest mockedCommentRequest = CommentRequestTestBuilder.aCommentRequest().build();
             ExampleMatcher exampleMatcher = ExampleMatcherTestBuilder.aExampleMatcher().build();
             Example<Comment> mockedCommentExample = Example.of(mockedComment, exampleMatcher);
+            String text = "It's terrible what's going on...";
+            String username = "Evlampia";
 
             doReturn(mockedComment)
                     .when(commentMapper)
-                    .fromRequest(mockedCommentRequest);
+                    .fromParams(text, username);
 
             doReturn(Page.empty())
                     .when(commentRepository)
                     .findAll(mockedCommentExample, mockedPageable);
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(mockedCommentRequest, mockedPageable);
+            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, mockedPageable);
 
             assertThat(actualValues).isEmpty();
         }
@@ -346,7 +350,7 @@ class CommentServiceImplTest {
 
             doReturn(mockedNewsResponse)
                     .when(newsService)
-                    .findById(mockedRequest.newsId());
+                    .findById(mockedRequest.getNewsId());
 
             doReturn(expectedValue)
                     .when(commentMapper)

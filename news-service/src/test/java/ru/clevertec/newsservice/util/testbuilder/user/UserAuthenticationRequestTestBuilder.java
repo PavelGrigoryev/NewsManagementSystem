@@ -3,7 +3,7 @@ package ru.clevertec.newsservice.util.testbuilder.user;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.With;
-import ru.clevertec.newsservice.dto.user.UserAuthenticationRequest;
+import ru.clevertec.newsservice.dto.proto.UserAuthenticationRequest;
 import ru.clevertec.newsservice.util.TestBuilder;
 
 @AllArgsConstructor
@@ -16,7 +16,10 @@ public class UserAuthenticationRequestTestBuilder implements TestBuilder<UserAut
 
     @Override
     public UserAuthenticationRequest build() {
-        return new UserAuthenticationRequest(email, password);
+        return UserAuthenticationRequest.newBuilder()
+                .setEmail(email)
+                .setPassword(password)
+                .build();
     }
 
 }

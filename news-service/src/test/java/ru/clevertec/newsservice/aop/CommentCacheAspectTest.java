@@ -14,7 +14,7 @@ import ru.clevertec.newsservice.cache.LFUCache;
 import ru.clevertec.newsservice.cache.factory.CacheFactory;
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
 import ru.clevertec.newsservice.service.CommentService;
 import ru.clevertec.newsservice.service.impl.CommentServiceImpl;
 import ru.clevertec.newsservice.util.testbuilder.comment.CommentResponseTestBuilder;
