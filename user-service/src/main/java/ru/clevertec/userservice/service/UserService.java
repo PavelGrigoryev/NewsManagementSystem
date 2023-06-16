@@ -2,9 +2,9 @@ package ru.clevertec.userservice.service;
 
 import ru.clevertec.userservice.dto.proto.DeleteResponse;
 import ru.clevertec.userservice.dto.proto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.proto.UserResponse;
 import ru.clevertec.userservice.dto.proto.UserAuthenticationRequest;
 import ru.clevertec.userservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.userservice.dto.proto.UserResponse;
 import ru.clevertec.userservice.dto.proto.UserUpdateRequest;
 
 /**

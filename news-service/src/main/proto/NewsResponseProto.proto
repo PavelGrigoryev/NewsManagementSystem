@@ -12,5 +12,5 @@ message NewsResponse {
 }
 
 message NewsResponseList {
-  repeated NewsResponse newsResponses = 1;
+  repeated NewsResponse news = 1;
 }

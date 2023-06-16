@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.newsservice.controller.openapi.CommentOpenApi;
-import ru.clevertec.newsservice.dto.proto.DeleteResponse;
-import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.dto.proto.CommentRequest;
 import ru.clevertec.newsservice.dto.proto.CommentResponse;
 import ru.clevertec.newsservice.dto.proto.CommentResponseList;
 import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.service.CommentService;
 import ru.clevertec.newsservice.util.ProtobufValidator;
 

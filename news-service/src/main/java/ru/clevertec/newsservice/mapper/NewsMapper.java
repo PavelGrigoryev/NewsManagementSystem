@@ -4,8 +4,8 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueMappingStrategy;
 import org.springframework.data.domain.Page;
-import ru.clevertec.newsservice.dto.proto.NewsResponse;
 import ru.clevertec.newsservice.dto.proto.NewsRequest;
+import ru.clevertec.newsservice.dto.proto.NewsResponse;
 import ru.clevertec.newsservice.model.News;
 
 import java.util.List;

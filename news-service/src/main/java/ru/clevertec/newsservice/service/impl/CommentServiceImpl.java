@@ -13,11 +13,11 @@ import ru.clevertec.exceptionhandlerstarter.exception.NoSuchCommentException;
 import ru.clevertec.newsservice.aop.annotation.GetCacheable;
 import ru.clevertec.newsservice.aop.annotation.PutCacheable;
 import ru.clevertec.newsservice.aop.annotation.RemoveCacheable;
-import ru.clevertec.newsservice.dto.proto.DeleteResponse;
 import ru.clevertec.newsservice.dto.proto.CommentRequest;
 import ru.clevertec.newsservice.dto.proto.CommentResponse;
 import ru.clevertec.newsservice.dto.proto.CommentResponseList;
 import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
 import ru.clevertec.newsservice.dto.proto.NewsResponse;
 import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.dto.proto.Role;
@@ -96,7 +96,7 @@ public class CommentServiceImpl implements CommentService {
         List<CommentResponse> responses = commentMapper.toResponses(commentRepository.findAll(commentExample, pageable)
                 .stream().toList());
         return CommentResponseList.newBuilder()
-                .addAllCommentResponses(responses)
+                .addAllComments(responses)
                 .build();
     }
 

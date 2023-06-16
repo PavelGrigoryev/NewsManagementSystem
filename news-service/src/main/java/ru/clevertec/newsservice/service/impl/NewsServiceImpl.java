@@ -14,8 +14,8 @@ import ru.clevertec.newsservice.aop.annotation.GetCacheable;
 import ru.clevertec.newsservice.aop.annotation.PutCacheable;
 import ru.clevertec.newsservice.aop.annotation.RemoveCacheable;
 import ru.clevertec.newsservice.dto.proto.DeleteResponse;
-import ru.clevertec.newsservice.dto.proto.NewsResponse;
 import ru.clevertec.newsservice.dto.proto.NewsRequest;
+import ru.clevertec.newsservice.dto.proto.NewsResponse;
 import ru.clevertec.newsservice.dto.proto.NewsResponseList;
 import ru.clevertec.newsservice.dto.proto.Role;
 import ru.clevertec.newsservice.dto.proto.TokenValidationResponse;
@@ -65,7 +65,7 @@ public class NewsServiceImpl implements NewsService {
     public NewsResponseList findAll(Pageable pageable) {
         List<NewsResponse> responses = newsMapper.toResponses(newsRepository.findAll(pageable));
         return NewsResponseList.newBuilder()
-                .addAllNewsResponses(responses)
+                .addAllNews(responses)
                 .build();
     }
 
@@ -87,7 +87,7 @@ public class NewsServiceImpl implements NewsService {
         Example<News> newsExample = Example.of(news, exampleMatcher);
         List<NewsResponse> responses = newsMapper.toResponses(newsRepository.findAll(newsExample, pageable));
         return NewsResponseList.newBuilder()
-                .addAllNewsResponses(responses)
+                .addAllNews(responses)
                 .build();
     }
 

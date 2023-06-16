@@ -12,7 +12,7 @@ message CommentResponse {
 }
 
 message CommentResponseList {
-  repeated CommentResponse commentResponses = 1;
+  repeated CommentResponse comments = 1;
 }
 
 message NewsWithCommentsResponse {
@@ -21,5 +21,5 @@ message NewsWithCommentsResponse {
   string title = 3;
   string text = 4;
   string email = 5;
-  repeated CommentResponse commentsResponses = 6;
+  repeated CommentResponse comments = 6;
 }

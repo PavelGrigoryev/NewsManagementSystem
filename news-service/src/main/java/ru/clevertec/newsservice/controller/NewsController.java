@@ -24,8 +24,6 @@ import ru.clevertec.newsservice.dto.proto.NewsResponseList;
 import ru.clevertec.newsservice.service.NewsService;
 import ru.clevertec.newsservice.util.ProtobufValidator;
 
-import java.util.List;
-
 @Loggable
 @RestController
 @RequiredArgsConstructor
@@ -49,8 +47,8 @@ public class NewsController implements NewsOpenApi {
     @Override
     @GetMapping("/params")
     public ResponseEntity<NewsResponseList> findAllByMatchingTextParams(@RequestParam(required = false) String title,
-                                                                          @RequestParam(required = false) String text,
-                                                                          Pageable pageable) {
+                                                                        @RequestParam(required = false) String text,
+                                                                        Pageable pageable) {
         return ResponseEntity.ok(newsService.findAllByMatchingTextParams(title, text, pageable));
     }
 

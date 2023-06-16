@@ -17,8 +17,8 @@ import ru.clevertec.newsservice.controller.openapi.AuthenticationOpenApi;
 import ru.clevertec.newsservice.dto.proto.DeleteResponse;
 import ru.clevertec.newsservice.dto.proto.UserAuthenticationRequest;
 import ru.clevertec.newsservice.dto.proto.UserRegisterRequest;
-import ru.clevertec.newsservice.dto.proto.UserUpdateRequest;
 import ru.clevertec.newsservice.dto.proto.UserResponse;
+import ru.clevertec.newsservice.dto.proto.UserUpdateRequest;
 import ru.clevertec.newsservice.util.ProtobufValidator;
 
 @Loggable

@@ -37,7 +37,7 @@ public interface CommentMapper {
                 .setTitle(response.getTitle())
                 .setText(response.getText())
                 .setEmail(response.getEmail())
-                .addAllCommentsResponses(responses)
+                .addAllComments(responses)
                 .build();
     }
 

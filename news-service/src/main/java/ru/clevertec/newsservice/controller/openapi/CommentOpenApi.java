@@ -17,14 +17,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
 import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
-import ru.clevertec.newsservice.dto.proto.DeleteResponse;
-import ru.clevertec.newsservice.dto.proto.CommentResponse;
-import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.dto.proto.CommentRequest;
+import ru.clevertec.newsservice.dto.proto.CommentResponse;
 import ru.clevertec.newsservice.dto.proto.CommentResponseList;
 import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
-
-import java.util.List;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
 
 @Validated
 @Tag(name = "Comment", description = "The Comment Api")
@@ -37,7 +35,7 @@ public interface CommentOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CommentResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 5,
+                              "id": "5",
                               "time": "2023-06-14T10:35:00",
                               "text": "This is so cool! I wish I could see it in person!",
                               "username": "VolcanoFan",
@@ -82,42 +80,42 @@ public interface CommentOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = NewsWithCommentsResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 19,
+                              "id": "19",
                               "time": "2023-06-14T12:00:00",
                               "title": "New song by Ed Sheeran tops charts",
                               "text": "The new song by the popular singer-songwriter Ed Sheeran, titled Perfect Harmony, has topped the charts in several countries around the world. The song, which is a duet with his wife Cherry Seaborn, is a romantic ballad that expresses their love and happiness. The song has been praised for its melody, lyrics, and vocals.",
                               "email": "music@news.com",
                               "comments": [
                                 {
-                                  "id": 92,
+                                  "id": "92",
                                   "time": "2023-06-14T12:02:00",
                                   "text": "This is so cool! The song is so beautiful!",
                                   "username": "SheeranLover",
                                   "email": "sheeranlover@yahoo.com"
                                 },
                                 {
-                                  "id": 143,
+                                  "id": "143",
                                   "time": "2023-06-14T12:03:00",
                                   "text": "This is so lame. Ed Sheeran is boring.",
                                   "username": "SheeranHater2",
                                   "email": "sheeranhater2@outlook.com"
                                 },
                                 {
-                                  "id": 93,
+                                  "id": "93",
                                   "time": "2023-06-14T12:03:00",
                                   "text": "This is so lame. Ed Sheeran is boring.",
                                   "username": "SheeranHater",
                                   "email": "sheeranhater@outlook.com"
                                 },
                                 {
-                                  "id": 141,
+                                  "id": "141",
                                   "time": "2023-06-14T12:01:00",
                                   "text": "Wow! That's awesome! I love Ed Sheeran!",
                                   "username": "SheeranFan2",
                                   "email": "sheeranfan2@gmail.com"
                                 },
                                 {
-                                  "id": 91,
+                                  "id": "91",
                                   "time": "2023-06-14T12:01:00",
                                   "text": "Wow! That's awesome! I love Ed Sheeran!",
                                   "username": "SheeranFan",
@@ -175,22 +173,24 @@ public interface CommentOpenApi {
             @ApiResponse(responseCode = "200", description = "List of Comments retrieved successfully",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CommentResponse.class), examples = @ExampleObject("""
-                            [
-                              {
-                                "id": 37,
-                                "time": "2023-06-14T11:07:00",
-                                "text": "This is so cool! I wonder what it looked like.",
-                                "username": "DinoLover",
-                                "email": "dinolover@yahoo.com"
-                              },
-                              {
-                                "id": 162,
-                                "time": "2023-06-14T11:07:00",
-                                "text": "This is so cool! I wonder what it looked like.",
-                                "username": "DinoLover2",
-                                "email": "dinolover2@yahoo.com"
-                              }
-                            ]
+                            {
+                              "comments": [
+                                {
+                                  "id": "37",
+                                  "time": "2023-06-14T11:07:00",
+                                  "text": "This is so cool! I wonder what it looked like.",
+                                  "username": "DinoLover",
+                                  "email": "dinolover@yahoo.com"
+                                },
+                                {
+                                  "id": "162",
+                                  "time": "2023-06-14T11:07:00",
+                                  "text": "This is so cool! I wonder what it looked like.",
+                                  "username": "DinoLover2",
+                                  "email": "dinolover2@yahoo.com"
+                                }
+                              ]
+                            }
                             """))),
             @ApiResponse(responseCode = "406", description = "Pageable wrong sort params",
                     content = @Content(mediaType = "application/json",
@@ -214,7 +214,7 @@ public interface CommentOpenApi {
                                     {
                                       "text": "Not bad at all :(",
                                       "username": "Vasiliy",
-                                      "news_id": 20
+                                      "news_id": "20"
                                     }
                                     """))))
     @ApiResponses(value = {
@@ -222,7 +222,7 @@ public interface CommentOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CommentResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 203,
+                              "id": "203",
                               "time": "2023-06-16T14:31:34",
                               "text": "Not bad at all :(",
                               "username": "Vasiliy",
@@ -286,7 +286,7 @@ public interface CommentOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CommentResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 191,
+                              "id": "191",
                               "time": "2023-06-16T14:32:55",
                               "text": "Wow, that's cool!",
                               "username": "Svetlana",

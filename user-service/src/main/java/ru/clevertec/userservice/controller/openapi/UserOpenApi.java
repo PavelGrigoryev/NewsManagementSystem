@@ -14,9 +14,9 @@ import org.springframework.http.ResponseEntity;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
 import ru.clevertec.userservice.dto.proto.DeleteResponse;
 import ru.clevertec.userservice.dto.proto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.proto.UserResponse;
 import ru.clevertec.userservice.dto.proto.UserAuthenticationRequest;
 import ru.clevertec.userservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.userservice.dto.proto.UserResponse;
 import ru.clevertec.userservice.dto.proto.UserUpdateRequest;
 
 @Tag(name = "User", description = "The User Api")
@@ -39,7 +39,7 @@ public interface UserOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 4,
+                              "id": "4",
                               "firstname": "Pavel",
                               "lastname": "Shishkin",
                               "email": "Green@mail.com",
@@ -86,7 +86,7 @@ public interface UserOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 1,
+                              "id": "1",
                               "firstname": "Chuck",
                               "lastname": "Norris",
                               "email": "ChakcNunChuck@gmail.com",
@@ -167,7 +167,7 @@ public interface UserOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 2,
+                              "id": "2",
                               "firstname": "Igor",
                               "lastname": "Zavadskiy",
                               "email": "Shwarsz@yahoo.com",

@@ -1,12 +1,12 @@
 package ru.clevertec.newsservice.service;
 
 import org.springframework.data.domain.Pageable;
-import ru.clevertec.newsservice.dto.proto.DeleteResponse;
-import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.dto.proto.CommentRequest;
 import ru.clevertec.newsservice.dto.proto.CommentResponse;
 import ru.clevertec.newsservice.dto.proto.CommentResponseList;
 import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
 
 /**
  * The CommentService interface provides the implementation for CRUD operations.
