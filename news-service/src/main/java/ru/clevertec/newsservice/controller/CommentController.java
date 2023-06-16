@@ -17,15 +17,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.newsservice.controller.openapi.CommentOpenApi;
-import ru.clevertec.newsservice.dto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.dto.proto.CommentRequest;
-import ru.clevertec.newsservice.dto.comment.CommentResponse;
+import ru.clevertec.newsservice.dto.proto.CommentResponse;
+import ru.clevertec.newsservice.dto.proto.CommentResponseList;
 import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
-import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.service.CommentService;
 import ru.clevertec.newsservice.util.ProtobufValidator;
-
-import java.util.List;
 
 @Loggable
 @RestController
@@ -50,9 +49,9 @@ public class CommentController implements CommentOpenApi {
 
     @Override
     @GetMapping("/params")
-    public ResponseEntity<List<CommentResponse>> findAllByMatchingTextParams(@RequestParam(required = false) String text,
-                                                                             @RequestParam(required = false) String username,
-                                                                             Pageable pageable) {
+    public ResponseEntity<CommentResponseList> findAllByMatchingTextParams(@RequestParam(required = false) String text,
+                                                                           @RequestParam(required = false) String username,
+                                                                           Pageable pageable) {
         return ResponseEntity.ok(commentService.findAllByMatchingTextParams(text, username, pageable));
     }
 

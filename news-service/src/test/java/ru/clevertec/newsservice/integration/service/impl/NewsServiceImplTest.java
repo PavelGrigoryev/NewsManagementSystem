@@ -17,6 +17,7 @@ import ru.clevertec.exceptionhandlerstarter.exception.UserDoesNotHavePermissionE
 import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.news.NewsResponse;
 import ru.clevertec.newsservice.dto.proto.NewsRequest;
+import ru.clevertec.newsservice.dto.proto.NewsResponseList;
 import ru.clevertec.newsservice.dto.user.Role;
 import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
 import ru.clevertec.newsservice.integration.BaseIntegrationTest;
@@ -91,9 +92,9 @@ class NewsServiceImplTest extends BaseIntegrationTest {
             int expectedSize = 5;
             Pageable pageable = PageRequest.of(0, 5);
 
-            List<NewsResponse> actualValues = newsService.findAll(pageable);
+            NewsResponseList actualValues = newsService.findAll(pageable);
 
-            assertThat(actualValues).hasSize(expectedSize);
+            assertThat(actualValues.getNewsResponsesList()).hasSize(expectedSize);
         }
 
         @Test

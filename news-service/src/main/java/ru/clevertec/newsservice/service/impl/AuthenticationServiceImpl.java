@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.clevertec.exceptionhandlerstarter.exception.AccessDeniedForThisRoleException;
 import ru.clevertec.exceptionhandlerstarter.exception.UserDoesNotHavePermissionException;
 import ru.clevertec.newsservice.client.UserApiClient;
-import ru.clevertec.newsservice.dto.user.Role;
-import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
+import ru.clevertec.newsservice.dto.proto.Role;
+import ru.clevertec.newsservice.dto.proto.TokenValidationResponse;
 import ru.clevertec.newsservice.service.AuthenticationService;
 
 /**
@@ -29,7 +29,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public TokenValidationResponse checkTokenValidationForRole(String token, Role role) {
         TokenValidationResponse response = userApiClient.tokenValidationCheck(token);
-        Role userRole = Role.valueOf(response.role());
+        Role userRole = Role.valueOf(response.getRole());
         if (!userRole.equals(Role.ADMIN) && !userRole.equals(role)) {
             throw new AccessDeniedForThisRoleException("Access Denied for role: " + userRole);
         }

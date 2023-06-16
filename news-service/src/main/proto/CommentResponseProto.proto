@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_package = "ru.clevertec.newsservice.dto.proto";
+option java_multiple_files = true;
+
+message CommentResponse {
+  int64 id = 1;
+  string time = 2;
+  string text = 3;
+  string username = 4;
+  string email = 5;
+}
+
+message CommentResponseList {
+  repeated CommentResponse commentResponses = 1;
+}
+
+message NewsWithCommentsResponse {
+  int64 id = 1;
+  string time = 2;
+  string title = 3;
+  string text = 4;
+  string email = 5;
+  repeated CommentResponse commentsResponses = 6;
+}

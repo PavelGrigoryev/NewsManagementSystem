@@ -64,7 +64,7 @@ public class NewsCacheAspect {
     public Object aroundPutCacheableAnnotation(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = joinPoint.proceed(joinPoint.getArgs());
         Class<?> aClass = result.getClass();
-        Method method = aClass.getMethod("id");
+        Method method = aClass.getMethod("getId");
         Object id = method.invoke(result);
         Cache<Object, Object> newsCache = cacheFactory.createNewsCache();
         newsCache.put(id, result);

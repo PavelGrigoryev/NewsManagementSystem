@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchUserEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
-import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UserResponse;
+import ru.clevertec.userservice.dto.proto.DeleteResponse;
+import ru.clevertec.userservice.dto.proto.TokenValidationResponse;
+import ru.clevertec.userservice.dto.proto.UserResponse;
 import ru.clevertec.userservice.dto.proto.UserAuthenticationRequest;
 import ru.clevertec.userservice.dto.proto.UserRegisterRequest;
 import ru.clevertec.userservice.dto.proto.UserUpdateRequest;
@@ -91,7 +91,9 @@ public class UserServiceImpl implements UserService {
                 .map(s -> s.substring(s.indexOf("=") + 1, s.length() - 2))
                 .findFirst()
                 .orElse("");
-        return new TokenValidationResponse(role, email);
+        return TokenValidationResponse.newBuilder()
+                .setRole(role)
+                .setEmail(email).build();
     }
 
 
@@ -134,7 +136,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchUserEmailException("There is no User with email " + email + " to delete"));
         userRepository.delete(user);
-        return new DeleteResponse("User with email " + email + " was successfully deleted");
+        return DeleteResponse.newBuilder().setMessage("User with email " + email + " was successfully deleted").build();
     }
 
 }

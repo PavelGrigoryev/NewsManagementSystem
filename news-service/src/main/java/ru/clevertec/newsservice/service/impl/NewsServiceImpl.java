@@ -13,11 +13,12 @@ import ru.clevertec.exceptionhandlerstarter.exception.NoSuchNewsException;
 import ru.clevertec.newsservice.aop.annotation.GetCacheable;
 import ru.clevertec.newsservice.aop.annotation.PutCacheable;
 import ru.clevertec.newsservice.aop.annotation.RemoveCacheable;
-import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.NewsResponse;
 import ru.clevertec.newsservice.dto.proto.NewsRequest;
-import ru.clevertec.newsservice.dto.user.Role;
-import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
+import ru.clevertec.newsservice.dto.proto.NewsResponseList;
+import ru.clevertec.newsservice.dto.proto.Role;
+import ru.clevertec.newsservice.dto.proto.TokenValidationResponse;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.News;
 import ru.clevertec.newsservice.repository.NewsRepository;
@@ -58,11 +59,14 @@ public class NewsServiceImpl implements NewsService {
      * Finds all {@link News} with pagination.
      *
      * @param pageable the {@link Pageable} News will be sorted by its parameters and divided into pages.
-     * @return a sorted by pageable and mapped from entity to dto list of all News.
+     * @return a sorted by pageable and mapped from entity to dto {@link NewsResponseList}.
      */
     @Override
-    public List<NewsResponse> findAll(Pageable pageable) {
-        return newsMapper.toResponses(newsRepository.findAll(pageable));
+    public NewsResponseList findAll(Pageable pageable) {
+        List<NewsResponse> responses = newsMapper.toResponses(newsRepository.findAll(pageable));
+        return NewsResponseList.newBuilder()
+                .addAllNewsResponses(responses)
+                .build();
     }
 
     /**
@@ -71,17 +75,20 @@ public class NewsServiceImpl implements NewsService {
      * @param title    the title to match against News.
      * @param text     the text to match against News.
      * @param pageable {@link Pageable} News will be sorted by its parameters and divided into pages.
-     * @return sorted by pageable, filtered by ExampleMatcher and mapped from entity to dto list of all NewsResponse.
+     * @return sorted by pageable, filtered by ExampleMatcher and mapped from entity to dto {@link NewsResponseList}.
      */
     @Override
-    public List<NewsResponse> findAllByMatchingTextParams(String title, String text, Pageable pageable) {
+    public NewsResponseList findAllByMatchingTextParams(String title, String text, Pageable pageable) {
         News news = newsMapper.fromParams(title, text);
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
                 .withIgnoreNullValues()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Example<News> newsExample = Example.of(news, exampleMatcher);
-        return newsMapper.toResponses(newsRepository.findAll(newsExample, pageable));
+        List<NewsResponse> responses = newsMapper.toResponses(newsRepository.findAll(newsExample, pageable));
+        return NewsResponseList.newBuilder()
+                .addAllNewsResponses(responses)
+                .build();
     }
 
     /**
@@ -99,7 +106,7 @@ public class NewsServiceImpl implements NewsService {
     public NewsResponse save(NewsRequest newsRequest, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.JOURNALIST);
         News news = newsMapper.fromRequest(newsRequest);
-        news.setEmail(response.email());
+        news.setEmail(response.getEmail());
         News saved = newsRepository.save(news);
         return newsMapper.toResponse(saved);
     }
@@ -122,10 +129,10 @@ public class NewsServiceImpl implements NewsService {
         News news = newsRepository.findById(id)
                 .orElseThrow(() -> new NoSuchNewsException("There is no News with ID " + id + " to update"));
         authenticationService.isObjectOwnedByEmailAndRole(
-                response.role(), Role.JOURNALIST, response.email(), news.getEmail());
+                response.getRole(), Role.JOURNALIST, response.getEmail(), news.getEmail());
         news.setTitle(newsRequest.getTitle());
         news.setText(newsRequest.getText());
-        news.setEmail(response.email());
+        news.setEmail(response.getEmail());
         News saved = newsRepository.saveAndFlush(news);
         return newsMapper.toResponse(saved);
     }
@@ -147,9 +154,9 @@ public class NewsServiceImpl implements NewsService {
         News news = newsRepository.findById(id)
                 .orElseThrow(() -> new NoSuchNewsException("There is no News with ID " + id + " to delete"));
         authenticationService.isObjectOwnedByEmailAndRole(
-                response.role(), Role.JOURNALIST, response.email(), news.getEmail());
+                response.getRole(), Role.JOURNALIST, response.getEmail(), news.getEmail());
         newsRepository.delete(news);
-        return new DeleteResponse("News with ID " + id + " was successfully deleted");
+        return DeleteResponse.newBuilder().setMessage("News with ID " + id + " was successfully deleted").build();
     }
 
 }

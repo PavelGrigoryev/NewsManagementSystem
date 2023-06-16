@@ -17,9 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.newsservice.controller.openapi.NewsOpenApi;
-import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
 import ru.clevertec.newsservice.dto.proto.NewsRequest;
+import ru.clevertec.newsservice.dto.proto.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.NewsResponseList;
 import ru.clevertec.newsservice.service.NewsService;
 import ru.clevertec.newsservice.util.ProtobufValidator;
 
@@ -41,13 +42,13 @@ public class NewsController implements NewsOpenApi {
 
     @Override
     @GetMapping
-    public ResponseEntity<List<NewsResponse>> findAll(Pageable pageable) {
+    public ResponseEntity<NewsResponseList> findAll(Pageable pageable) {
         return ResponseEntity.ok(newsService.findAll(pageable));
     }
 
     @Override
     @GetMapping("/params")
-    public ResponseEntity<List<NewsResponse>> findAllByMatchingTextParams(@RequestParam(required = false) String title,
+    public ResponseEntity<NewsResponseList> findAllByMatchingTextParams(@RequestParam(required = false) String title,
                                                                           @RequestParam(required = false) String text,
                                                                           Pageable pageable) {
         return ResponseEntity.ok(newsService.findAllByMatchingTextParams(title, text, pageable));

@@ -1,5 +1,6 @@
 ###register
 POST http://localhost:8081/users/register
+Accept: application/json
 Content-Type: application/json
 
 {
@@ -12,6 +13,7 @@ Content-Type: application/json
 
 ###authenticate
 POST http://localhost:8081/users/authenticate
+Accept: application/json
 Content-Type: application/json
 
 {
@@ -21,11 +23,13 @@ Content-Type: application/json
 
 ###validate
 POST http://localhost:8081/users/validate
+Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt_token}}
 
 ###updateByToken
 PUT http://localhost:8081/users
+Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt_token}}
 
@@ -37,5 +41,6 @@ Authorization: Bearer {{jwt_token}}
 
 ###deleteByToken
 DELETE http://localhost:8081/users
+Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt_token}}

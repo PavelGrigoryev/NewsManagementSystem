@@ -12,12 +12,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
-import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
-import ru.clevertec.newsservice.dto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
 import ru.clevertec.newsservice.dto.proto.UserAuthenticationRequest;
 import ru.clevertec.newsservice.dto.proto.UserRegisterRequest;
 import ru.clevertec.newsservice.dto.proto.UserUpdateRequest;
-import ru.clevertec.newsservice.dto.user.UserResponse;
+import ru.clevertec.newsservice.dto.proto.UserResponse;
 
 @Tag(name = "Authentication", description = "The Authentication Api")
 public interface AuthenticationOpenApi {

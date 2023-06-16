@@ -17,10 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
 import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
-import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.CommentResponse;
+import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.dto.proto.CommentRequest;
+import ru.clevertec.newsservice.dto.proto.CommentResponseList;
 import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
 
 import java.util.List;
@@ -201,9 +202,9 @@ public interface CommentOpenApi {
                             }
                             """)))
     })
-    ResponseEntity<List<CommentResponse>> findAllByMatchingTextParams(String text,
-                                                                      String username,
-                                                                      @ParameterObject Pageable pageable);
+    ResponseEntity<CommentResponseList> findAllByMatchingTextParams(String text,
+                                                                    String username,
+                                                                    @ParameterObject Pageable pageable);
 
     @Operation(summary = "Save new Comment and related it with News by newsId.", tags = "Comment",
             security = @SecurityRequirement(name = "Bearer Authentication"),

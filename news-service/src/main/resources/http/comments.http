@@ -12,6 +12,7 @@ Accept: application/json
 
 ###save
 POST http://localhost:8080/comments
+Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt_token}}
 
@@ -23,6 +24,7 @@ Authorization: Bearer {{jwt_token}}
 
 ###update
 PUT http://localhost:8080/comments/191
+Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt_token}}
 
@@ -33,5 +35,6 @@ Authorization: Bearer {{jwt_token}}
 
 ###delete
 DELETE http://localhost:8080/comments/191
+Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt_token}}

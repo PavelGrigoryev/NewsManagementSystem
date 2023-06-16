@@ -1,5 +1,6 @@
 package ru.clevertec.newsservice.controller.openapi;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,9 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
 import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
-import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.NewsResponse;
 import ru.clevertec.newsservice.dto.proto.NewsRequest;
+import ru.clevertec.newsservice.dto.proto.NewsResponseList;
 
 import java.util.List;
 
@@ -125,7 +127,7 @@ public interface NewsOpenApi {
                             }
                             """))),
     })
-    ResponseEntity<List<NewsResponse>> findAll(@ParameterObject Pageable pageable);
+    ResponseEntity<NewsResponseList> findAll(@ParameterObject Pageable pageable) throws InvalidProtocolBufferException;
 
     @Operation(summary = "Find all News by matching text and title params with pagination.",
             tags = "News", parameters = {
@@ -167,9 +169,9 @@ public interface NewsOpenApi {
                             }
                             """)))
     })
-    ResponseEntity<List<NewsResponse>> findAllByMatchingTextParams(String title,
-                                                                   String text,
-                                                                   @ParameterObject Pageable pageable);
+    ResponseEntity<NewsResponseList> findAllByMatchingTextParams(String title,
+                                                                 String text,
+                                                                 @ParameterObject Pageable pageable);
 
     @Operation(summary = "Save new News.", tags = "News",
             security = @SecurityRequirement(name = "Bearer Authentication"),

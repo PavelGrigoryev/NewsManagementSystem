@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.newsservice.client.UserApiClient;
 import ru.clevertec.newsservice.controller.openapi.AuthenticationOpenApi;
-import ru.clevertec.newsservice.dto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
 import ru.clevertec.newsservice.dto.proto.UserAuthenticationRequest;
 import ru.clevertec.newsservice.dto.proto.UserRegisterRequest;
 import ru.clevertec.newsservice.dto.proto.UserUpdateRequest;
-import ru.clevertec.newsservice.dto.user.UserResponse;
+import ru.clevertec.newsservice.dto.proto.UserResponse;
 import ru.clevertec.newsservice.util.ProtobufValidator;
 
 @Loggable
