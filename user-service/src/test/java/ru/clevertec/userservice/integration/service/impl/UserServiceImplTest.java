@@ -10,20 +10,20 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchUserEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
-import ru.clevertec.userservice.dto.UserAuthenticationRequest;
 import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.UserRegisterRequest;
 import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UserUpdateRequest;
 import ru.clevertec.userservice.dto.UserResponse;
+import ru.clevertec.userservice.dto.proto.UserAuthenticationRequest;
+import ru.clevertec.userservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.userservice.dto.proto.UserUpdateRequest;
 import ru.clevertec.userservice.integration.BaseIntegrationTest;
 import ru.clevertec.userservice.service.UserService;
 import ru.clevertec.userservice.util.json.TokenTxtSupplier;
+import ru.clevertec.userservice.util.testbuilder.TokenValidationResponseTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserAuthenticationRequestTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserRegisterRequestTestBuilder;
-import ru.clevertec.userservice.util.testbuilder.TokenValidationResponseTestBuilder;
-import ru.clevertec.userservice.util.testbuilder.UserUpdateRequestTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserResponseTestBuilder;
+import ru.clevertec.userservice.util.testbuilder.UserUpdateRequestTestBuilder;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -49,7 +49,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
                     .build();
             UserResponse expectedValue = UserResponseTestBuilder.aUserResponse()
                     .withId(4L)
-                    .withEmail(request.email())
+                    .withEmail(request.getEmail())
                     .build();
 
             UserResponse actualValue = userService.register(request);
@@ -73,7 +73,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         @DisplayName("test should throw UniqueEmailException with expected message")
         void testShouldThrowUniqueEmailExceptionWithExpectedMessage() {
             UserRegisterRequest request = UserRegisterRequestTestBuilder.aUserRegisterRequest().build();
-            String expectedMessage = "Email " + request.email()
+            String expectedMessage = "Email " + request.getEmail()
                                      + " is occupied! Another user is already registered by this email!";
 
             Exception exception = assertThrows(UniqueEmailException.class, () -> userService.register(request));
@@ -126,7 +126,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         void testShouldThrowInternalAuthenticationServiceExceptionWithExpectedMessage() {
             UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest()
                     .withEmail("NotExist@email.by").build();
-            String expectedMessage = "User with email " + request.email() + " is not exist";
+            String expectedMessage = "User with email " + request.getEmail() + " is not exist";
 
             Exception exception = assertThrows(InternalAuthenticationServiceException.class,
                     () -> userService.authenticate(request));
@@ -190,8 +190,8 @@ public class UserServiceImplTest extends BaseIntegrationTest {
             String token = TokenTxtSupplier.getToken2048Request();
             UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest().build();
             UserResponse expectedValue = UserResponseTestBuilder.aUserResponse()
-                    .withFirstname(request.firstname())
-                    .withLastname(request.lastname())
+                    .withFirstname(request.getFirstname())
+                    .withLastname(request.getLastname())
                     .withUpdatedTime(LocalDateTime.now())
                     .build();
 

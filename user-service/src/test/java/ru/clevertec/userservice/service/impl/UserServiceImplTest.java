@@ -15,22 +15,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchUserEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
-import ru.clevertec.userservice.dto.UserAuthenticationRequest;
 import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.UserRegisterRequest;
 import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UserUpdateRequest;
 import ru.clevertec.userservice.dto.UserResponse;
+import ru.clevertec.userservice.dto.proto.UserAuthenticationRequest;
+import ru.clevertec.userservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.userservice.dto.proto.UserUpdateRequest;
 import ru.clevertec.userservice.mapper.UserMapper;
 import ru.clevertec.userservice.model.User;
 import ru.clevertec.userservice.repository.UserRepository;
 import ru.clevertec.userservice.service.JwtService;
+import ru.clevertec.userservice.util.testbuilder.TokenValidationResponseTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserAuthenticationRequestTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserRegisterRequestTestBuilder;
-import ru.clevertec.userservice.util.testbuilder.TokenValidationResponseTestBuilder;
-import ru.clevertec.userservice.util.testbuilder.UserUpdateRequestTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserResponseTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserTestBuilder;
+import ru.clevertec.userservice.util.testbuilder.UserUpdateRequestTestBuilder;
 
 import java.util.Date;
 import java.util.Optional;
@@ -136,7 +136,7 @@ class UserServiceImplTest {
             User user = UserTestBuilder.aUser().build();
             String token = "jwt";
             Date tokenExpiration = new Date();
-            Authentication authentication = new UsernamePasswordAuthenticationToken(request.email(), request.password());
+            Authentication authentication = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
             UserResponse expectedValue = UserResponseTestBuilder.aUserResponse().build();
 
             doReturn(authentication)
@@ -145,7 +145,7 @@ class UserServiceImplTest {
 
             doReturn(Optional.of(user))
                     .when(userRepository)
-                    .findByEmail(request.email());
+                    .findByEmail(request.getEmail());
 
             doReturn(token)
                     .when(jwtService)
@@ -168,7 +168,7 @@ class UserServiceImplTest {
         @DisplayName("test should throw BadCredentialsException with expected message")
         void testShouldThrowBadCredentialsExceptionWithExpectedMessage() {
             UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest().build();
-            Authentication authentication = new UsernamePasswordAuthenticationToken(request.email(), request.password());
+            Authentication authentication = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
             String expectedMessage = "Bad credentials";
 
             doThrow(new BadCredentialsException(expectedMessage))
@@ -185,11 +185,11 @@ class UserServiceImplTest {
         @DisplayName("test should throw NoSuchUserEmailException with expected message")
         void testShouldThrowNoSuchUserEmailExceptionWithExpectedMessage() {
             UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest().build();
-            String expectedMessage = "User with email " + request.email() + " is not exist";
+            String expectedMessage = "User with email " + request.getEmail() + " is not exist";
 
             doThrow(new NoSuchUserEmailException(expectedMessage))
                     .when(userRepository)
-                    .findByEmail(request.email());
+                    .findByEmail(request.getEmail());
 
             Exception exception = assertThrows(NoSuchUserEmailException.class, () -> userService.authenticate(request));
             String actualMessage = exception.getMessage();
@@ -248,7 +248,7 @@ class UserServiceImplTest {
 
             doReturn(user.getPassword())
                     .when(passwordEncoder)
-                    .encode(request.password());
+                    .encode(request.getPassword());
 
             doReturn(user)
                     .when(userRepository)
