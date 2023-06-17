@@ -25,7 +25,7 @@ import ru.clevertec.userservice.util.ProtobufValidator;
 @Loggable
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
+@RequestMapping(value = "/users", produces = "application/json")
 public class UserController implements UserOpenApi {
 
     private final UserService userService;

@@ -3,7 +3,7 @@ package ru.clevertec.userservice.util.testbuilder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.With;
-import ru.clevertec.userservice.dto.TokenValidationResponse;
+import ru.clevertec.userservice.dto.proto.TokenValidationResponse;
 import ru.clevertec.userservice.util.TestBuilder;
 
 @AllArgsConstructor
@@ -16,7 +16,10 @@ public class TokenValidationResponseTestBuilder implements TestBuilder<TokenVali
 
     @Override
     public TokenValidationResponse build() {
-        return new TokenValidationResponse(role, email);
+        return TokenValidationResponse.newBuilder()
+                .setRole(role)
+                .setEmail(email)
+                .build();
     }
 
 }

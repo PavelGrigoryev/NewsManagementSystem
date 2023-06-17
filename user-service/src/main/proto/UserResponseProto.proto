@@ -8,15 +8,9 @@ message UserResponse {
   string firstname = 2;
   string lastname = 3;
   string email = 4;
-  Role role = 5;
+  string role = 5;
   string token = 6;
   string tokenExpiration = 7;
   string createdTime = 8;
   string updatedTime = 9;
-}
-
-enum Role {
-  ADMIN = 0;
-  JOURNALIST = 1;
-  SUBSCRIBER = 2;
 }

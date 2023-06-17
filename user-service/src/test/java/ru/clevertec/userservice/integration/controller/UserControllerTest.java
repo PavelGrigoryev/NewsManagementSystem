@@ -1,6 +1,5 @@
 package ru.clevertec.userservice.integration.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.util.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
@@ -9,11 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UserResponse;
+import ru.clevertec.userservice.dto.proto.DeleteResponse;
+import ru.clevertec.userservice.dto.proto.TokenValidationResponse;
 import ru.clevertec.userservice.dto.proto.UserAuthenticationRequest;
 import ru.clevertec.userservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.userservice.dto.proto.UserResponse;
 import ru.clevertec.userservice.dto.proto.UserUpdateRequest;
 import ru.clevertec.userservice.integration.BaseIntegrationTest;
 import ru.clevertec.userservice.util.json.TokenTxtSupplier;
@@ -38,7 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest extends BaseIntegrationTest {
 
     private final MockMvc mockMvc;
-    private final ObjectMapper objectMapper;
     private static final String BEARER = "Bearer ";
 
     @Nested
@@ -61,9 +59,9 @@ class UserControllerTest extends BaseIntegrationTest {
                     .andExpect(jsonPath("$.email").value(request.getEmail()))
                     .andExpect(jsonPath("$.role").value(request.getRole()))
                     .andExpect(jsonPath("$.token").isString())
-                    .andExpect(jsonPath("$.token_expiration").isString())
-                    .andExpect(jsonPath("$.created_time").isNotEmpty())
-                    .andExpect(jsonPath("$.updated_time").isNotEmpty());
+                    .andExpect(jsonPath("$.tokenExpiration").isString())
+                    .andExpect(jsonPath("$.createdTime").isNotEmpty())
+                    .andExpect(jsonPath("$.updatedTime").isNotEmpty());
         }
 
         @Test
@@ -113,14 +111,14 @@ class UserControllerTest extends BaseIntegrationTest {
                             .content(content)
                             .contentType(APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.firstname").value(response.firstname()))
-                    .andExpect(jsonPath("$.lastname").value(response.lastname()))
+                    .andExpect(jsonPath("$.firstname").value(response.getFirstname()))
+                    .andExpect(jsonPath("$.lastname").value(response.getLastname()))
                     .andExpect(jsonPath("$.email").value(request.getEmail()))
-                    .andExpect(jsonPath("$.role").value(response.role().name()))
+                    .andExpect(jsonPath("$.role").value(response.getRole()))
                     .andExpect(jsonPath("$.token").isString())
-                    .andExpect(jsonPath("$.token_expiration").isString())
-                    .andExpect(jsonPath("$.created_time").isNotEmpty())
-                    .andExpect(jsonPath("$.updated_time").isNotEmpty());
+                    .andExpect(jsonPath("$.tokenExpiration").isString())
+                    .andExpect(jsonPath("$.createdTime").isNotEmpty())
+                    .andExpect(jsonPath("$.updatedTime").isNotEmpty());
         }
 
         @Test
@@ -181,7 +179,7 @@ class UserControllerTest extends BaseIntegrationTest {
                     .withEmail("BruceLee@shazam.com")
                     .build();
             String token = TokenTxtSupplier.getToken2048Request();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
 
             mockMvc.perform(post("/users/validate")
                             .header(AUTHORIZATION, BEARER + token))
@@ -249,12 +247,12 @@ class UserControllerTest extends BaseIntegrationTest {
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.firstname").value(request.getFirstname()))
                     .andExpect(jsonPath("$.lastname").value(request.getLastname()))
-                    .andExpect(jsonPath("$.email").value(response.email()))
-                    .andExpect(jsonPath("$.role").value(response.role().name()))
+                    .andExpect(jsonPath("$.email").value(response.getEmail()))
+                    .andExpect(jsonPath("$.role").value(response.getRole()))
                     .andExpect(jsonPath("$.token").isString())
-                    .andExpect(jsonPath("$.token_expiration").isString())
-                    .andExpect(jsonPath("$.created_time").isNotEmpty())
-                    .andExpect(jsonPath("$.updated_time").isNotEmpty());
+                    .andExpect(jsonPath("$.tokenExpiration").isString())
+                    .andExpect(jsonPath("$.createdTime").isNotEmpty())
+                    .andExpect(jsonPath("$.updatedTime").isNotEmpty());
         }
 
         @Test
@@ -316,8 +314,10 @@ class UserControllerTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return expected json and status 200")
         void testShouldReturnExpectedJsonAndStatus200() throws Exception {
-            DeleteResponse deleteResponse = new DeleteResponse("User with email BruceLee@shazam.com was successfully deleted");
-            String json = objectMapper.writeValueAsString(deleteResponse);
+            DeleteResponse deleteResponse = DeleteResponse.newBuilder()
+                    .setMessage("User with email BruceLee@shazam.com was successfully deleted")
+                    .build();
+            String json = JsonFormat.printer().print(deleteResponse);
             String token = TokenTxtSupplier.getToken2048Request();
 
             mockMvc.perform(delete("/users")

@@ -15,11 +15,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchUserEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
-import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UserResponse;
+import ru.clevertec.userservice.dto.proto.DeleteResponse;
+import ru.clevertec.userservice.dto.proto.TokenValidationResponse;
 import ru.clevertec.userservice.dto.proto.UserAuthenticationRequest;
 import ru.clevertec.userservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.userservice.dto.proto.UserResponse;
 import ru.clevertec.userservice.dto.proto.UserUpdateRequest;
 import ru.clevertec.userservice.mapper.UserMapper;
 import ru.clevertec.userservice.model.User;
@@ -210,7 +210,7 @@ class UserServiceImplTest {
             TokenValidationResponse expectedValue = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
             String roles = "[{authority=ADMIN}]";
 
-            doReturn(expectedValue.email())
+            doReturn(expectedValue.getEmail())
                     .when(jwtService)
                     .extractUsername(token);
 
@@ -302,7 +302,9 @@ class UserServiceImplTest {
             String bearer = "Bearer jwt";
             String token = "jwt";
             User user = UserTestBuilder.aUser().build();
-            DeleteResponse expectedValue = new DeleteResponse("User with email " + user.getEmail() + " was successfully deleted");
+            DeleteResponse expectedValue = DeleteResponse.newBuilder()
+                    .setMessage("User with email " + user.getEmail() + " was successfully deleted")
+                    .build();
 
             doReturn(user.getEmail())
                     .when(jwtService)
