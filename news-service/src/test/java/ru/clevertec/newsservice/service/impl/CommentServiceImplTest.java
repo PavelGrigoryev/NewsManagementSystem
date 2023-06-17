@@ -19,14 +19,15 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchCommentException;
-import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.news.NewsResponse;
-import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.dto.proto.CommentRequest;
+import ru.clevertec.newsservice.dto.proto.CommentResponse;
+import ru.clevertec.newsservice.dto.proto.CommentResponseList;
 import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
-import ru.clevertec.newsservice.dto.user.Role;
-import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
+import ru.clevertec.newsservice.dto.proto.Role;
+import ru.clevertec.newsservice.dto.proto.TokenValidationResponse;
 import ru.clevertec.newsservice.mapper.CommentMapper;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.Comment;
@@ -106,7 +107,7 @@ class CommentServiceImplTest {
         void testShouldReturnExpectedCommentResponse() {
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().build();
             Comment mockedComment = CommentTestBuilder.aComment().build();
-            long id = expectedValue.id();
+            long id = expectedValue.getId();
 
             doReturn(expectedValue)
                     .when(commentMapper)
@@ -130,10 +131,11 @@ class CommentServiceImplTest {
         @DisplayName("test should return expected value")
         void testShouldReturnExpectedValue() {
             NewsResponse mockedNewsResponse = NewsResponseTestBuilder.aNewsResponse().build();
-            long id = mockedNewsResponse.id();
+            long id = mockedNewsResponse.getId();
             NewsWithCommentsResponse expectedValue = NewsWithCommentsResponseTestBuilder
                     .aNewsWithCommentsResponse().build();
             Comment mockedComment = CommentTestBuilder.aComment().build();
+            CommentResponse mockedCommentResponse = CommentResponseTestBuilder.aCommentResponse().build();
             Pageable mockedPageable = PageRequest.of(1, 2);
 
             doReturn(mockedNewsResponse)
@@ -144,9 +146,13 @@ class CommentServiceImplTest {
                     .when(commentRepository)
                     .findAllByNewsId(id, mockedPageable);
 
+            doReturn(List.of(mockedCommentResponse))
+                    .when(commentMapper)
+                    .toResponses(List.of(mockedComment));
+
             doReturn(expectedValue)
                     .when(commentMapper)
-                    .toWithCommentsResponse(mockedNewsResponse, List.of(mockedComment));
+                    .toNewsWithCommentsResponse(mockedNewsResponse, List.of(mockedCommentResponse));
 
             NewsWithCommentsResponse actualValue = commentService.findNewsByNewsIdWithComments(id, mockedPageable);
 
@@ -157,10 +163,11 @@ class CommentServiceImplTest {
         @DisplayName("test should return NewsWithCommentsResponse with List of Comments size 2")
         void testShouldReturnNewsWithCommentsResponseWithListOfSizeTwo() {
             NewsResponse mockedNewsResponse = NewsResponseTestBuilder.aNewsResponse().build();
-            long id = mockedNewsResponse.id();
+            long id = mockedNewsResponse.getId();
             NewsWithCommentsResponse mockedNewsWithComments = NewsWithCommentsResponseTestBuilder
                     .aNewsWithCommentsResponse().build();
             Comment mockedComment = CommentTestBuilder.aComment().build();
+            CommentResponse mockedCommentResponse = CommentResponseTestBuilder.aCommentResponse().build();
             Pageable mockedPageable = PageRequest.of(1, 2);
             int expectedSize = 2;
 
@@ -172,23 +179,28 @@ class CommentServiceImplTest {
                     .when(commentRepository)
                     .findAllByNewsId(id, mockedPageable);
 
+            doReturn(List.of(mockedCommentResponse))
+                    .when(commentMapper)
+                    .toResponses(List.of(mockedComment));
+
             doReturn(mockedNewsWithComments)
                     .when(commentMapper)
-                    .toWithCommentsResponse(mockedNewsResponse, List.of(mockedComment));
+                    .toNewsWithCommentsResponse(mockedNewsResponse, List.of(mockedCommentResponse));
 
             NewsWithCommentsResponse actualValue = commentService.findNewsByNewsIdWithComments(id, mockedPageable);
 
-            assertThat(actualValue.comments()).hasSize(expectedSize);
+            assertThat(actualValue.getCommentsList()).hasSize(expectedSize);
         }
 
         @Test
         @DisplayName("test should return NewsWithCommentsResponse with List that contains expected value")
         void testShouldReturnNewsWithCommentsResponseWithListThatContainsExpectedValue() {
             NewsResponse mockedNewsResponse = NewsResponseTestBuilder.aNewsResponse().build();
-            long id = mockedNewsResponse.id();
+            long id = mockedNewsResponse.getId();
             NewsWithCommentsResponse mockedNewsWithComments = NewsWithCommentsResponseTestBuilder
                     .aNewsWithCommentsResponse().build();
             Comment mockedComment = CommentTestBuilder.aComment().build();
+            CommentResponse mockedCommentResponse = CommentResponseTestBuilder.aCommentResponse().build();
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().build();
             Pageable mockedPageable = PageRequest.of(1, 2);
 
@@ -200,13 +212,17 @@ class CommentServiceImplTest {
                     .when(commentRepository)
                     .findAllByNewsId(id, mockedPageable);
 
+            doReturn(List.of(mockedCommentResponse))
+                    .when(commentMapper)
+                    .toResponses(List.of(mockedComment));
+
             doReturn(mockedNewsWithComments)
                     .when(commentMapper)
-                    .toWithCommentsResponse(mockedNewsResponse, List.of(mockedComment));
+                    .toNewsWithCommentsResponse(mockedNewsResponse, List.of(mockedCommentResponse));
 
             NewsWithCommentsResponse actualValue = commentService.findNewsByNewsIdWithComments(id, mockedPageable);
 
-            assertThat(actualValue.comments()).contains(expectedValue);
+            assertThat(actualValue.getCommentsList()).contains(expectedValue);
         }
 
         @Test
@@ -229,11 +245,11 @@ class CommentServiceImplTest {
 
             doReturn(mockedNewsWithComments)
                     .when(commentMapper)
-                    .toWithCommentsResponse(mockedNewsResponse, List.of());
+                    .toNewsWithCommentsResponse(mockedNewsResponse, List.of());
 
             NewsWithCommentsResponse actualValue = commentService.findNewsByNewsIdWithComments(id, mockedPageable);
 
-            assertThat(actualValue.comments()).isEmpty();
+            assertThat(actualValue.getCommentsList()).isEmpty();
         }
 
     }
@@ -267,9 +283,9 @@ class CommentServiceImplTest {
                     .when(commentRepository)
                     .findAll(mockedCommentExample, mockedPageable);
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, mockedPageable);
+            CommentResponseList actualValues = commentService.findAllByMatchingTextParams(text, username, mockedPageable);
 
-            assertThat(actualValues).hasSize(expectedSize);
+            assertThat(actualValues.getCommentsList()).hasSize(expectedSize);
         }
 
         @Test
@@ -296,9 +312,9 @@ class CommentServiceImplTest {
                     .when(commentRepository)
                     .findAll(mockedCommentExample, mockedPageable);
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, mockedPageable);
+            CommentResponseList actualValues = commentService.findAllByMatchingTextParams(text, username, mockedPageable);
 
-            assertThat(actualValues).contains(expectedValue);
+            assertThat(actualValues.getCommentsList()).contains(expectedValue);
         }
 
         @Test
@@ -319,9 +335,9 @@ class CommentServiceImplTest {
                     .when(commentRepository)
                     .findAll(mockedCommentExample, mockedPageable);
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, mockedPageable);
+            CommentResponseList actualValues = commentService.findAllByMatchingTextParams(text, username, mockedPageable);
 
-            assertThat(actualValues).isEmpty();
+            assertThat(actualValues.getCommentsList()).isEmpty();
         }
 
     }
@@ -460,7 +476,9 @@ class CommentServiceImplTest {
         void testShouldReturnExpectedDeleteResponse() {
             Comment mockedComment = CommentTestBuilder.aComment().build();
             long id = mockedComment.getId();
-            DeleteResponse expectedValue = new DeleteResponse("Comment with ID " + id + " was successfully deleted");
+            DeleteResponse expectedValue = DeleteResponse.newBuilder()
+                    .setMessage("Comment with ID " + id + " was successfully deleted")
+                    .build();
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
             String token = "jwt";
 

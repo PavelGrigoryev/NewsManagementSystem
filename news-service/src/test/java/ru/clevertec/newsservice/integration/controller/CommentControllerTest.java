@@ -1,6 +1,5 @@
 package ru.clevertec.newsservice.integration.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.google.protobuf.util.JsonFormat;
@@ -13,11 +12,11 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.clevertec.newsservice.dto.DeleteResponse;
 import ru.clevertec.newsservice.dto.proto.CommentRequest;
 import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
-import ru.clevertec.newsservice.dto.user.Role;
-import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.Role;
+import ru.clevertec.newsservice.dto.proto.TokenValidationResponse;
 import ru.clevertec.newsservice.integration.BaseIntegrationTest;
 import ru.clevertec.newsservice.util.json.CommentJsonSupplier;
 import ru.clevertec.newsservice.util.json.CommonErrorJsonSupplier;
@@ -47,7 +46,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CommentControllerTest extends BaseIntegrationTest {
 
     private final MockMvc mockMvc;
-    private final ObjectMapper objectMapper;
 
     @Nested
     class FindByIdGetEndpointTest {
@@ -95,10 +93,11 @@ class CommentControllerTest extends BaseIntegrationTest {
         void testShouldReturnNewsJsonAndStatus200WithNoCommentsOnThePage() throws Exception {
             long newsId = 5;
             int page = 5;
+            String json = NewsJsonSupplier.getNewsResponse();
 
             mockMvc.perform(get("/comments/news/" + newsId + "?page=" + page))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.comments").isEmpty());
+                    .andExpect(content().json(json));
         }
 
         @Test
@@ -160,7 +159,7 @@ class CommentControllerTest extends BaseIntegrationTest {
         void testShouldReturnEmptyJsonAndStatus200IfThereIsNoNewsOnThePage() throws Exception {
             int page = 5;
             String username = "Soccer";
-            String json = "[]";
+            String json = "{}";
 
             mockMvc.perform(get("/comments/params?username=" + username + "&page=" + page))
                     .andExpect(status().isOk())
@@ -205,7 +204,7 @@ class CommentControllerTest extends BaseIntegrationTest {
                                                                            TokenValidationResponse response) throws Exception {
             CommentWithNewsRequest request = CommentWithNewsRequestTestBuilder.aCommentWithNewsRequest().build();
             String content = JsonFormat.printer().print(request);
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -220,7 +219,7 @@ class CommentControllerTest extends BaseIntegrationTest {
                     .andExpect(jsonPath("$.id").value(expectedId))
                     .andExpect(jsonPath("$.text").value(request.getText()))
                     .andExpect(jsonPath("$.username").value(request.getUsername()))
-                    .andExpect(jsonPath("$.email").value(response.email()));
+                    .andExpect(jsonPath("$.email").value(response.getEmail()));
         }
 
         @Test
@@ -250,7 +249,7 @@ class CommentControllerTest extends BaseIntegrationTest {
             String content = JsonFormat.printer().print(request);
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.JOURNALIST.name()).build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             String expectedJson = CommonErrorJsonSupplier.getForbiddenForJournalistErrorResponse();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -275,7 +274,7 @@ class CommentControllerTest extends BaseIntegrationTest {
             String expectedJson = NewsJsonSupplier.getNotFoundGetNewsResponse();
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.SUBSCRIBER.name()).build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -319,7 +318,7 @@ class CommentControllerTest extends BaseIntegrationTest {
                                                                            TokenValidationResponse response) throws Exception {
             CommentRequest request = CommentRequestTestBuilder.aCommentRequest().build();
             String content = JsonFormat.printer().print(request);
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -334,7 +333,7 @@ class CommentControllerTest extends BaseIntegrationTest {
                     .andExpect(jsonPath("$.id").value(expectedId))
                     .andExpect(jsonPath("$.text").value(request.getText()))
                     .andExpect(jsonPath("$.username").value(request.getUsername()))
-                    .andExpect(jsonPath("$.email").value(response.email()));
+                    .andExpect(jsonPath("$.email").value(response.getEmail()));
         }
 
         @Test
@@ -366,7 +365,7 @@ class CommentControllerTest extends BaseIntegrationTest {
             String content = JsonFormat.printer().print(request);
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.JOURNALIST.name()).build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             String expectedJson = CommonErrorJsonSupplier.getForbiddenForJournalistErrorResponse();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -390,7 +389,7 @@ class CommentControllerTest extends BaseIntegrationTest {
             String content = JsonFormat.printer().print(request);
             String expectedJson = CommentJsonSupplier.getNotFoundPutCommentResponse();
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -413,7 +412,7 @@ class CommentControllerTest extends BaseIntegrationTest {
             String content = JsonFormat.printer().print(request);
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.SUBSCRIBER.name()).build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             String expectedJson = CommonErrorJsonSupplier.getMethodNotAllowedForSubscriberErrorResponse();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -470,9 +469,11 @@ class CommentControllerTest extends BaseIntegrationTest {
         @MethodSource("ru.clevertec.newsservice.integration.controller.CommentControllerTest#getArgumentsForDeleteTest")
         void testShouldReturnExpectedJsonAndStatus200ForSubscriberAndAdmin(Long id,
                                                                            TokenValidationResponse response) throws Exception {
-            DeleteResponse deleteResponse = new DeleteResponse("Comment with ID " + id + " was successfully deleted");
-            String expectedJson = objectMapper.writeValueAsString(deleteResponse);
-            String json = objectMapper.writeValueAsString(response);
+            DeleteResponse deleteResponse = DeleteResponse.newBuilder()
+                    .setMessage("Comment with ID " + id + " was successfully deleted")
+                    .build();
+            String expectedJson = JsonFormat.printer().print(deleteResponse);
+            String json = JsonFormat.printer().print(response);
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -508,7 +509,7 @@ class CommentControllerTest extends BaseIntegrationTest {
             long id = 2L;
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.JOURNALIST.name()).build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             String expectedJson = CommonErrorJsonSupplier.getForbiddenForJournalistErrorResponse();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -528,7 +529,7 @@ class CommentControllerTest extends BaseIntegrationTest {
             long wrongId = 122;
             String expectedJson = CommentJsonSupplier.getNotFoundDeleteCommentResponse();
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -547,7 +548,7 @@ class CommentControllerTest extends BaseIntegrationTest {
             long id = 2L;
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.SUBSCRIBER.name()).build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             String expectedJson = CommonErrorJsonSupplier.getMethodNotAllowedForSubscriberErrorResponse();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))

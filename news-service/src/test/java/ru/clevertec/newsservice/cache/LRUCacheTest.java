@@ -3,7 +3,7 @@ package ru.clevertec.newsservice.cache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.NewsResponse;
 import ru.clevertec.newsservice.util.testbuilder.news.NewsResponseTestBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;

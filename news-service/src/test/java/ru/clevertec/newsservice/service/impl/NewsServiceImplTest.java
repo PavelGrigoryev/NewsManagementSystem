@@ -19,11 +19,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchNewsException;
-import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.news.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
 import ru.clevertec.newsservice.dto.proto.NewsRequest;
-import ru.clevertec.newsservice.dto.user.Role;
-import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
+import ru.clevertec.newsservice.dto.proto.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.NewsResponseList;
+import ru.clevertec.newsservice.dto.proto.Role;
+import ru.clevertec.newsservice.dto.proto.TokenValidationResponse;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.News;
 import ru.clevertec.newsservice.repository.NewsRepository;
@@ -92,7 +93,7 @@ class NewsServiceImplTest {
         void testShouldReturnExpectedNewsResponse() {
             NewsResponse expectedValue = NewsResponseTestBuilder.aNewsResponse().build();
             News mockedNews = NewsTestBuilder.aNews().build();
-            long id = expectedValue.id();
+            long id = expectedValue.getId();
 
             doReturn(expectedValue)
                     .when(newsMapper)
@@ -129,9 +130,9 @@ class NewsServiceImplTest {
                     .when(newsRepository)
                     .findAll(mockedPageable);
 
-            List<NewsResponse> actualValues = newsService.findAll(mockedPageable);
+            NewsResponseList actualValues = newsService.findAll(mockedPageable);
 
-            assertThat(actualValues).hasSize(expectedSize);
+            assertThat(actualValues.getNewsList()).hasSize(expectedSize);
         }
 
         @Test
@@ -150,9 +151,9 @@ class NewsServiceImplTest {
                     .when(newsRepository)
                     .findAll(mockedPageable);
 
-            List<NewsResponse> actualValues = newsService.findAll(mockedPageable);
+            NewsResponseList actualValues = newsService.findAll(mockedPageable);
 
-            assertThat(actualValues).contains(expectedValue);
+            assertThat(actualValues.getNewsList()).contains(expectedValue);
         }
 
         @Test
@@ -164,9 +165,9 @@ class NewsServiceImplTest {
                     .when(newsRepository)
                     .findAll(mockedPageable);
 
-            List<NewsResponse> actualValues = newsService.findAll(mockedPageable);
+            NewsResponseList actualValues = newsService.findAll(mockedPageable);
 
-            assertThat(actualValues).isEmpty();
+            assertThat(actualValues.getNewsList()).isEmpty();
         }
 
     }
@@ -199,9 +200,9 @@ class NewsServiceImplTest {
                     .when(newsRepository)
                     .findAll(mockedNewsExample, mockedPageable);
 
-            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(title, text, mockedPageable);
+            NewsResponseList actualValues = newsService.findAllByMatchingTextParams(title, text, mockedPageable);
 
-            assertThat(actualValues).hasSize(expectedSize);
+            assertThat(actualValues.getNewsList()).hasSize(expectedSize);
         }
 
         @Test
@@ -228,9 +229,9 @@ class NewsServiceImplTest {
                     .when(newsRepository)
                     .findAll(mockedNewsExample, mockedPageable);
 
-            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(title, text, mockedPageable);
+            NewsResponseList actualValues = newsService.findAllByMatchingTextParams(title, text, mockedPageable);
 
-            assertThat(actualValues).contains(expectedValue);
+            assertThat(actualValues.getNewsList()).contains(expectedValue);
         }
 
         @Test
@@ -251,9 +252,9 @@ class NewsServiceImplTest {
                     .when(newsRepository)
                     .findAll(mockedNewsExample, mockedPageable);
 
-            List<NewsResponse> actualValues = newsService.findAllByMatchingTextParams(title, text, mockedPageable);
+            NewsResponseList actualValues = newsService.findAllByMatchingTextParams(title, text, mockedPageable);
 
-            assertThat(actualValues).isEmpty();
+            assertThat(actualValues.getNewsList()).isEmpty();
         }
 
     }
@@ -382,7 +383,9 @@ class NewsServiceImplTest {
         void testShouldReturnExpectedDeleteResponse() {
             News mockedNews = NewsTestBuilder.aNews().build();
             long id = mockedNews.getId();
-            DeleteResponse expectedValue = new DeleteResponse("News with ID " + id + " was successfully deleted");
+            DeleteResponse expectedValue = DeleteResponse.newBuilder()
+                    .setMessage("News with ID " + id + " was successfully deleted")
+                    .build();
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
             String token = "jwt";
 

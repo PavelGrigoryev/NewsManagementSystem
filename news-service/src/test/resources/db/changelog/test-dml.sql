@@ -2,16 +2,16 @@
 
 --changeset Grigoryev_Pavel:test2
 INSERT INTO news (id, time, title, text, email)
-VALUES (1, '2023-06-14 10:30:00', 'Breaking: Volcano erupts in Hawaii',
+VALUES (1, '2023-06-14 10:30:17', 'Breaking: Volcano erupts in Hawaii',
         'A massive volcanic eruption has occurred on the Big Island of Hawaii, spewing lava and ash into the air. The eruption was triggered by a series of earthquakes that rocked the island in the past few days. Authorities have issued evacuation orders for nearby residents and warned of possible tsunamis and landslides.',
         'reporter@news.com'),
        (2, '2023-06-14 10:35:00', 'SpaceX launches Starship SN20 to orbit',
         'SpaceX has successfully launched its Starship SN20 vehicle to orbit for the first time, marking a major milestone for the company and the future of space exploration. The Starship SN20 lifted off from Boca Chica, Texas, at 10:15 a.m. local time and reached an altitude of about 200 kilometers before performing a flip maneuver and reentering the atmosphere. The Starship SN20 then landed safely on a floating platform in the Gulf of Mexico.',
         'space@news.com'),
-       (3, '2023-06-14 10:40:00', 'Apple unveils iPhone 15 with holographic display',
+       (3, '2023-06-14 10:40:15', 'Apple unveils iPhone 15 with holographic display',
         'Apple has announced its latest flagship smartphone, the iPhone 15, which features a revolutionary holographic display that projects 3D images in mid-air. The iPhone 15 also boasts a faster processor, a longer battery life, and a new design that is thinner and lighter than ever. The iPhone 15 will be available in stores starting from July 1st.',
         'tech@news.com'),
-       (4, '2023-06-14 10:45:00', 'World Cup kicks off in Qatar',
+       (4, '2023-06-14 10:45:33', 'World Cup kicks off in Qatar',
         'The 2023 FIFA World Cup has officially begun in Qatar, with the host nation facing Brazil in the opening match. The World Cup, which is held every four years, is the most prestigious and popular soccer tournament in the world, attracting millions of fans and viewers from around the globe. The World Cup will last for a month, with 32 teams competing for the coveted trophy.',
         'sports@news.com'),
        (5, '2023-06-14 10:50:00', 'New study reveals the secrets of longevity',
@@ -21,7 +21,7 @@ VALUES (1, '2023-06-14 10:30:00', 'Breaking: Volcano erupts in Hawaii',
 SELECT setval('news_id_seq', (SELECT max(id) FROM news));
 
 INSERT INTO comments (id, time, text, username, email, news_id)
-VALUES (1, '2023-06-14 10:31:00', 'Wow! That''s scary! I hope everyone is safe!', 'LavaLover', 'lavalover@gmail.com',
+VALUES (1, '2023-06-14 10:31:12', 'Wow! That''s scary! I hope everyone is safe!', 'LavaLover', 'lavalover@gmail.com',
         1),
        (2, '2023-06-14 10:32:00', 'I live in Hawaii and I can see the smoke from my window. It''s crazy!', 'Aloha123',
         'aloha123@yahoo.com', 1),
@@ -42,7 +42,7 @@ VALUES (1, '2023-06-14 10:31:00', 'Wow! That''s scary! I hope everyone is safe!'
         'MarsLover', 'marslover@hotmail.com', 2),
        (10, '2023-06-14 10:40:00', 'This is so exciting! I can''t wait to see more Starship launches!', 'SpaceXFan',
         'spacexfan@gmail.com', 2),
-       (11, '2023-06-14 10:41:00', 'Wow! That''s awesome! I want an iPhone 15!', 'AppleFan', 'applefan@gmail.com', 3),
+       (11, '2023-06-14 10:41:45', 'Wow! That''s awesome! I want an iPhone 15!', 'AppleFan', 'applefan@gmail.com', 3),
        (12, '2023-06-14 10:42:00', 'This is so cool! A holographic display? That''s like sci-fi!', 'TechLover',
         'techlover@yahoo.com', 3),
        (13, '2023-06-14 10:43:00', 'This is so lame. Apple is just copying Samsung. They have nothing new to offer.',

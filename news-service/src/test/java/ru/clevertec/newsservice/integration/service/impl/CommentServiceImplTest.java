@@ -1,9 +1,9 @@
 package ru.clevertec.newsservice.integration.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,13 +15,14 @@ import ru.clevertec.exceptionhandlerstarter.exception.AccessDeniedForThisRoleExc
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchCommentException;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchNewsException;
 import ru.clevertec.exceptionhandlerstarter.exception.UserDoesNotHavePermissionException;
-import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.dto.proto.CommentRequest;
+import ru.clevertec.newsservice.dto.proto.CommentResponse;
+import ru.clevertec.newsservice.dto.proto.CommentResponseList;
 import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
-import ru.clevertec.newsservice.dto.user.Role;
-import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
+import ru.clevertec.newsservice.dto.proto.Role;
+import ru.clevertec.newsservice.dto.proto.TokenValidationResponse;
 import ru.clevertec.newsservice.integration.BaseIntegrationTest;
 import ru.clevertec.newsservice.service.CommentService;
 import ru.clevertec.newsservice.util.testbuilder.comment.CommentRequestTestBuilder;
@@ -33,7 +34,6 @@ import ru.clevertec.newsservice.util.testbuilder.user.TokenValidationResponseTes
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Collections;
-import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
@@ -49,7 +49,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 class CommentServiceImplTest extends BaseIntegrationTest {
 
     private final CommentService commentService;
-    private final ObjectMapper objectMapper;
 
     @Nested
     class FindByIdTest {
@@ -79,7 +78,7 @@ class CommentServiceImplTest extends BaseIntegrationTest {
         void testShouldReturnExpectedCommentResponse() {
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse().build();
 
-            CommentResponse actualValue = commentService.findById(expectedValue.id());
+            CommentResponse actualValue = commentService.findById(expectedValue.getId());
 
             assertThat(actualValue).isEqualTo(expectedValue);
         }
@@ -95,7 +94,7 @@ class CommentServiceImplTest extends BaseIntegrationTest {
             long newsId = 3L;
             NewsWithCommentsResponse expectedValue = NewsWithCommentsResponseTestBuilder.aNewsWithCommentsResponse()
                     .withId(newsId)
-                    .withTime(LocalDateTime.of(2023, Month.JUNE, 14, 10, 40))
+                    .withTime(LocalDateTime.of(2023, Month.JUNE, 14, 10, 40, 15))
                     .withTitle("Apple unveils iPhone 15 with holographic display")
                     .withText("Apple has announced its latest flagship smartphone, the iPhone 15, which features a " +
                               "revolutionary holographic display that projects 3D images in mid-air. The iPhone 15 also" +
@@ -104,7 +103,7 @@ class CommentServiceImplTest extends BaseIntegrationTest {
                     .withEmail("tech@news.com")
                     .withComments(Collections.singletonList(CommentResponseTestBuilder.aCommentResponse()
                             .withId(11L)
-                            .withTime(LocalDateTime.of(2023, Month.JUNE, 14, 10, 41))
+                            .withTime(LocalDateTime.of(2023, Month.JUNE, 14, 10, 41, 45))
                             .withText("Wow! That's awesome! I want an iPhone 15!")
                             .withUsername("AppleFan")
                             .withEmail("applefan@gmail.com")
@@ -126,7 +125,7 @@ class CommentServiceImplTest extends BaseIntegrationTest {
 
             NewsWithCommentsResponse actualValue = commentService.findNewsByNewsIdWithComments(newsId, pageable);
 
-            assertThat(actualValue.comments()).hasSize(expectedSize);
+            assertThat(actualValue.getCommentsList()).hasSize(expectedSize);
         }
 
         @Test
@@ -137,7 +136,7 @@ class CommentServiceImplTest extends BaseIntegrationTest {
 
             NewsWithCommentsResponse actualValue = commentService.findNewsByNewsIdWithComments(newsId, pageable);
 
-            assertThat(actualValue.comments()).isEmpty();
+            assertThat(actualValue.getCommentsList()).isEmpty();
         }
 
         @Test
@@ -164,7 +163,7 @@ class CommentServiceImplTest extends BaseIntegrationTest {
 
             NewsWithCommentsResponse actualValue = commentService.findNewsByNewsIdWithComments(newsId, pageable);
 
-            assertThat(actualValue.comments().get(0).id()).isEqualTo(expectedId);
+            assertThat(actualValue.getCommentsList().get(0).getId()).isEqualTo(expectedId);
         }
 
         @Test
@@ -177,7 +176,7 @@ class CommentServiceImplTest extends BaseIntegrationTest {
 
             NewsWithCommentsResponse actualValue = commentService.findNewsByNewsIdWithComments(newsId, pageable);
 
-            assertThat(actualValue.comments().get(0).email()).isEqualTo(expectedEmail);
+            assertThat(actualValue.getCommentsList().get(0).getEmail()).isEqualTo(expectedEmail);
         }
 
     }
@@ -193,9 +192,9 @@ class CommentServiceImplTest extends BaseIntegrationTest {
             String username = "SoccerFan";
             int expectedSize = 1;
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
+            CommentResponseList actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
 
-            assertThat(actualValues).hasSize(expectedSize);
+            assertThat(actualValues.getCommentsList()).hasSize(expectedSize);
         }
 
         @Test
@@ -206,9 +205,9 @@ class CommentServiceImplTest extends BaseIntegrationTest {
             String text = "Wow!";
             String username = "LavaLover";
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
+            CommentResponseList actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
 
-            assertThat(actualValues).contains(expectedValue);
+            assertThat(actualValues.getCommentsList()).contains(expectedValue);
         }
 
         @Test
@@ -219,9 +218,9 @@ class CommentServiceImplTest extends BaseIntegrationTest {
             String text = "This is so expensive.";
             String username = "";
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
+            CommentResponseList actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
 
-            assertThat(actualValues.get(0).text()).isEqualTo(expectedText);
+            assertThat(actualValues.getCommentsList().get(0).getText()).isEqualTo(expectedText);
         }
 
         @Test
@@ -231,9 +230,9 @@ class CommentServiceImplTest extends BaseIntegrationTest {
             String text = "It's terrible what's going on...";
             String username = "Evlampia";
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
+            CommentResponseList actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
 
-            assertThat(actualValues).isEmpty();
+            assertThat(actualValues.getCommentsList()).isEmpty();
         }
 
         @Test
@@ -245,9 +244,9 @@ class CommentServiceImplTest extends BaseIntegrationTest {
             String text = "This is so cool!";
             String username = "";
 
-            List<CommentResponse> actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
+            CommentResponseList actualValues = commentService.findAllByMatchingTextParams(text, username, pageable);
 
-            assertThat(actualValues.get(0).username()).isEqualTo(expectedUsername);
+            assertThat(actualValues.getCommentsList().get(0).getUsername()).isEqualTo(expectedUsername);
         }
 
     }
@@ -258,16 +257,16 @@ class CommentServiceImplTest extends BaseIntegrationTest {
 
         @Test
         @DisplayName("test should return expected value")
-        void testShouldReturnExpectedValue() throws JsonProcessingException {
+        void testShouldReturnExpectedValue() throws InvalidProtocolBufferException {
             String token = "jwt";
             CommentWithNewsRequest request = CommentWithNewsRequestTestBuilder.aCommentWithNewsRequest().build();
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse()
                     .withTime(LocalDateTime.now())
                     .withUsername(request.getUsername())
                     .withText(request.getText())
-                    .withEmail(response.email())
+                    .withEmail(response.getEmail())
                     .build();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -279,25 +278,23 @@ class CommentServiceImplTest extends BaseIntegrationTest {
             CommentResponse actualValue = commentService.save(request, token);
 
             assertAll(
-                    () -> assertThat(actualValue.username()).isEqualTo(expectedValue.username()),
-                    () -> assertThat(actualValue.text()).isEqualTo(expectedValue.text()),
-                    () -> assertThat(actualValue.email()).isEqualTo(expectedValue.email()),
-                    () -> assertThat(actualValue.time().getMonthValue()).isEqualTo(expectedValue.time().getMonthValue()),
-                    () -> assertThat(actualValue.time().getHour()).isEqualTo(expectedValue.time().getHour()),
-                    () -> assertThat(actualValue.time().getMinute()).isEqualTo(expectedValue.time().getMinute())
+                    () -> assertThat(actualValue.getUsername()).isEqualTo(expectedValue.getUsername()),
+                    () -> assertThat(actualValue.getText()).isEqualTo(expectedValue.getText()),
+                    () -> assertThat(actualValue.getEmail()).isEqualTo(expectedValue.getEmail()),
+                    () -> assertThat(actualValue.getTime()).isNotBlank()
             );
         }
 
         @Test
         @DisplayName("test should throw AccessDeniedForThisRoleException with expected message")
-        void testShouldThrowAccessDeniedForThisRoleExceptionWithExpectedMessage() throws JsonProcessingException {
+        void testShouldThrowAccessDeniedForThisRoleExceptionWithExpectedMessage() throws InvalidProtocolBufferException {
             String token = "jwt";
             CommentWithNewsRequest request = CommentWithNewsRequestTestBuilder.aCommentWithNewsRequest().build();
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.JOURNALIST.name())
                     .build();
-            String json = objectMapper.writeValueAsString(response);
-            String expectedMessage = "Access Denied for role: " + response.role();
+            String json = JsonFormat.printer().print(response);
+            String expectedMessage = "Access Denied for role: " + response.getRole();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -320,17 +317,17 @@ class CommentServiceImplTest extends BaseIntegrationTest {
 
         @Test
         @DisplayName("test should return expected value")
-        void testShouldReturnExpectedValue() throws JsonProcessingException {
+        void testShouldReturnExpectedValue() throws InvalidProtocolBufferException {
             long id = 1L;
             String token = "jwt";
             CommentRequest request = CommentRequestTestBuilder.aCommentRequest().build();
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             CommentResponse expectedValue = CommentResponseTestBuilder.aCommentResponse()
                     .withTime(LocalDateTime.now())
                     .withUsername(request.getUsername())
                     .withText(request.getText())
-                    .withEmail(response.email())
+                    .withEmail(response.getEmail())
                     .build();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -342,26 +339,24 @@ class CommentServiceImplTest extends BaseIntegrationTest {
             CommentResponse actualValue = commentService.updateById(id, request, token);
 
             assertAll(
-                    () -> assertThat(actualValue.username()).isEqualTo(expectedValue.username()),
-                    () -> assertThat(actualValue.text()).isEqualTo(expectedValue.text()),
-                    () -> assertThat(actualValue.email()).isEqualTo(expectedValue.email()),
-                    () -> assertThat(actualValue.time().getMonthValue()).isEqualTo(expectedValue.time().getMonthValue()),
-                    () -> assertThat(actualValue.time().getHour()).isEqualTo(expectedValue.time().getHour()),
-                    () -> assertThat(actualValue.time().getMinute()).isEqualTo(expectedValue.time().getMinute())
+                    () -> assertThat(actualValue.getUsername()).isEqualTo(expectedValue.getUsername()),
+                    () -> assertThat(actualValue.getText()).isEqualTo(expectedValue.getText()),
+                    () -> assertThat(actualValue.getEmail()).isEqualTo(expectedValue.getEmail()),
+                    () -> assertThat(actualValue.getTime()).isNotBlank()
             );
         }
 
         @Test
         @DisplayName("test should throw AccessDeniedForThisRoleException with expected message")
-        void testShouldThrowAccessDeniedForThisRoleExceptionWithExpectedMessage() throws JsonProcessingException {
+        void testShouldThrowAccessDeniedForThisRoleExceptionWithExpectedMessage() throws InvalidProtocolBufferException {
             long id = 1L;
             String token = "jwt";
             CommentRequest request = CommentRequestTestBuilder.aCommentRequest().build();
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.JOURNALIST.name())
                     .build();
-            String json = objectMapper.writeValueAsString(response);
-            String expectedMessage = "Access Denied for role: " + response.role();
+            String json = JsonFormat.printer().print(response);
+            String expectedMessage = "Access Denied for role: " + response.getRole();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -378,12 +373,12 @@ class CommentServiceImplTest extends BaseIntegrationTest {
 
         @Test
         @DisplayName("test should throw NoSuchCommentException with expected message")
-        void testShouldThrowNoSuchCommentExceptionWithExpectedMessage() throws JsonProcessingException {
+        void testShouldThrowNoSuchCommentExceptionWithExpectedMessage() throws InvalidProtocolBufferException {
             long id = 0;
             String token = "jwt";
             CommentRequest request = CommentRequestTestBuilder.aCommentRequest().build();
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             String expectedMessage = "There is no Comment with ID " + id + " to update";
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -401,15 +396,15 @@ class CommentServiceImplTest extends BaseIntegrationTest {
 
         @Test
         @DisplayName("test should throw UserDoesNotHavePermissionException with expected message")
-        void testShouldThrowUserDoesNotHavePermissionExceptionWithExpectedMessage() throws JsonProcessingException {
+        void testShouldThrowUserDoesNotHavePermissionExceptionWithExpectedMessage() throws InvalidProtocolBufferException {
             long id = 3L;
             String token = "jwt";
             CommentRequest request = CommentRequestTestBuilder.aCommentRequest().build();
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.SUBSCRIBER.name())
                     .build();
-            String json = objectMapper.writeValueAsString(response);
-            String expectedMessage = "With role " + response.role() + " you can update or delete only your own news/comments";
+            String json = JsonFormat.printer().print(response);
+            String expectedMessage = "With role " + response.getRole() + " you can update or delete only your own news/comments";
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -432,12 +427,14 @@ class CommentServiceImplTest extends BaseIntegrationTest {
 
         @Test
         @DisplayName("test should return expected value")
-        void testShouldReturnExpectedValue() throws JsonProcessingException {
+        void testShouldReturnExpectedValue() throws InvalidProtocolBufferException {
             long id = 1L;
             String token = "jwt";
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
-            String json = objectMapper.writeValueAsString(response);
-            DeleteResponse expectedValue = new DeleteResponse("Comment with ID " + id + " was successfully deleted");
+            String json = JsonFormat.printer().print(response);
+            DeleteResponse expectedValue = DeleteResponse.newBuilder()
+                    .setMessage("Comment with ID " + id + " was successfully deleted")
+                    .build();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -452,14 +449,14 @@ class CommentServiceImplTest extends BaseIntegrationTest {
 
         @Test
         @DisplayName("test should throw AccessDeniedForThisRoleException with expected message")
-        void testShouldThrowAccessDeniedForThisRoleExceptionWithExpectedMessage() throws JsonProcessingException {
+        void testShouldThrowAccessDeniedForThisRoleExceptionWithExpectedMessage() throws InvalidProtocolBufferException {
             long id = 1L;
             String token = "jwt";
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.JOURNALIST.name())
                     .build();
-            String json = objectMapper.writeValueAsString(response);
-            String expectedMessage = "Access Denied for role: " + response.role();
+            String json = JsonFormat.printer().print(response);
+            String expectedMessage = "Access Denied for role: " + response.getRole();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -476,11 +473,11 @@ class CommentServiceImplTest extends BaseIntegrationTest {
 
         @Test
         @DisplayName("test should throw NoSuchCommentException with expected message")
-        void testShouldThrowNoSuchCommentExceptionWithExpectedMessage() throws JsonProcessingException {
+        void testShouldThrowNoSuchCommentExceptionWithExpectedMessage() throws InvalidProtocolBufferException {
             long id = 0;
             String token = "jwt";
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             String expectedMessage = "There is no Comment with ID " + id + " to delete";
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -497,14 +494,14 @@ class CommentServiceImplTest extends BaseIntegrationTest {
 
         @Test
         @DisplayName("test should throw UserDoesNotHavePermissionException with expected message")
-        void testShouldThrowUserDoesNotHavePermissionExceptionWithExpectedMessage() throws JsonProcessingException {
+        void testShouldThrowUserDoesNotHavePermissionExceptionWithExpectedMessage() throws InvalidProtocolBufferException {
             long id = 3L;
             String token = "jwt";
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.SUBSCRIBER.name())
                     .build();
-            String json = objectMapper.writeValueAsString(response);
-            String expectedMessage = "With role " + response.role() + " you can update or delete only your own news/comments";
+            String json = JsonFormat.printer().print(response);
+            String expectedMessage = "With role " + response.getRole() + " you can update or delete only your own news/comments";
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()

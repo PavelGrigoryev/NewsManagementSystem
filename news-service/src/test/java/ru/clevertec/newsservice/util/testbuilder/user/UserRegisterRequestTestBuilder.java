@@ -3,8 +3,8 @@ package ru.clevertec.newsservice.util.testbuilder.user;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.With;
+import ru.clevertec.newsservice.dto.proto.Role;
 import ru.clevertec.newsservice.dto.proto.UserRegisterRequest;
-import ru.clevertec.newsservice.dto.user.Role;
 import ru.clevertec.newsservice.util.TestBuilder;
 
 @AllArgsConstructor

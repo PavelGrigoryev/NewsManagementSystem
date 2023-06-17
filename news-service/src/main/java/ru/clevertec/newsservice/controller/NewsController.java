@@ -27,7 +27,7 @@ import ru.clevertec.newsservice.util.ProtobufValidator;
 @Loggable
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/news")
+@RequestMapping(value = "/news", produces = "application/json")
 public class NewsController implements NewsOpenApi {
 
     private final NewsService newsService;

@@ -9,8 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.clevertec.exceptionhandlerstarter.exception.AccessDeniedForThisRoleException;
 import ru.clevertec.exceptionhandlerstarter.exception.UserDoesNotHavePermissionException;
 import ru.clevertec.newsservice.client.UserApiClient;
-import ru.clevertec.newsservice.dto.user.Role;
-import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
+import ru.clevertec.newsservice.dto.proto.Role;
+import ru.clevertec.newsservice.dto.proto.TokenValidationResponse;
 import ru.clevertec.newsservice.util.testbuilder.user.TokenValidationResponseTestBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;

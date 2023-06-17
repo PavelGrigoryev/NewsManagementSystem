@@ -29,7 +29,7 @@ import ru.clevertec.newsservice.util.ProtobufValidator;
 @Loggable
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/comments")
+@RequestMapping(value = "/comments", produces = "application/json")
 public class CommentController implements CommentOpenApi {
 
     private final CommentService commentService;

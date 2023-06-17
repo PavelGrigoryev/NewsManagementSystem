@@ -24,7 +24,7 @@ import ru.clevertec.newsservice.util.ProtobufValidator;
 @Loggable
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping(value = "/auth", produces = "application/json")
 public class AuthenticationController implements AuthenticationOpenApi {
 
     private final UserApiClient userApiClient;

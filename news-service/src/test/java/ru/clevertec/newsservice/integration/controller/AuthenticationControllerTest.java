@@ -1,6 +1,5 @@
 package ru.clevertec.newsservice.integration.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.google.protobuf.util.JsonFormat;
@@ -9,11 +8,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.clevertec.newsservice.dto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
 import ru.clevertec.newsservice.dto.proto.UserAuthenticationRequest;
 import ru.clevertec.newsservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.newsservice.dto.proto.UserResponse;
 import ru.clevertec.newsservice.dto.proto.UserUpdateRequest;
-import ru.clevertec.newsservice.dto.user.UserResponse;
 import ru.clevertec.newsservice.integration.BaseIntegrationTest;
 import ru.clevertec.newsservice.util.json.AuthenticationJsonSupplier;
 import ru.clevertec.newsservice.util.json.CommonErrorJsonSupplier;
@@ -39,7 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthenticationControllerTest extends BaseIntegrationTest {
 
     private final MockMvc mockMvc;
-    private final ObjectMapper objectMapper;
 
     @Test
     @DisplayName("test register should return expected json and status 201")
@@ -47,7 +45,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
         UserResponse response = UserResponseTestBuilder.aUserResponse().build();
         UserRegisterRequest request = UserRegisterRequestTestBuilder.aUserRegisterRequest().build();
         String content = JsonFormat.printer().print(request);
-        String json = objectMapper.writeValueAsString(response);
+        String json = JsonFormat.printer().print(response);
 
         stubFor(WireMock.post(urlEqualTo("/users/register"))
                 .willReturn(aResponse()
@@ -102,7 +100,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
         UserResponse response = UserResponseTestBuilder.aUserResponse().build();
         UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest().build();
         String content = JsonFormat.printer().print(request);
-        String json = objectMapper.writeValueAsString(response);
+        String json = JsonFormat.printer().print(response);
 
         stubFor(WireMock.post(urlEqualTo("/users/authenticate"))
                 .willReturn(aResponse()
@@ -183,7 +181,7 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
                 .withLastname(request.getLastname())
                 .build();
         String content = JsonFormat.printer().print(request);
-        String json = objectMapper.writeValueAsString(response);
+        String json = JsonFormat.printer().print(response);
 
         stubFor(WireMock.put(urlEqualTo("/users"))
                 .willReturn(aResponse()
@@ -256,8 +254,10 @@ class AuthenticationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("test deleteByToken should return expected json and status 200")
     void testDeleteByTokenShouldReturnExpectedJsonAndStatus200() throws Exception {
-        DeleteResponse deleteResponse = new DeleteResponse("User with email BruceLee@shazam.com was successfully deleted");
-        String json = objectMapper.writeValueAsString(deleteResponse);
+        DeleteResponse deleteResponse = DeleteResponse.newBuilder()
+                .setMessage("User with email BruceLee@shazam.com was successfully deleted")
+                .build();
+        String json = JsonFormat.printer().print(deleteResponse);
 
         stubFor(WireMock.delete(urlEqualTo("/users"))
                 .willReturn(aResponse()
