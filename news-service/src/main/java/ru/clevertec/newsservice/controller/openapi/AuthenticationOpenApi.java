@@ -44,9 +44,9 @@ public interface AuthenticationOpenApi {
                               "email": "Green@mail.com",
                               "role": "ADMIN",
                               "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiQURNSU4ifV0sInN1YiI6IkdyZWVuQG1haWwuY29tIiwiaWF0IjoxNjg2MzExNDIxLCJleHAiOjE2ODYzOTc4MjF9.CPPgPruJXiABRI2466pT8jX62L9t9BTV00WuC_AHrNA",
-                              "token_expiration": "Sat Jun 10 14:50:21 MSK 2023",
-                              "created_time": "2023-06-09T14:50:21",
-                              "updated_time": "2023-06-09T14:50:21"
+                              "tokenExpiration": "Sat Jun 10 14:50:21 MSK 2023",
+                              "createdTime": "2023-06-09T14:50:21",
+                              "updatedTime": "2023-06-09T14:50:21"
                             }
                             """))),
             @ApiResponse(responseCode = "406", description = "Email is unique for User",
@@ -91,9 +91,9 @@ public interface AuthenticationOpenApi {
                               "email": "ChakcNunChuck@gmail.com",
                               "role": "SUBSCRIBER",
                               "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiU1VCU0NSSUJFUiJ9XSwic3ViIjoiQ2hha2NOdW5DaHVja0BnbWFpbC5jb20iLCJpYXQiOjE2ODY5MTUzNjcsImV4cCI6MTY4NzAwMTc2N30.zTK3gwck5_SSORSufAfbON8UO4cOcFe4-xJTAFS9dsc",
-                              "token_expiration": "Sat Jun 17 14:36:07 MSK 2023",
-                              "created_time": "2023-06-06T16:45:59",
-                              "updated_time": "2023-06-06T16:45:59"
+                              "tokenExpiration": "Sat Jun 17 14:36:07 MSK 2023",
+                              "createdTime": "2023-06-06T16:45:59",
+                              "updatedTime": "2023-06-06T16:45:59"
                             }
                             """))),
             @ApiResponse(responseCode = "401", description = "Wrong password for User",
@@ -149,9 +149,9 @@ public interface AuthenticationOpenApi {
                               "email": "Shwarsz@yahoo.com",
                               "role": "JOURNALIST",
                               "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiSk9VUk5BTElTVCJ9XSwic3ViIjoiU2h3YXJzekB5YWhvby5jb20iLCJpYXQiOjE2ODYzMTA0NTUsImV4cCI6MTY4NjM5Njg1NX0.3xmnKRAPcAjPNo_kN8myvlOfyGaweGgjt9DFhfa8LuQ",
-                              "token_expiration": "Sat Jun 10 14:34:15 MSK 2023",
-                              "created_time": "2023-06-06T12:33:47",
-                              "updated_time": "2023-06-09T15:05:50"
+                              "tokenExpiration": "Sat Jun 10 14:34:15 MSK 2023",
+                              "createdTime": "2023-06-06T12:33:47",
+                              "updatedTime": "2023-06-09T15:05:50"
                             }
                             """))),
             @ApiResponse(responseCode = "401", description = "Not Authenticated User",

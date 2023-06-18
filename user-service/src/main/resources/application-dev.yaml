@@ -14,9 +14,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-springdoc:
-  swagger-ui:
-    default-models-expand-depth: -1
 server:
   port: 8081
 security:
