@@ -102,7 +102,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     @PutCacheable
     @Transactional
-    @CachePut(value = "news", key = "#result.id()")
+    @CachePut(value = "news", key = "#result.getId()")
     public NewsResponse save(NewsRequest newsRequest, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.JOURNALIST);
         News news = newsMapper.fromRequest(newsRequest);
@@ -123,7 +123,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     @PutCacheable
     @Transactional
-    @CachePut(value = "news", key = "#result.id()")
+    @CachePut(value = "news", key = "#result.getId()")
     public NewsResponse updateById(Long id, NewsRequest newsRequest, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.JOURNALIST);
         News news = newsRepository.findById(id)

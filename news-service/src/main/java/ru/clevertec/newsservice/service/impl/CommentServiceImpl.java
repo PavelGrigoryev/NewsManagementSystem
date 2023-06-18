@@ -111,7 +111,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @PutCacheable
     @Transactional
-    @CachePut(value = "comment", key = "#result.id()")
+    @CachePut(value = "comment", key = "#result.getId()")
     public CommentResponse save(CommentWithNewsRequest commentWithNewsRequest, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.SUBSCRIBER);
         NewsResponse newsResponse = newsService.findById(commentWithNewsRequest.getNewsId());
@@ -135,7 +135,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @PutCacheable
     @Transactional
-    @CachePut(value = "comment", key = "#result.id()")
+    @CachePut(value = "comment", key = "#result.getId()")
     public CommentResponse updateById(Long id, CommentRequest commentRequest, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.SUBSCRIBER);
         Comment comment = commentRepository.findById(id)

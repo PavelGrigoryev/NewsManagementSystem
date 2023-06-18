@@ -214,7 +214,7 @@ public interface CommentOpenApi {
                                     {
                                       "text": "Not bad at all :(",
                                       "username": "Vasiliy",
-                                      "news_id": "20"
+                                      "newsId": "20"
                                     }
                                     """))))
     @ApiResponses(value = {
