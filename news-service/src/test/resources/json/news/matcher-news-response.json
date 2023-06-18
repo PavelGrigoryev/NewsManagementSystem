@@ -1,0 +1,11 @@
+{
+  "news": [
+    {
+      "id": "4",
+      "time": "2023-06-14T10:45:33",
+      "title": "World Cup kicks off in Qatar",
+      "text": "The 2023 FIFA World Cup has officially begun in Qatar, with the host nation facing Brazil in the opening match. The World Cup, which is held every four years, is the most prestigious and popular soccer tournament in the world, attracting millions of fans and viewers from around the globe. The World Cup will last for a month, with 32 teams competing for the coveted trophy.",
+      "email": "sports@news.com"
+    }
+  ]
+}

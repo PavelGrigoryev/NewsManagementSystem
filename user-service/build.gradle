@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'io.freefair.lombok' version "8.0.1"
+    id "com.google.protobuf" version "0.9.3"
+}
+
+sourceCompatibility = targetCompatibility = '17'
+
+ext {
+    set('springCloudVersion', "2022.0.2")
+}
+
+dependencies {
+    implementation project(':logging-starter')
+    implementation project(':exception-handler-starter')
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+    implementation 'com.google.protobuf:protobuf-java:3.23.2'
+    implementation 'io.envoyproxy.protoc-gen-validate:pgv-java-grpc:0.6.13'
+    implementation 'com.hubspot.jackson:jackson-datatype-protobuf:0.9.13'
+    implementation 'org.liquibase:liquibase-core'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'com.google.protobuf:protobuf-java-util:3.23.2'
+
+    testImplementation 'org.testcontainers:postgresql:1.18.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'com.google.protobuf:protobuf-java-util:3.23.2'
+}
+
+compileJava {
+    options.annotationProcessorPath = configurations.annotationProcessor
+    options.compilerArgs += [
+            '-Amapstruct.defaultComponentModel=spring',
+            '-Amapstruct.unmappedTargetPolicy=IGNORE'
+    ]
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+apply from: 'protobuf.gradle'
+
+test {
+    useJUnitPlatform()
+}

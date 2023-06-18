@@ -1,0 +1,5 @@
+{
+  "exception": "MalformedJwtException",
+  "error_message": "JWT strings must contain exactly 2 period characters. Found: 0",
+  "error_code": "401 UNAUTHORIZED"
+}

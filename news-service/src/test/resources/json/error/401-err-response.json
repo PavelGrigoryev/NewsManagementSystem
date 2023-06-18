@@ -1,0 +1,5 @@
+{
+  "exception": "InsufficientAuthenticationException",
+  "error_message": "Full authentication is required to access this resource",
+  "error_code": "401 UNAUTHORIZED"
+}

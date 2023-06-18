@@ -1,0 +1,5 @@
+{
+  "exception": "ProtoValidationException",
+  "error_message": ".UserRegisterRequest.role: must match pattern ADMIN|JOURNALIST|SUBSCRIBER - Got \"SUPER_ADMIN\"",
+  "error_code": "409 CONFLICT"
+}

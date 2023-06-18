@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/PavelGrigoryev/SpringCloudConfigServer.git
+          search-paths: news-management-system-config
+server:
+  port: 8888

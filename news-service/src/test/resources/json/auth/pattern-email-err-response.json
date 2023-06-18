@@ -1,0 +1,5 @@
+{
+  "exception": "ProtoValidationException",
+  "error_message": ".UserAuthenticationRequest.email: should be a valid email - Got \"Bad email\"",
+  "error_code": "409 CONFLICT"
+}

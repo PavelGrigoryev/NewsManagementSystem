@@ -1,0 +1,46 @@
+###register
+POST http://localhost:8081/users/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "firstname": "Pavel",
+  "lastname": "Shishkin",
+  "email": "Green@mail.com",
+  "password": "1234",
+  "role": "ADMIN"
+}
+
+###authenticate
+POST http://localhost:8081/users/authenticate
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "ChakcNunChuck@gmail.com",
+  "password": "555"
+}
+
+###validate
+POST http://localhost:8081/users/validate
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+###updateByToken
+PUT http://localhost:8081/users
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "firstname": "Igor",
+  "lastname": "Zavadskiy",
+  "password": "987"
+}
+
+###deleteByToken
+DELETE http://localhost:8081/users
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}

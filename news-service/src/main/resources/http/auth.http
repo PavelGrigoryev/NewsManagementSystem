@@ -1,0 +1,40 @@
+###register
+POST http://localhost:8080/auth/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "firstname": "Pavel",
+  "lastname": "Shishkin",
+  "email": "Green@mail.com",
+  "password": "1234",
+  "role": "ADMIN"
+}
+
+###authenticate
+POST http://localhost:8080/auth/authenticate
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "ChakcNunChuck@gmail.com",
+  "password": "555"
+}
+
+###updateByToken
+PUT http://localhost:8080/auth
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "firstname": "Igor",
+  "lastname": "Zavadskiy",
+  "password": "987"
+}
+
+###deleteByToken
+DELETE http://localhost:8080/auth
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}

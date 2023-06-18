@@ -1,0 +1,33 @@
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.23.2"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.55.1'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.23.2"
+    }
+    plugins {
+        javapgv {
+            artifact = "build.buf.protoc-gen-validate:protoc-gen-validate:0.6.13"
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            javapgv {
+                option "lang=java"
+            }
+        }
+    }
+}
