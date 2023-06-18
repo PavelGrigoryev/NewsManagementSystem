@@ -1,0 +1,5 @@
+{
+  "exception": "ProtoValidationException",
+  "error_message": ".CommentWithNewsRequest.username: must match pattern ^[a-zA-Zа-яА-ЯёЁ0-9@_-]+$ - Got \"Ali - Muhammed\"",
+  "error_code": "409 CONFLICT"
+}

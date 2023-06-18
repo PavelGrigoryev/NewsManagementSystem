@@ -13,14 +13,15 @@ import ru.clevertec.exceptionhandlerstarter.exception.NoSuchCommentException;
 import ru.clevertec.newsservice.aop.annotation.GetCacheable;
 import ru.clevertec.newsservice.aop.annotation.PutCacheable;
 import ru.clevertec.newsservice.aop.annotation.RemoveCacheable;
-import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.comment.CommentRequest;
-import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
-import ru.clevertec.newsservice.dto.news.NewsResponse;
-import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
-import ru.clevertec.newsservice.dto.user.Role;
-import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
+import ru.clevertec.newsservice.dto.proto.CommentRequest;
+import ru.clevertec.newsservice.dto.proto.CommentResponse;
+import ru.clevertec.newsservice.dto.proto.CommentResponseList;
+import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.NewsResponse;
+import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
+import ru.clevertec.newsservice.dto.proto.Role;
+import ru.clevertec.newsservice.dto.proto.TokenValidationResponse;
 import ru.clevertec.newsservice.mapper.CommentMapper;
 import ru.clevertec.newsservice.mapper.NewsMapper;
 import ru.clevertec.newsservice.model.Comment;
@@ -71,28 +72,32 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public NewsWithCommentsResponse findNewsByNewsIdWithComments(Long newsId, Pageable pageable) {
-        NewsResponse newsResponse = newsService.findById(newsId);
-        List<Comment> comments = commentRepository.findAllByNewsId(newsId, pageable);
-        return commentMapper.toWithCommentsResponse(newsResponse, comments);
+        NewsResponse response = newsService.findById(newsId);
+        List<CommentResponse> responses = commentMapper.toResponses(commentRepository.findAllByNewsId(newsId, pageable));
+        return commentMapper.toNewsWithCommentsResponse(response, responses);
     }
-
 
     /**
      * Finds all {@link Comment} by matching it through {@link ExampleMatcher} with pagination.
      *
-     * @param commentRequest the {@link CommentRequest} which will be mapped to {@link CommentResponse}.
-     * @param pageable       {@link Pageable} Comments will be sorted by its parameters and divided into pages.
-     * @return sorted by pageable, filtered by ExampleMatcher and mapped from entity to dto list of all CommentResponse.
+     * @param text     the title to match against Comment.
+     * @param username the text to match against Comment.
+     * @param pageable {@link Pageable} Comments will be sorted by its parameters and divided into pages.
+     * @return sorted by pageable, filtered by ExampleMatcher and mapped from entity to dto {@link CommentResponseList}.
      */
     @Override
-    public List<CommentResponse> findAllByMatchingTextParams(CommentRequest commentRequest, Pageable pageable) {
-        Comment comment = commentMapper.fromRequest(commentRequest);
+    public CommentResponseList findAllByMatchingTextParams(String text, String username, Pageable pageable) {
+        Comment comment = commentMapper.fromParams(text, username);
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
                 .withIgnoreNullValues()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Example<Comment> commentExample = Example.of(comment, exampleMatcher);
-        return commentMapper.toResponses(commentRepository.findAll(commentExample, pageable).stream().toList());
+        List<CommentResponse> responses = commentMapper.toResponses(commentRepository.findAll(commentExample, pageable)
+                .stream().toList());
+        return CommentResponseList.newBuilder()
+                .addAllComments(responses)
+                .build();
     }
 
     /**
@@ -106,13 +111,13 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @PutCacheable
     @Transactional
-    @CachePut(value = "comment", key = "#result.id()")
+    @CachePut(value = "comment", key = "#result.getId()")
     public CommentResponse save(CommentWithNewsRequest commentWithNewsRequest, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.SUBSCRIBER);
-        NewsResponse newsResponse = newsService.findById(commentWithNewsRequest.newsId());
+        NewsResponse newsResponse = newsService.findById(commentWithNewsRequest.getNewsId());
         Comment comment = commentMapper.fromWithNewsRequest(commentWithNewsRequest);
         News news = newsMapper.fromResponse(newsResponse);
-        comment.setEmail(response.email());
+        comment.setEmail(response.getEmail());
         comment.setNews(news);
         Comment saved = commentRepository.save(comment);
         return commentMapper.toResponse(saved);
@@ -130,16 +135,16 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @PutCacheable
     @Transactional
-    @CachePut(value = "comment", key = "#result.id()")
+    @CachePut(value = "comment", key = "#result.getId()")
     public CommentResponse updateById(Long id, CommentRequest commentRequest, String token) {
         TokenValidationResponse response = authenticationService.checkTokenValidationForRole(token, Role.SUBSCRIBER);
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchCommentException("There is no Comment with ID " + id + " to update"));
         authenticationService.isObjectOwnedByEmailAndRole(
-                response.role(), Role.SUBSCRIBER, response.email(), comment.getEmail());
-        comment.setText(commentRequest.text());
-        comment.setUsername(commentRequest.username());
-        comment.setEmail(response.email());
+                response.getRole(), Role.SUBSCRIBER, response.getEmail(), comment.getEmail());
+        comment.setText(commentRequest.getText());
+        comment.setUsername(commentRequest.getUsername());
+        comment.setEmail(response.getEmail());
         Comment saved = commentRepository.saveAndFlush(comment);
         return commentMapper.toResponse(saved);
     }
@@ -161,9 +166,9 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchCommentException("There is no Comment with ID " + id + " to delete"));
         authenticationService.isObjectOwnedByEmailAndRole(
-                response.role(), Role.SUBSCRIBER, response.email(), comment.getEmail());
+                response.getRole(), Role.SUBSCRIBER, response.getEmail(), comment.getEmail());
         commentRepository.delete(comment);
-        return new DeleteResponse("Comment with ID " + id + " was successfully deleted");
+        return DeleteResponse.newBuilder().setMessage("Comment with ID " + id + " was successfully deleted").build();
     }
 
 }

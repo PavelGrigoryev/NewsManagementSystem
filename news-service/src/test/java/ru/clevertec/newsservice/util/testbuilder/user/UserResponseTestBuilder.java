@@ -3,8 +3,8 @@ package ru.clevertec.newsservice.util.testbuilder.user;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.With;
-import ru.clevertec.newsservice.dto.user.Role;
-import ru.clevertec.newsservice.dto.user.UserResponse;
+import ru.clevertec.newsservice.dto.proto.Role;
+import ru.clevertec.newsservice.dto.proto.UserResponse;
 import ru.clevertec.newsservice.util.TestBuilder;
 
 import java.time.LocalDateTime;
@@ -16,8 +16,8 @@ import java.time.Month;
 public class UserResponseTestBuilder implements TestBuilder<UserResponse> {
 
     private Long id = 3L;
-    private String firstname = "Брюс";
-    private String lastname = "Ли";
+    private String firstname = "Bruce";
+    private String lastname = "Lee";
     private String email = "BruceLee@shazam.com";
     private Role role = Role.ADMIN;
     private String token = "jwt";
@@ -27,7 +27,17 @@ public class UserResponseTestBuilder implements TestBuilder<UserResponse> {
 
     @Override
     public UserResponse build() {
-        return new UserResponse(id, firstname, lastname, email, role, token, tokenExpiration, createdTime, updatedTime);
+        return UserResponse.newBuilder()
+                .setId(id)
+                .setFirstname(firstname)
+                .setLastname(lastname)
+                .setEmail(email)
+                .setRole(role)
+                .setToken(token)
+                .setTokenExpiration(tokenExpiration)
+                .setCreatedTime(createdTime.toString())
+                .setUpdatedTime(updatedTime.toString())
+                .build();
     }
 
 }

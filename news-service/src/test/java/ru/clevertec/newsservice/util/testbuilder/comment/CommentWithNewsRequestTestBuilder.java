@@ -3,7 +3,7 @@ package ru.clevertec.newsservice.util.testbuilder.comment;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.With;
-import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
 import ru.clevertec.newsservice.util.TestBuilder;
 
 @AllArgsConstructor
@@ -11,13 +11,17 @@ import ru.clevertec.newsservice.util.TestBuilder;
 @With
 public class CommentWithNewsRequestTestBuilder implements TestBuilder<CommentWithNewsRequest> {
 
-    private String text = "Не очень понятно, надо бы больше примеров";
-    private String username = "Ольга";
+    private String text = "Wow! That's scary! I hope everyone is safe!";
+    private String username = "LavaLover";
     private Long newsId = 1L;
 
     @Override
     public CommentWithNewsRequest build() {
-        return new CommentWithNewsRequest(text, username, newsId);
+        return CommentWithNewsRequest.newBuilder()
+                .setText(text)
+                .setUsername(username)
+                .setNewsId(newsId)
+                .build();
     }
 
 }

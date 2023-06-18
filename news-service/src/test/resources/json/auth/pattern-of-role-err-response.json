@@ -1,9 +1,5 @@
 {
-  "error_code": "409 CONFLICT",
-  "violations": [
-    {
-      "field_name": "role",
-      "error_message": "Acceptable roles are only: ADMIN, JOURNALIST, SUBSCRIBER"
-    }
-  ]
+  "exception": "ProtoValidationException",
+  "error_message": ".UserRegisterRequest.role: must match pattern ADMIN|JOURNALIST|SUBSCRIBER - Got \"SUPER_ADMIN\"",
+  "error_code": "409 CONFLICT"
 }

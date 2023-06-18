@@ -13,22 +13,23 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.loggingstarter.annotation.Loggable;
 import ru.clevertec.newsservice.controller.openapi.CommentOpenApi;
-import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.comment.CommentRequest;
-import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
-import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
+import ru.clevertec.newsservice.dto.proto.CommentRequest;
+import ru.clevertec.newsservice.dto.proto.CommentResponse;
+import ru.clevertec.newsservice.dto.proto.CommentResponseList;
+import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.service.CommentService;
-
-import java.util.List;
+import ru.clevertec.newsservice.util.ProtobufValidator;
 
 @Loggable
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/comments")
+@RequestMapping(value = "/comments", produces = "application/json")
 public class CommentController implements CommentOpenApi {
 
     private final CommentService commentService;
@@ -48,9 +49,10 @@ public class CommentController implements CommentOpenApi {
 
     @Override
     @GetMapping("/params")
-    public ResponseEntity<List<CommentResponse>> findAllByMatchingTextParams(CommentRequest commentRequest,
-                                                                             Pageable pageable) {
-        return ResponseEntity.ok(commentService.findAllByMatchingTextParams(commentRequest, pageable));
+    public ResponseEntity<CommentResponseList> findAllByMatchingTextParams(@RequestParam(required = false) String text,
+                                                                           @RequestParam(required = false) String username,
+                                                                           Pageable pageable) {
+        return ResponseEntity.ok(commentService.findAllByMatchingTextParams(text, username, pageable));
     }
 
     @Override
@@ -58,6 +60,7 @@ public class CommentController implements CommentOpenApi {
     public ResponseEntity<CommentResponse> save(@RequestBody CommentWithNewsRequest commentWithNewsRequest,
                                                 @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
                                                 String token) {
+        ProtobufValidator.validateProto(commentWithNewsRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(commentWithNewsRequest, token));
     }
 
@@ -67,6 +70,7 @@ public class CommentController implements CommentOpenApi {
                                                       @RequestBody CommentRequest commentRequest,
                                                       @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
                                                       String token) {
+        ProtobufValidator.validateProto(commentRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.updateById(id, commentRequest, token));
     }
 

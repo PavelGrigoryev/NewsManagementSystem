@@ -10,20 +10,20 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchUserEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
-import ru.clevertec.userservice.dto.UserAuthenticationRequest;
-import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.UserRegisterRequest;
-import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UserUpdateRequest;
-import ru.clevertec.userservice.dto.UserResponse;
+import ru.clevertec.userservice.dto.proto.DeleteResponse;
+import ru.clevertec.userservice.dto.proto.TokenValidationResponse;
+import ru.clevertec.userservice.dto.proto.UserAuthenticationRequest;
+import ru.clevertec.userservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.userservice.dto.proto.UserResponse;
+import ru.clevertec.userservice.dto.proto.UserUpdateRequest;
 import ru.clevertec.userservice.integration.BaseIntegrationTest;
 import ru.clevertec.userservice.service.UserService;
 import ru.clevertec.userservice.util.json.TokenTxtSupplier;
+import ru.clevertec.userservice.util.testbuilder.TokenValidationResponseTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserAuthenticationRequestTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserRegisterRequestTestBuilder;
-import ru.clevertec.userservice.util.testbuilder.TokenValidationResponseTestBuilder;
-import ru.clevertec.userservice.util.testbuilder.UserUpdateRequestTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserResponseTestBuilder;
+import ru.clevertec.userservice.util.testbuilder.UserUpdateRequestTestBuilder;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -49,23 +49,19 @@ public class UserServiceImplTest extends BaseIntegrationTest {
                     .build();
             UserResponse expectedValue = UserResponseTestBuilder.aUserResponse()
                     .withId(4L)
-                    .withEmail(request.email())
+                    .withEmail(request.getEmail())
                     .build();
 
             UserResponse actualValue = userService.register(request);
 
             assertAll(
-                    () -> assertThat(actualValue.firstname()).isEqualTo(expectedValue.firstname()),
-                    () -> assertThat(actualValue.lastname()).isEqualTo(expectedValue.lastname()),
-                    () -> assertThat(actualValue.email()).isEqualTo(expectedValue.email()),
-                    () -> assertThat(actualValue.role()).isEqualTo(expectedValue.role()),
-                    () -> assertThat(actualValue.token()).isNotEmpty(),
-                    () -> assertThat(actualValue.tokenExpiration()).isNotEmpty(),
-                    () -> assertThat(actualValue.createdTime().getYear()).isEqualTo(LocalDateTime.now().getYear()),
-                    () -> assertThat(actualValue.createdTime().getMonthValue()).isEqualTo(LocalDateTime.now().getMonthValue()),
-                    () -> assertThat(actualValue.createdTime().getDayOfMonth()).isEqualTo(LocalDateTime.now().getDayOfMonth()),
-                    () -> assertThat(actualValue.createdTime().getHour()).isEqualTo(LocalDateTime.now().getHour()),
-                    () -> assertThat(actualValue.updatedTime().getHour()).isEqualTo(LocalDateTime.now().getHour())
+                    () -> assertThat(actualValue.getFirstname()).isEqualTo(expectedValue.getFirstname()),
+                    () -> assertThat(actualValue.getLastname()).isEqualTo(expectedValue.getLastname()),
+                    () -> assertThat(actualValue.getEmail()).isEqualTo(expectedValue.getEmail()),
+                    () -> assertThat(actualValue.getRole()).isEqualTo(expectedValue.getRole()),
+                    () -> assertThat(actualValue.getToken()).isNotBlank(),
+                    () -> assertThat(actualValue.getTokenExpiration()).isNotBlank(),
+                    () -> assertThat(actualValue.getCreatedTime()).isNotBlank()
             );
         }
 
@@ -73,7 +69,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         @DisplayName("test should throw UniqueEmailException with expected message")
         void testShouldThrowUniqueEmailExceptionWithExpectedMessage() {
             UserRegisterRequest request = UserRegisterRequestTestBuilder.aUserRegisterRequest().build();
-            String expectedMessage = "Email " + request.email()
+            String expectedMessage = "Email " + request.getEmail()
                                      + " is occupied! Another user is already registered by this email!";
 
             Exception exception = assertThrows(UniqueEmailException.class, () -> userService.register(request));
@@ -96,15 +92,15 @@ public class UserServiceImplTest extends BaseIntegrationTest {
             UserResponse actualValue = userService.authenticate(request);
 
             assertAll(
-                    () -> assertThat(actualValue.id()).isEqualTo(expectedValue.id()),
-                    () -> assertThat(actualValue.firstname()).isEqualTo(expectedValue.firstname()),
-                    () -> assertThat(actualValue.lastname()).isEqualTo(expectedValue.lastname()),
-                    () -> assertThat(actualValue.email()).isEqualTo(expectedValue.email()),
-                    () -> assertThat(actualValue.role()).isEqualTo(expectedValue.role()),
-                    () -> assertThat(actualValue.token()).isNotEmpty(),
-                    () -> assertThat(actualValue.tokenExpiration()).isNotEmpty(),
-                    () -> assertThat(actualValue.createdTime()).isNotNull(),
-                    () -> assertThat(actualValue.updatedTime()).isNotNull()
+                    () -> assertThat(actualValue.getId()).isEqualTo(expectedValue.getId()),
+                    () -> assertThat(actualValue.getFirstname()).isEqualTo(expectedValue.getFirstname()),
+                    () -> assertThat(actualValue.getLastname()).isEqualTo(expectedValue.getLastname()),
+                    () -> assertThat(actualValue.getEmail()).isEqualTo(expectedValue.getEmail()),
+                    () -> assertThat(actualValue.getRole()).isEqualTo(expectedValue.getRole()),
+                    () -> assertThat(actualValue.getToken()).isNotBlank(),
+                    () -> assertThat(actualValue.getTokenExpiration()).isNotBlank(),
+                    () -> assertThat(actualValue.getCreatedTime()).isNotBlank(),
+                    () -> assertThat(actualValue.getUpdatedTime()).isNotBlank()
             );
         }
 
@@ -126,7 +122,7 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         void testShouldThrowInternalAuthenticationServiceExceptionWithExpectedMessage() {
             UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest()
                     .withEmail("NotExist@email.by").build();
-            String expectedMessage = "User with email " + request.email() + " is not exist";
+            String expectedMessage = "User with email " + request.getEmail() + " is not exist";
 
             Exception exception = assertThrows(InternalAuthenticationServiceException.class,
                     () -> userService.authenticate(request));
@@ -190,26 +186,23 @@ public class UserServiceImplTest extends BaseIntegrationTest {
             String token = TokenTxtSupplier.getToken2048Request();
             UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest().build();
             UserResponse expectedValue = UserResponseTestBuilder.aUserResponse()
-                    .withFirstname(request.firstname())
-                    .withLastname(request.lastname())
+                    .withFirstname(request.getFirstname())
+                    .withLastname(request.getLastname())
                     .withUpdatedTime(LocalDateTime.now())
                     .build();
 
             UserResponse actualValue = userService.updateByToken(request, BEARER + token);
 
             assertAll(
-                    () -> assertThat(actualValue.id()).isEqualTo(expectedValue.id()),
-                    () -> assertThat(actualValue.firstname()).isEqualTo(expectedValue.firstname()),
-                    () -> assertThat(actualValue.lastname()).isEqualTo(expectedValue.lastname()),
-                    () -> assertThat(actualValue.email()).isEqualTo(expectedValue.email()),
-                    () -> assertThat(actualValue.role()).isEqualTo(expectedValue.role()),
-                    () -> assertThat(actualValue.token()).isNotEmpty(),
-                    () -> assertThat(actualValue.tokenExpiration()).isNotEmpty(),
-                    () -> assertThat(actualValue.createdTime()).isNotNull(),
-                    () -> assertThat(actualValue.updatedTime().getYear()).isEqualTo(LocalDateTime.now().getYear()),
-                    () -> assertThat(actualValue.updatedTime().getMonthValue()).isEqualTo(LocalDateTime.now().getMonthValue()),
-                    () -> assertThat(actualValue.updatedTime().getDayOfMonth()).isEqualTo(LocalDateTime.now().getDayOfMonth()),
-                    () -> assertThat(actualValue.updatedTime().getHour()).isEqualTo(LocalDateTime.now().getHour())
+                    () -> assertThat(actualValue.getId()).isEqualTo(expectedValue.getId()),
+                    () -> assertThat(actualValue.getFirstname()).isEqualTo(expectedValue.getFirstname()),
+                    () -> assertThat(actualValue.getLastname()).isEqualTo(expectedValue.getLastname()),
+                    () -> assertThat(actualValue.getEmail()).isEqualTo(expectedValue.getEmail()),
+                    () -> assertThat(actualValue.getRole()).isEqualTo(expectedValue.getRole()),
+                    () -> assertThat(actualValue.getToken()).isNotBlank(),
+                    () -> assertThat(actualValue.getTokenExpiration()).isNotBlank(),
+                    () -> assertThat(actualValue.getCreatedTime()).isNotBlank(),
+                    () -> assertThat(actualValue.getUpdatedTime()).isNotBlank()
             );
         }
 
@@ -265,7 +258,9 @@ public class UserServiceImplTest extends BaseIntegrationTest {
         @DisplayName("test should return expected DeleteResponse")
         void testShouldReturnExpectedDeleteResponse() throws IOException {
             String token = TokenTxtSupplier.getToken2048Request();
-            DeleteResponse expectedValue = new DeleteResponse("User with email BruceLee@shazam.com was successfully deleted");
+            DeleteResponse expectedValue = DeleteResponse.newBuilder()
+                    .setMessage("User with email BruceLee@shazam.com was successfully deleted")
+                    .build();
 
             DeleteResponse actualValue = userService.deleteByToken(BEARER + token);
 

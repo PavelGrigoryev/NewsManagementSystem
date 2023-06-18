@@ -1,8 +1,8 @@
 package ru.clevertec.newsservice.integration.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import com.google.protobuf.util.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -12,10 +12,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.news.NewsRequest;
-import ru.clevertec.newsservice.dto.user.Role;
-import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.NewsRequest;
+import ru.clevertec.newsservice.dto.proto.Role;
+import ru.clevertec.newsservice.dto.proto.TokenValidationResponse;
 import ru.clevertec.newsservice.integration.BaseIntegrationTest;
 import ru.clevertec.newsservice.util.json.CommonErrorJsonSupplier;
 import ru.clevertec.newsservice.util.json.NewsJsonSupplier;
@@ -43,7 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class NewsControllerTest extends BaseIntegrationTest {
 
     private final MockMvc mockMvc;
-    private final ObjectMapper objectMapper;
 
     @Nested
     class FindByIdGetEndpointTest {
@@ -90,7 +89,7 @@ class NewsControllerTest extends BaseIntegrationTest {
         @DisplayName("test should return empty json and status 200 if there is no news on the page")
         void testShouldReturnEmptyJsonAndStatus200IfThereIsNoNewsOnThePage() throws Exception {
             int page = 3;
-            String json = "[]";
+            String json = "{}";
 
             mockMvc.perform(get("/news?page=" + page))
                     .andExpect(status().isOk())
@@ -131,9 +130,9 @@ class NewsControllerTest extends BaseIntegrationTest {
         @DisplayName("test should return empty json and status 200 if there is no news on the page")
         void testShouldReturnEmptyJsonAndStatus200IfThereIsNoNewsOnThePage() throws Exception {
             int page = 3;
-            String text = "в России";
-            String title = "в россии";
-            String json = "[]";
+            String text = "The";
+            String title = "World Cup";
+            String json = "{}";
 
             mockMvc.perform(get("/news/params?text=" + text + "&title=" + title + "&page=" + page))
                     .andExpect(status().isOk())
@@ -144,8 +143,8 @@ class NewsControllerTest extends BaseIntegrationTest {
         @DisplayName("test should return expected json and status 200")
         void testShouldReturnExpectedJsonAndStatus200() throws Exception {
             int page = 0;
-            String text = "в России";
-            String title = "в россии";
+            String text = "The";
+            String title = "World Cup";
             String json = NewsJsonSupplier.getMatcherNewsResponse();
 
             mockMvc.perform(get("/news/params?text=" + text + "&title=" + title + "&page=" + page))
@@ -156,8 +155,8 @@ class NewsControllerTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return expected json and status 406 if typo in sort")
         void testShouldReturnExpectedJsonAndStatus406IfTypoInSort() throws Exception {
-            String text = "в России";
-            String title = "в россии";
+            String text = "The";
+            String title = "World Cup";
             String typoInSort = "tit";
             String json = NewsJsonSupplier.getTypoInSortNewsResponse();
 
@@ -177,9 +176,9 @@ class NewsControllerTest extends BaseIntegrationTest {
         @MethodSource("ru.clevertec.newsservice.integration.controller.NewsControllerTest#getArgumentsForPostTest")
         void testShouldReturnExpectedJsonAndStatus201ForJournalistAndAdmin(Long expectedId,
                                                                            TokenValidationResponse response) throws Exception {
-            NewsRequest newsRequest = NewsRequestTestBuilder.aNewsRequest().build();
-            String content = objectMapper.writeValueAsString(newsRequest);
-            String json = objectMapper.writeValueAsString(response);
+            NewsRequest request = NewsRequestTestBuilder.aNewsRequest().build();
+            String content = JsonFormat.printer().print(request);
+            String json = JsonFormat.printer().print(response);
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -192,16 +191,16 @@ class NewsControllerTest extends BaseIntegrationTest {
                             .contentType(APPLICATION_JSON))
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").value(expectedId))
-                    .andExpect(jsonPath("$.title").value(newsRequest.title()))
-                    .andExpect(jsonPath("$.text").value(newsRequest.text()))
-                    .andExpect(jsonPath("$.email").value(response.email()));
+                    .andExpect(jsonPath("$.title").value(request.getTitle()))
+                    .andExpect(jsonPath("$.text").value(request.getText()))
+                    .andExpect(jsonPath("$.email").value(response.getEmail()));
         }
 
         @Test
         @DisplayName("test should return expected json and status 401 if user is unauthorized")
         void testShouldReturnExpectedJsonAndStatus401IfUserIsUnauthorized() throws Exception {
             NewsRequest request = NewsRequestTestBuilder.aNewsRequest().build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
             String json = CommonErrorJsonSupplier.getUnauthorizedErrorResponse();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -221,10 +220,10 @@ class NewsControllerTest extends BaseIntegrationTest {
         @DisplayName("test should return expected json and status 403 for Subscriber")
         void testShouldReturnExpectedJsonAndStatus403ForSubscriber() throws Exception {
             NewsRequest request = NewsRequestTestBuilder.aNewsRequest().build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.SUBSCRIBER.name()).build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             String expectedJson = CommonErrorJsonSupplier.getForbiddenForSubscriberErrorResponse();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -243,8 +242,8 @@ class NewsControllerTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return expected json and status 409 if text size is less then 3")
         void testShouldReturnExpectedJsonAndStatus409IfTextSizeIsLessThenThree() throws Exception {
-            NewsRequest newsRequest = NewsRequestTestBuilder.aNewsRequest().withText("").build();
-            String content = objectMapper.writeValueAsString(newsRequest);
+            NewsRequest request = NewsRequestTestBuilder.aNewsRequest().withText("").build();
+            String content = JsonFormat.printer().print(request);
             String json = CommonErrorJsonSupplier.getSizeErrorResponse();
 
             mockMvc.perform(post("/news")
@@ -265,9 +264,9 @@ class NewsControllerTest extends BaseIntegrationTest {
         @MethodSource("ru.clevertec.newsservice.integration.controller.NewsControllerTest#getArgumentsForPutTest")
         void testShouldReturnExpectedJsonAndStatus201ForJournalistAndAdmin(Long expectedId,
                                                                            TokenValidationResponse response) throws Exception {
-            NewsRequest newsRequest = NewsRequestTestBuilder.aNewsRequest().build();
-            String content = objectMapper.writeValueAsString(newsRequest);
-            String json = objectMapper.writeValueAsString(response);
+            NewsRequest request = NewsRequestTestBuilder.aNewsRequest().build();
+            String content = JsonFormat.printer().print(request);
+            String json = JsonFormat.printer().print(response);
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -280,9 +279,9 @@ class NewsControllerTest extends BaseIntegrationTest {
                             .contentType(APPLICATION_JSON))
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").value(expectedId))
-                    .andExpect(jsonPath("$.title").value(newsRequest.title()))
-                    .andExpect(jsonPath("$.text").value(newsRequest.text()))
-                    .andExpect(jsonPath("$.email").value(response.email()));
+                    .andExpect(jsonPath("$.title").value(request.getTitle()))
+                    .andExpect(jsonPath("$.text").value(request.getText()))
+                    .andExpect(jsonPath("$.email").value(response.getEmail()));
         }
 
         @Test
@@ -290,7 +289,7 @@ class NewsControllerTest extends BaseIntegrationTest {
         void testShouldReturnExpectedJsonAndStatus401IfUserIsUnauthorized() throws Exception {
             long id = 2L;
             NewsRequest request = NewsRequestTestBuilder.aNewsRequest().build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
             String json = CommonErrorJsonSupplier.getUnauthorizedErrorResponse();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -311,10 +310,10 @@ class NewsControllerTest extends BaseIntegrationTest {
         void testShouldReturnExpectedJsonAndStatus403ForSubscriber() throws Exception {
             long id = 2L;
             NewsRequest request = NewsRequestTestBuilder.aNewsRequest().build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.SUBSCRIBER.name()).build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             String expectedJson = CommonErrorJsonSupplier.getForbiddenForSubscriberErrorResponse();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -334,11 +333,11 @@ class NewsControllerTest extends BaseIntegrationTest {
         @DisplayName("test should return expected json and status 404 if value is not exist in db")
         void testShouldReturnExpectedJsonAndStatus404IfValueIsNotExist() throws Exception {
             long wrongId = 122;
-            NewsRequest newsRequest = NewsRequestTestBuilder.aNewsRequest().build();
-            String content = objectMapper.writeValueAsString(newsRequest);
+            NewsRequest request = NewsRequestTestBuilder.aNewsRequest().build();
+            String content = JsonFormat.printer().print(request);
             String expectedJson = NewsJsonSupplier.getNotFoundPutNewsResponse();
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -358,10 +357,10 @@ class NewsControllerTest extends BaseIntegrationTest {
         void testShouldReturnExpectedJsonAndStatus405ForJournalistWithWrongPermission() throws Exception {
             long id = 2L;
             NewsRequest request = NewsRequestTestBuilder.aNewsRequest().build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.JOURNALIST.name()).build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             String expectedJson = CommonErrorJsonSupplier.getMethodNotAllowedForJournalistErrorResponse();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -381,9 +380,24 @@ class NewsControllerTest extends BaseIntegrationTest {
         @DisplayName("test should return expected json and status 409 if text size is less then 3")
         void testShouldReturnExpectedJsonAndStatus409IfTextSizeIsLessThenThree() throws Exception {
             long id = 5;
-            NewsRequest newsRequest = NewsRequestTestBuilder.aNewsRequest().withText("").build();
-            String content = objectMapper.writeValueAsString(newsRequest);
+            NewsRequest request = NewsRequestTestBuilder.aNewsRequest().withText("").build();
+            String content = JsonFormat.printer().print(request);
             String json = CommonErrorJsonSupplier.getSizeErrorResponse();
+
+            mockMvc.perform(put("/news/" + id)
+                            .content(content)
+                            .contentType(APPLICATION_JSON))
+                    .andExpect(status().isConflict())
+                    .andExpect(content().json(json));
+        }
+
+        @Test
+        @DisplayName("test should return expected json and status 409 if news id is less then 1")
+        void testShouldReturnExpectedJsonAndStatus409IfNewsIdIsLessThenOne() throws Exception {
+            long id = 0;
+            NewsRequest request = NewsRequestTestBuilder.aNewsRequest().build();
+            String content = JsonFormat.printer().print(request);
+            String json = CommonErrorJsonSupplier.getIdErrorResponse();
 
             mockMvc.perform(put("/news/" + id)
                             .content(content)
@@ -403,9 +417,11 @@ class NewsControllerTest extends BaseIntegrationTest {
         @MethodSource("ru.clevertec.newsservice.integration.controller.NewsControllerTest#getArgumentsForDeleteTest")
         void testShouldReturnExpectedJsonAndStatus200ForJournalistAndAdmin(Long id,
                                                                            TokenValidationResponse response) throws Exception {
-            DeleteResponse deleteResponse = new DeleteResponse("News with ID " + id + " was successfully deleted");
-            String expectedJson = objectMapper.writeValueAsString(deleteResponse);
-            String json = objectMapper.writeValueAsString(response);
+            DeleteResponse deleteResponse = DeleteResponse.newBuilder()
+                    .setMessage("News with ID " + id + " was successfully deleted")
+                    .build();
+            String expectedJson = JsonFormat.printer().print(deleteResponse);
+            String json = JsonFormat.printer().print(response);
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -422,8 +438,6 @@ class NewsControllerTest extends BaseIntegrationTest {
         @DisplayName("test should return expected json and status 401 if user is unauthorized")
         void testShouldReturnExpectedJsonAndStatus401IfUserIsUnauthorized() throws Exception {
             long id = 3L;
-            NewsRequest request = NewsRequestTestBuilder.aNewsRequest().build();
-            String content = objectMapper.writeValueAsString(request);
             String json = CommonErrorJsonSupplier.getUnauthorizedErrorResponse();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -432,9 +446,7 @@ class NewsControllerTest extends BaseIntegrationTest {
                             .withBody(json)
                             .withHeader(CONTENT_TYPE, APPLICATION_JSON.toString())));
 
-            mockMvc.perform(delete("/news/" + id)
-                            .content(content)
-                            .contentType(APPLICATION_JSON))
+            mockMvc.perform(delete("/news/" + id))
                     .andExpect(status().isUnauthorized())
                     .andExpect(content().json(json));
         }
@@ -443,11 +455,9 @@ class NewsControllerTest extends BaseIntegrationTest {
         @DisplayName("test should return expected json and status 403 for Subscriber")
         void testShouldReturnExpectedJsonAndStatus403ForSubscriber() throws Exception {
             long id = 2L;
-            NewsRequest request = NewsRequestTestBuilder.aNewsRequest().build();
-            String content = objectMapper.writeValueAsString(request);
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.SUBSCRIBER.name()).build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             String expectedJson = CommonErrorJsonSupplier.getForbiddenForSubscriberErrorResponse();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -456,9 +466,7 @@ class NewsControllerTest extends BaseIntegrationTest {
                             .withBody(json)
                             .withHeader(CONTENT_TYPE, APPLICATION_JSON.toString())));
 
-            mockMvc.perform(delete("/news/" + id)
-                            .content(content)
-                            .contentType(APPLICATION_JSON))
+            mockMvc.perform(delete("/news/" + id))
                     .andExpect(status().isForbidden())
                     .andExpect(content().json(expectedJson));
         }
@@ -469,7 +477,7 @@ class NewsControllerTest extends BaseIntegrationTest {
             long wrongId = 122;
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse().build();
             String expectedJson = NewsJsonSupplier.getNotFoundDeleteNewsResponse();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
                     .willReturn(aResponse()
@@ -486,11 +494,9 @@ class NewsControllerTest extends BaseIntegrationTest {
         @DisplayName("test should return expected json and status 405 for Journalist with wrong permission")
         void testShouldReturnExpectedJsonAndStatus405ForJournalistWithWrongPermission() throws Exception {
             long id = 2L;
-            NewsRequest request = NewsRequestTestBuilder.aNewsRequest().build();
-            String content = objectMapper.writeValueAsString(request);
             TokenValidationResponse response = TokenValidationResponseTestBuilder.aTokenValidationResponse()
                     .withRole(Role.JOURNALIST.name()).build();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
             String expectedJson = CommonErrorJsonSupplier.getMethodNotAllowedForJournalistErrorResponse();
 
             stubFor(WireMock.post(urlEqualTo("/users/validate"))
@@ -499,9 +505,7 @@ class NewsControllerTest extends BaseIntegrationTest {
                             .withBody(json)
                             .withHeader(CONTENT_TYPE, APPLICATION_JSON.toString())));
 
-            mockMvc.perform(delete("/news/" + id)
-                            .content(content)
-                            .contentType(APPLICATION_JSON))
+            mockMvc.perform(delete("/news/" + id))
                     .andExpect(status().isMethodNotAllowed())
                     .andExpect(content().json(expectedJson));
         }
@@ -529,14 +533,14 @@ class NewsControllerTest extends BaseIntegrationTest {
     private static Stream<Arguments> getArgumentsForPutTest() {
         return Stream.of(
                 Arguments.of(4L, TokenValidationResponseTestBuilder.aTokenValidationResponse()
-                        .withRole(Role.JOURNALIST.name()).withEmail("bjohnson04@outlook.com").build()),
+                        .withRole(Role.JOURNALIST.name()).withEmail("sports@news.com").build()),
                 Arguments.of(4L, TokenValidationResponseTestBuilder.aTokenValidationResponse().build()));
     }
 
     private static Stream<Arguments> getArgumentsForDeleteTest() {
         return Stream.of(
                 Arguments.of(4L, TokenValidationResponseTestBuilder.aTokenValidationResponse()
-                        .withRole(Role.JOURNALIST.name()).withEmail("bjohnson04@outlook.com").build()),
+                        .withRole(Role.JOURNALIST.name()).withEmail("sports@news.com").build()),
                 Arguments.of(2L, TokenValidationResponseTestBuilder.aTokenValidationResponse().build()));
     }
 

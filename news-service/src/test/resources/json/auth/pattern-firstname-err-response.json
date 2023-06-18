@@ -1,9 +1,5 @@
 {
-  "error_code": "409 CONFLICT",
-  "violations": [
-    {
-      "field_name": "firstname",
-      "error_message": "Firstname must contain only letters of the Russian and English alphabets without spaces in any case"
-    }
-  ]
+  "exception": "ProtoValidationException",
+  "error_message": ".UserUpdateRequest.firstname: must match pattern ^[a-zA-Zа-яА-ЯёЁ]+$ - Got \"Ali - Muhammed\"",
+  "error_code": "409 CONFLICT"
 }

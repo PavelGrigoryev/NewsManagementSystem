@@ -9,7 +9,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.clevertec.exceptionhandlerstarter.handler.NewsManagementSystemExceptionHandler;
-import ru.clevertec.loggingstarter.aspect.LoggingAspect;
 
 /**
  * The HandlerAutoConfiguration class is responsible for configuring NewsManagementSystemExceptionHandler in a Spring Boot application.
@@ -37,7 +36,7 @@ public class HandlerAutoConfiguration {
      * @return The NewsManagementSystemExceptionHandler bean.
      */
     @Bean
-    @ConditionalOnMissingBean(LoggingAspect.class)
+    @ConditionalOnMissingBean(NewsManagementSystemExceptionHandler.class)
     public NewsManagementSystemExceptionHandler newsServiceExceptionHandler() {
         return new NewsManagementSystemExceptionHandler();
     }

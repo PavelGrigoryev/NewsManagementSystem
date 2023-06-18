@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.With;
 import ru.clevertec.userservice.model.Role;
-import ru.clevertec.userservice.dto.UserResponse;
+import ru.clevertec.userservice.dto.proto.UserResponse;
 import ru.clevertec.userservice.util.TestBuilder;
 
 import java.time.LocalDateTime;
@@ -16,8 +16,8 @@ import java.time.Month;
 public class UserResponseTestBuilder implements TestBuilder<UserResponse> {
 
     private Long id = 3L;
-    private String firstname = "Брюс";
-    private String lastname = "Ли";
+    private String firstname = "Bruce";
+    private String lastname = "Lee";
     private String email = "BruceLee@shazam.com";
     private Role role = Role.ADMIN;
     private String token = "jwt";
@@ -27,7 +27,13 @@ public class UserResponseTestBuilder implements TestBuilder<UserResponse> {
 
     @Override
     public UserResponse build() {
-        return new UserResponse(id, firstname, lastname, email, role, token, tokenExpiration, createdTime, updatedTime);
+        return UserResponse.newBuilder()
+                .setId(id)
+                .setFirstname(firstname)
+                .setLastname(lastname)
+                .setEmail(email)
+                .setRole(role.name())
+                .build();
     }
 
 }

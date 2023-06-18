@@ -64,7 +64,7 @@ public class CommentCacheAspect {
     public Object aroundPutCacheableAnnotation(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = joinPoint.proceed(joinPoint.getArgs());
         Class<?> aClass = result.getClass();
-        Method method = aClass.getMethod("id");
+        Method method = aClass.getMethod("getId");
         Object id = method.invoke(result);
         Cache<Object, Object> commentCache = cacheFactory.createCommentCache();
         commentCache.put(id, result);

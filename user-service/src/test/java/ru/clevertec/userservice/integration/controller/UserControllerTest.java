@@ -1,6 +1,6 @@
 package ru.clevertec.userservice.integration.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.protobuf.util.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -8,20 +8,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.clevertec.userservice.dto.UserAuthenticationRequest;
-import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.UserRegisterRequest;
-import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UserUpdateRequest;
-import ru.clevertec.userservice.dto.UserResponse;
+import ru.clevertec.userservice.dto.proto.DeleteResponse;
+import ru.clevertec.userservice.dto.proto.TokenValidationResponse;
+import ru.clevertec.userservice.dto.proto.UserAuthenticationRequest;
+import ru.clevertec.userservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.userservice.dto.proto.UserResponse;
+import ru.clevertec.userservice.dto.proto.UserUpdateRequest;
 import ru.clevertec.userservice.integration.BaseIntegrationTest;
-import ru.clevertec.userservice.util.json.UserJsonSupplier;
 import ru.clevertec.userservice.util.json.TokenTxtSupplier;
+import ru.clevertec.userservice.util.json.UserJsonSupplier;
+import ru.clevertec.userservice.util.testbuilder.TokenValidationResponseTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserAuthenticationRequestTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserRegisterRequestTestBuilder;
-import ru.clevertec.userservice.util.testbuilder.TokenValidationResponseTestBuilder;
-import ru.clevertec.userservice.util.testbuilder.UserUpdateRequestTestBuilder;
 import ru.clevertec.userservice.util.testbuilder.UserResponseTestBuilder;
+import ru.clevertec.userservice.util.testbuilder.UserUpdateRequestTestBuilder;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -37,7 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest extends BaseIntegrationTest {
 
     private final MockMvc mockMvc;
-    private final ObjectMapper objectMapper;
     private static final String BEARER = "Bearer ";
 
     @Nested
@@ -49,27 +48,27 @@ class UserControllerTest extends BaseIntegrationTest {
             UserRegisterRequest request = UserRegisterRequestTestBuilder.aUserRegisterRequest()
                     .withEmail("new@email.by")
                     .build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
 
             mockMvc.perform(post("/users/register")
                             .content(content)
                             .contentType(APPLICATION_JSON))
                     .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.firstname").value(request.firstname()))
-                    .andExpect(jsonPath("$.lastname").value(request.lastname()))
-                    .andExpect(jsonPath("$.email").value(request.email()))
-                    .andExpect(jsonPath("$.role").value(request.role()))
+                    .andExpect(jsonPath("$.firstname").value(request.getFirstname()))
+                    .andExpect(jsonPath("$.lastname").value(request.getLastname()))
+                    .andExpect(jsonPath("$.email").value(request.getEmail()))
+                    .andExpect(jsonPath("$.role").value(request.getRole()))
                     .andExpect(jsonPath("$.token").isString())
-                    .andExpect(jsonPath("$.token_expiration").isString())
-                    .andExpect(jsonPath("$.created_time").isNotEmpty())
-                    .andExpect(jsonPath("$.updated_time").isNotEmpty());
+                    .andExpect(jsonPath("$.tokenExpiration").isString())
+                    .andExpect(jsonPath("$.createdTime").isNotEmpty())
+                    .andExpect(jsonPath("$.updatedTime").isNotEmpty());
         }
 
         @Test
         @DisplayName("test should return expected json and status 406 if email is occupied")
         void testShouldReturnExpectedJsonAndStatus406IfEmailIsOccupied() throws Exception {
             UserRegisterRequest request = UserRegisterRequestTestBuilder.aUserRegisterRequest().build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
             String json = UserJsonSupplier.getUniqueEmailErrorResponse();
 
             mockMvc.perform(post("/users/register")
@@ -86,7 +85,7 @@ class UserControllerTest extends BaseIntegrationTest {
                     .withEmail("super@email.ru")
                     .withRole("SUPER_ADMIN")
                     .build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
             String json = UserJsonSupplier.getPatternRoleErrorResponse();
 
             mockMvc.perform(post("/users/register")
@@ -106,20 +105,20 @@ class UserControllerTest extends BaseIntegrationTest {
         void testShouldReturnExpectedJsonAndStatus200() throws Exception {
             UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest().build();
             UserResponse response = UserResponseTestBuilder.aUserResponse().build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
 
             mockMvc.perform(post("/users/authenticate")
                             .content(content)
                             .contentType(APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.firstname").value(response.firstname()))
-                    .andExpect(jsonPath("$.lastname").value(response.lastname()))
-                    .andExpect(jsonPath("$.email").value(request.email()))
-                    .andExpect(jsonPath("$.role").value(response.role().name()))
+                    .andExpect(jsonPath("$.firstname").value(response.getFirstname()))
+                    .andExpect(jsonPath("$.lastname").value(response.getLastname()))
+                    .andExpect(jsonPath("$.email").value(request.getEmail()))
+                    .andExpect(jsonPath("$.role").value(response.getRole()))
                     .andExpect(jsonPath("$.token").isString())
-                    .andExpect(jsonPath("$.token_expiration").isString())
-                    .andExpect(jsonPath("$.created_time").isNotEmpty())
-                    .andExpect(jsonPath("$.updated_time").isNotEmpty());
+                    .andExpect(jsonPath("$.tokenExpiration").isString())
+                    .andExpect(jsonPath("$.createdTime").isNotEmpty())
+                    .andExpect(jsonPath("$.updatedTime").isNotEmpty());
         }
 
         @Test
@@ -127,7 +126,7 @@ class UserControllerTest extends BaseIntegrationTest {
         void testShouldReturnExpectedJsonAndStatus401IfUserHasWrongPassword() throws Exception {
             UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest()
                     .withPassword("wrong").build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
             String json = UserJsonSupplier.getWrongPasswordErrorResponse();
 
             mockMvc.perform(post("/users/authenticate")
@@ -142,7 +141,7 @@ class UserControllerTest extends BaseIntegrationTest {
         void testShouldReturnExpectedJsonAndStatus404IfUserIsNotExist() throws Exception {
             UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest()
                     .withEmail("Bad@email.com").build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
             String json = UserJsonSupplier.getNotFoundErrorResponse();
 
             mockMvc.perform(post("/users/authenticate")
@@ -157,7 +156,7 @@ class UserControllerTest extends BaseIntegrationTest {
         void testShouldReturnExpectedJsonAndStatus409IfEmailIsOutOfPattern() throws Exception {
             UserAuthenticationRequest request = UserAuthenticationRequestTestBuilder.aUserAuthenticationRequest()
                     .withEmail("Bad email").build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
             String json = UserJsonSupplier.getPatternEmailErrorResponse();
 
             mockMvc.perform(post("/users/authenticate")
@@ -180,7 +179,7 @@ class UserControllerTest extends BaseIntegrationTest {
                     .withEmail("BruceLee@shazam.com")
                     .build();
             String token = TokenTxtSupplier.getToken2048Request();
-            String json = objectMapper.writeValueAsString(response);
+            String json = JsonFormat.printer().print(response);
 
             mockMvc.perform(post("/users/validate")
                             .header(AUTHORIZATION, BEARER + token))
@@ -238,7 +237,7 @@ class UserControllerTest extends BaseIntegrationTest {
         void testShouldReturnExpectedJsonAndStatus201() throws Exception {
             UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest().build();
             UserResponse response = UserResponseTestBuilder.aUserResponse().build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
             String token = TokenTxtSupplier.getToken2048Request();
 
             mockMvc.perform(put("/users")
@@ -246,14 +245,14 @@ class UserControllerTest extends BaseIntegrationTest {
                             .content(content)
                             .contentType(APPLICATION_JSON))
                     .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.firstname").value(request.firstname()))
-                    .andExpect(jsonPath("$.lastname").value(request.lastname()))
-                    .andExpect(jsonPath("$.email").value(response.email()))
-                    .andExpect(jsonPath("$.role").value(response.role().name()))
+                    .andExpect(jsonPath("$.firstname").value(request.getFirstname()))
+                    .andExpect(jsonPath("$.lastname").value(request.getLastname()))
+                    .andExpect(jsonPath("$.email").value(response.getEmail()))
+                    .andExpect(jsonPath("$.role").value(response.getRole()))
                     .andExpect(jsonPath("$.token").isString())
-                    .andExpect(jsonPath("$.token_expiration").isString())
-                    .andExpect(jsonPath("$.created_time").isNotEmpty())
-                    .andExpect(jsonPath("$.updated_time").isNotEmpty());
+                    .andExpect(jsonPath("$.tokenExpiration").isString())
+                    .andExpect(jsonPath("$.createdTime").isNotEmpty())
+                    .andExpect(jsonPath("$.updatedTime").isNotEmpty());
         }
 
         @Test
@@ -262,7 +261,7 @@ class UserControllerTest extends BaseIntegrationTest {
             String token = TokenTxtSupplier.getBadSignatureTokenRequest();
             String json = UserJsonSupplier.getSignatureErrorResponse();
             UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest().build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
 
             mockMvc.perform(put("/users")
                             .header(AUTHORIZATION, BEARER + token)
@@ -278,7 +277,7 @@ class UserControllerTest extends BaseIntegrationTest {
             String token = TokenTxtSupplier.getDeletedEmailTokenRequest();
             String json = UserJsonSupplier.getNotFoundUpdateErrorResponse();
             UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest().build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
 
             mockMvc.perform(put("/users")
                             .header(AUTHORIZATION, BEARER + token)
@@ -294,9 +293,9 @@ class UserControllerTest extends BaseIntegrationTest {
             String token = TokenTxtSupplier.getToken2048Request();
             String json = UserJsonSupplier.getPatternFirstnameErrorResponse();
             UserUpdateRequest request = UserUpdateRequestTestBuilder.aUserUpdateRequest()
-                    .withFirstname("Али - Баба")
+                    .withFirstname("Ali - Muhammed")
                     .build();
-            String content = objectMapper.writeValueAsString(request);
+            String content = JsonFormat.printer().print(request);
 
             mockMvc.perform(put("/users")
                             .header(AUTHORIZATION, BEARER + token)
@@ -315,8 +314,10 @@ class UserControllerTest extends BaseIntegrationTest {
         @Test
         @DisplayName("test should return expected json and status 200")
         void testShouldReturnExpectedJsonAndStatus200() throws Exception {
-            DeleteResponse deleteResponse = new DeleteResponse("User with email BruceLee@shazam.com was successfully deleted");
-            String json = objectMapper.writeValueAsString(deleteResponse);
+            DeleteResponse deleteResponse = DeleteResponse.newBuilder()
+                    .setMessage("User with email BruceLee@shazam.com was successfully deleted")
+                    .build();
+            String json = JsonFormat.printer().print(deleteResponse);
             String token = TokenTxtSupplier.getToken2048Request();
 
             mockMvc.perform(delete("/users")

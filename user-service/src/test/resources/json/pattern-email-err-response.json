@@ -1,9 +1,5 @@
 {
-  "error_code": "409 CONFLICT",
-  "violations": [
-    {
-      "field_name": "email",
-      "error_message": "must be a well-formed email address"
-    }
-  ]
+  "exception": "ProtoValidationException",
+  "error_message": ".UserAuthenticationRequest.email: should be a valid email - Got \"Bad email\"",
+  "error_code": "409 CONFLICT"
 }

@@ -1,9 +1,5 @@
 {
-  "error_code": "409 CONFLICT",
-  "violations": [
-    {
-      "field_name": "text",
-      "error_message": "size must be between 3 and 2000"
-    }
-  ]
+  "exception": "ProtoValidationException",
+  "error_message": ".NewsRequest.text: length must be at least 3 but got: 0 - Got \"\"",
+  "error_code": "409 CONFLICT"
 }

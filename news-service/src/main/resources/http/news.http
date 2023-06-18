@@ -7,30 +7,33 @@ GET http://localhost:8080/news?page=1&size=5
 Accept: application/json
 
 ###findAllByMatchingTextParams
-GET http://localhost:8080/news/params?text=в России&title=в россии&page=0&size=2&sort=id,desc
+GET http://localhost:8080/news/params?title=New s&text=The&page=0&size=2&sort=id,desc
 Accept: application/json
 
 ###save
 POST http://localhost:8080/news
+Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt_token}}
 
 {
-  "title": "Привет из Беларуси",
-  "text": "Беларусь - великая страна!"
+  "title": "Hello from Belarus",
+  "text": "Belarus is a great country!"
 }
 
 ###update
 PUT http://localhost:8080/news/21
+Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt_token}}
 
 {
-  "title": "До свидания от Беларуси",
-  "text": "Беларусь прощается с вами"
+  "title": "Good-bye from Belarus",
+  "text": "Belarus says goodbye to you!"
 }
 
 ###delete
 DELETE http://localhost:8080/news/21
+Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt_token}}

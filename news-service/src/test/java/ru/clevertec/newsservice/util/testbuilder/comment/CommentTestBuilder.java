@@ -16,9 +16,9 @@ public class CommentTestBuilder implements TestBuilder<Comment> {
 
     private Long id = 1L;
     private LocalDateTime time = LocalDateTime.of(2023, Month.JUNE, 3, 19, 44, 11);
-    private String text = "Не очень понятно, надо бы больше примеров";
-    private String username = "Ольга";
-    private String email = "olga1989@yandex.ru";
+    private String text = "Wow! That's scary! I hope everyone is safe!";
+    private String username = "LavaLover";
+    private String email = "lavalover@gmail.com";
 
     @Override
     public Comment build() {

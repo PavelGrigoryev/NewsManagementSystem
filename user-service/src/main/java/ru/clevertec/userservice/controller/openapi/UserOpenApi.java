@@ -10,16 +10,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
-import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
-import ru.clevertec.userservice.dto.UserAuthenticationRequest;
-import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.UserRegisterRequest;
-import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UserUpdateRequest;
-import ru.clevertec.userservice.dto.UserResponse;
+import ru.clevertec.userservice.dto.proto.DeleteResponse;
+import ru.clevertec.userservice.dto.proto.TokenValidationResponse;
+import ru.clevertec.userservice.dto.proto.UserAuthenticationRequest;
+import ru.clevertec.userservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.userservice.dto.proto.UserResponse;
+import ru.clevertec.userservice.dto.proto.UserUpdateRequest;
 
 @Tag(name = "User", description = "The User Api")
 public interface UserOpenApi {
@@ -41,15 +39,15 @@ public interface UserOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 4,
+                              "id": "4",
                               "firstname": "Pavel",
                               "lastname": "Shishkin",
                               "email": "Green@mail.com",
                               "role": "ADMIN",
                               "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiQURNSU4ifV0sInN1YiI6IkdyZWVuQG1haWwuY29tIiwiaWF0IjoxNjg2MzExNDIxLCJleHAiOjE2ODYzOTc4MjF9.CPPgPruJXiABRI2466pT8jX62L9t9BTV00WuC_AHrNA",
-                              "token_expiration": "Sat Jun 10 14:50:21 MSK 2023",
-                              "created_time": "2023-06-09T14:50:21",
-                              "updated_time": "2023-06-09T14:50:21"
+                              "tokenExpiration": "Sat Jun 10 14:50:21 MSK 2023",
+                              "createdTime": "2023-06-09T14:50:21",
+                              "updatedTime": "2023-06-09T14:50:21"
                             }
                             """))),
             @ApiResponse(responseCode = "406", description = "Email is unique for User",
@@ -63,20 +61,16 @@ public interface UserOpenApi {
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ValidationErrorResponse.class),
+                            schema = @Schema(implementation = IncorrectData.class),
                             examples = @ExampleObject("""
                                     {
-                                      "error_code": "409 CONFLICT",
-                                      "violations": [
-                                        {
-                                          "field_name": "role",
-                                          "error_message": "Acceptable roles are only: ADMIN, JOURNALIST, SUBSCRIBER"
-                                        }
-                                      ]
+                                      "exception": "ProtoValidationException",
+                                      "error_message": ".UserRegisterRequest.role: must match pattern ADMIN|JOURNALIST|SUBSCRIBER - Got \\"SUPERMAN\\"",
+                                      "error_code": "409 CONFLICT"
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> register(@Valid UserRegisterRequest request);
+    ResponseEntity<UserResponse> register(UserRegisterRequest request);
 
     @Operation(summary = "Authenticate User and get jwt token.", tags = "User",
             requestBody = @RequestBody(description = "RequestBody for UserAuthenticationRequest",
@@ -92,15 +86,15 @@ public interface UserOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 1,
-                              "firstname": "Чак",
-                              "lastname": "Норрис",
+                              "id": "1",
+                              "firstname": "Chuck",
+                              "lastname": "Norris",
                               "email": "ChakcNunChuck@gmail.com",
                               "role": "SUBSCRIBER",
-                              "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiU1VCU0NSSUJFUiJ9XSwic3ViIjoiQ2hha2NOdW5DaHVja0BnbWFpbC5jb20iLCJpYXQiOjE2ODYzMTE3NjgsImV4cCI6MTY4NjM5ODE2OH0.HLYlRTR_sUcS9tngeR9XQUyYAHMnGvw-uCVrKwdTxWs",
-                              "token_expiration": "Sat Jun 10 14:56:08 MSK 2023",
-                              "created_time": "2023-06-06T16:45:59",
-                              "updated_time": "2023-06-06T16:45:59"
+                              "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiU1VCU0NSSUJFUiJ9XSwic3ViIjoiQ2hha2NOdW5DaHVja0BnbWFpbC5jb20iLCJpYXQiOjE2ODY5MTUzNjcsImV4cCI6MTY4NzAwMTc2N30.zTK3gwck5_SSORSufAfbON8UO4cOcFe4-xJTAFS9dsc",
+                              "tokenExpiration": "Sat Jun 17 14:36:07 MSK 2023",
+                              "createdTime": "2023-06-06T16:45:59",
+                              "updatedTime": "2023-06-06T16:45:59"
                             }
                             """))),
             @ApiResponse(responseCode = "401", description = "Wrong password for User",
@@ -123,20 +117,16 @@ public interface UserOpenApi {
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ValidationErrorResponse.class),
+                            schema = @Schema(implementation = IncorrectData.class),
                             examples = @ExampleObject("""
                                     {
-                                      "error_code": "409 CONFLICT",
-                                      "violations": [
-                                        {
-                                          "field_name": "email",
-                                          "error_message": "must be a well-formed email address"
-                                        }
-                                      ]
+                                      "exception": "ProtoValidationException",
+                                      "error_message": ".UserAuthenticationRequest.email: should be a valid email - Got \\"ChakcNunChuckgmail.com\\"",
+                                      "error_code": "409 CONFLICT"
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> authenticate(@Valid UserAuthenticationRequest request);
+    ResponseEntity<UserResponse> authenticate(UserAuthenticationRequest request);
 
     @Operation(summary = "Check validation of token for User, if valid - returns his role and email.", tags = "User",
             security = @SecurityRequirement(name = "Bearer Authentication"))
@@ -177,15 +167,15 @@ public interface UserOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 2,
+                              "id": "2",
                               "firstname": "Igor",
                               "lastname": "Zavadskiy",
                               "email": "Shwarsz@yahoo.com",
                               "role": "JOURNALIST",
                               "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiSk9VUk5BTElTVCJ9XSwic3ViIjoiU2h3YXJzekB5YWhvby5jb20iLCJpYXQiOjE2ODYzMTA0NTUsImV4cCI6MTY4NjM5Njg1NX0.3xmnKRAPcAjPNo_kN8myvlOfyGaweGgjt9DFhfa8LuQ",
-                              "token_expiration": "Sat Jun 10 14:34:15 MSK 2023",
-                              "created_time": "2023-06-06T12:33:47",
-                              "updated_time": "2023-06-09T15:05:50"
+                              "tokenExpiration": "Sat Jun 10 14:34:15 MSK 2023",
+                              "createdTime": "2023-06-06T12:33:47",
+                              "updatedTime": "2023-06-09T15:05:50"
                             }
                             """))),
             @ApiResponse(responseCode = "401", description = "Not Authenticated User",
@@ -208,20 +198,16 @@ public interface UserOpenApi {
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ValidationErrorResponse.class),
+                            schema = @Schema(implementation = IncorrectData.class),
                             examples = @ExampleObject("""
                                     {
-                                      "error_code": "409 CONFLICT",
-                                      "violations": [
-                                        {
-                                          "field_name": "firstname",
-                                          "error_message": "Firstname must contain only letters of the Russian and English alphabets without spaces in any case"
-                                        }
-                                      ]
+                                      "exception": "ProtoValidationException",
+                                      "error_message": ".UserUpdateRequest.firstname: must match pattern ^[a-zA-Zа-яА-ЯёЁ]+$ - Got \\"Igor1\\"",
+                                      "error_code": "409 CONFLICT"
                                     }
                                     """)))
     })
-    ResponseEntity<UserResponse> updateByToken(@Valid UserUpdateRequest request, @Parameter(hidden = true) String token);
+    ResponseEntity<UserResponse> updateByToken(UserUpdateRequest request, @Parameter(hidden = true) String token);
 
     @Operation(summary = "Delete User by token.", tags = "User",
             security = @SecurityRequirement(name = "Bearer Authentication"))

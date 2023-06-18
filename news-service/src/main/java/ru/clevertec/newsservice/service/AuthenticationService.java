@@ -1,7 +1,7 @@
 package ru.clevertec.newsservice.service;
 
-import ru.clevertec.newsservice.dto.user.Role;
-import ru.clevertec.newsservice.dto.user.TokenValidationResponse;
+import ru.clevertec.newsservice.dto.proto.Role;
+import ru.clevertec.newsservice.dto.proto.TokenValidationResponse;
 
 /**
  * The AuthenticationService interface provides the implementation for token validation operations.

@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.exceptionhandlerstarter.exception.NoSuchUserEmailException;
 import ru.clevertec.exceptionhandlerstarter.exception.UniqueEmailException;
-import ru.clevertec.userservice.dto.UserAuthenticationRequest;
-import ru.clevertec.userservice.dto.DeleteResponse;
-import ru.clevertec.userservice.dto.UserRegisterRequest;
-import ru.clevertec.userservice.dto.TokenValidationResponse;
-import ru.clevertec.userservice.dto.UserUpdateRequest;
-import ru.clevertec.userservice.dto.UserResponse;
+import ru.clevertec.userservice.dto.proto.DeleteResponse;
+import ru.clevertec.userservice.dto.proto.TokenValidationResponse;
+import ru.clevertec.userservice.dto.proto.UserAuthenticationRequest;
+import ru.clevertec.userservice.dto.proto.UserRegisterRequest;
+import ru.clevertec.userservice.dto.proto.UserResponse;
+import ru.clevertec.userservice.dto.proto.UserUpdateRequest;
 import ru.clevertec.userservice.mapper.UserMapper;
 import ru.clevertec.userservice.model.User;
 import ru.clevertec.userservice.repository.UserRepository;
@@ -69,9 +69,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserResponse authenticate(UserAuthenticationRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new NoSuchUserEmailException("User with email " + request.email() + " is not exist"));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new NoSuchUserEmailException("User with email " + request.getEmail() + " is not exist"));
         String jwtToken = jwtService.generateToken(user);
         return userMapper.toResponse(user, jwtToken, jwtService.extractExpiration(jwtToken).toString());
     }
@@ -91,7 +91,9 @@ public class UserServiceImpl implements UserService {
                 .map(s -> s.substring(s.indexOf("=") + 1, s.length() - 2))
                 .findFirst()
                 .orElse("");
-        return new TokenValidationResponse(role, email);
+        return TokenValidationResponse.newBuilder()
+                .setRole(role)
+                .setEmail(email).build();
     }
 
 
@@ -111,9 +113,9 @@ public class UserServiceImpl implements UserService {
         String email = jwtService.extractUsername(jwt);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchUserEmailException("There is no User with email " + email + " to update"));
-        user.setFirstname(request.firstname());
-        user.setLastname(request.lastname());
-        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setFirstname(request.getFirstname());
+        user.setLastname(request.getLastname());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         User updatedUser = userRepository.saveAndFlush(user);
         return userMapper.toResponse(updatedUser, jwt, jwtService.extractExpiration(jwt).toString());
     }
@@ -134,7 +136,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchUserEmailException("There is no User with email " + email + " to delete"));
         userRepository.delete(user);
-        return new DeleteResponse("User with email " + email + " was successfully deleted");
+        return DeleteResponse.newBuilder().setMessage("User with email " + email + " was successfully deleted").build();
     }
 
 }

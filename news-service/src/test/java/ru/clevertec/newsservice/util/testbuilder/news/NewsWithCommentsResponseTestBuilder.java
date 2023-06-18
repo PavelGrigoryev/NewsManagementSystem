@@ -3,8 +3,8 @@ package ru.clevertec.newsservice.util.testbuilder.news;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.With;
-import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
+import ru.clevertec.newsservice.dto.proto.CommentResponse;
+import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
 import ru.clevertec.newsservice.util.TestBuilder;
 import ru.clevertec.newsservice.util.testbuilder.comment.CommentResponseTestBuilder;
 
@@ -19,15 +19,25 @@ public class NewsWithCommentsResponseTestBuilder implements TestBuilder<NewsWith
 
     private Long id = 1L;
     private LocalDateTime time = LocalDateTime.of(2023, Month.MAY, 25, 15, 25, 33);
-    private String title = "В Беларуси прошли массовые акции протеста против алкоголизма";
-    private String text = "В Беларуси прошли массовые акции протеста против алкоголизма, который удерживает власть над алкоголиками более 40 лет.";
+    private String title = "Apple unveils iPhone 15 with holographic display";
+    private String text = "Apple has announced its latest flagship smartphone, the iPhone 15, which features a " +
+                          "revolutionary holographic display that projects 3D images in mid-air. The iPhone 15 also" +
+                          " boasts a faster processor, a longer battery life, and a new design that is thinner" +
+                          " and lighter than ever. The iPhone 15 will be available in stores starting from July 1st.";
+    private String email = "tech@news.com";
     private List<CommentResponse> comments = List.of(CommentResponseTestBuilder.aCommentResponse().build(),
-            CommentResponseTestBuilder.aCommentResponse().withId(2L).withUsername("Саня").build());
-    private String email = "olga1989@yandex.ru";
+            CommentResponseTestBuilder.aCommentResponse().withId(2L).withUsername("Sasha").build());
 
     @Override
     public NewsWithCommentsResponse build() {
-        return new NewsWithCommentsResponse(id, time, title, text, email, comments);
+        return NewsWithCommentsResponse.newBuilder()
+                .setId(id)
+                .setTime(time.toString())
+                .setTitle(title)
+                .setText(text)
+                .setEmail(email)
+                .addAllComments(comments)
+                .build();
     }
 
 }

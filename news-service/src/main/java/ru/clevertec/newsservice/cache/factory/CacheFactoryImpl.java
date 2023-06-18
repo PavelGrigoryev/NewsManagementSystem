@@ -3,6 +3,7 @@ package ru.clevertec.newsservice.cache.factory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import ru.clevertec.newsservice.cache.Cache;
 import ru.clevertec.newsservice.cache.LFUCache;
 import ru.clevertec.newsservice.cache.LRUCache;
@@ -12,6 +13,7 @@ import ru.clevertec.newsservice.cache.LRUCache;
  * in the application.yaml file.
  */
 @Configuration
+@Profile("dev")
 public class CacheFactoryImpl<K, V> implements CacheFactory<K, V> {
 
     @Value("${cache.algorithm}")

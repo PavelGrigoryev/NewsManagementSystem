@@ -3,7 +3,7 @@ package ru.clevertec.newsservice.util.testbuilder.user;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.With;
-import ru.clevertec.newsservice.dto.user.UserUpdateRequest;
+import ru.clevertec.newsservice.dto.proto.UserUpdateRequest;
 import ru.clevertec.newsservice.util.TestBuilder;
 
 @AllArgsConstructor
@@ -17,7 +17,11 @@ public class UserUpdateRequestTestBuilder implements TestBuilder<UserUpdateReque
 
     @Override
     public UserUpdateRequest build() {
-        return new UserUpdateRequest(firstname, lastname, password);
+        return UserUpdateRequest.newBuilder()
+                .setFirstname(firstname)
+                .setLastname(lastname)
+                .setPassword(password)
+                .build();
     }
 
 }

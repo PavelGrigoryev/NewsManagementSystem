@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +17,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import ru.clevertec.exceptionhandlerstarter.model.IncorrectData;
 import ru.clevertec.exceptionhandlerstarter.model.ValidationErrorResponse;
-import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.comment.CommentRequest;
-import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
-import ru.clevertec.newsservice.dto.news.NewsWithCommentsResponse;
-
-import java.util.List;
+import ru.clevertec.newsservice.dto.proto.CommentRequest;
+import ru.clevertec.newsservice.dto.proto.CommentResponse;
+import ru.clevertec.newsservice.dto.proto.CommentResponseList;
+import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
+import ru.clevertec.newsservice.dto.proto.NewsWithCommentsResponse;
 
 @Validated
 @Tag(name = "Comment", description = "The Comment Api")
@@ -37,11 +35,11 @@ public interface CommentOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CommentResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 5,
-                              "time": "2023-06-03T17:56:12",
-                              "text": "Все это бессмысленно, никто не будет использовать это",
-                              "username": "Дмитрий",
-                              "email": "cthompson05@gmail.com"
+                              "id": "5",
+                              "time": "2023-06-14T10:35:00",
+                              "text": "This is so cool! I wish I could see it in person!",
+                              "username": "VolcanoFan",
+                              "email": "volcanofan@gmail.com"
                             }
                             """))),
             @ApiResponse(responseCode = "404", description = "No Comment with this id in database",
@@ -82,46 +80,46 @@ public interface CommentOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = NewsWithCommentsResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 19,
-                              "time": "2023-05-27T10:55:59",
-                              "title": "В Беларуси прошли массовые акции протеста против алкоголизма",
-                              "text": "В Беларуси прошли массовые акции протеста против алкоголизма, который удерживает власть над алкоголиками более 40 лет.",
-                              "email": "rrogers19@hotmail.com",
+                              "id": "19",
+                              "time": "2023-06-14T12:00:00",
+                              "title": "New song by Ed Sheeran tops charts",
+                              "text": "The new song by the popular singer-songwriter Ed Sheeran, titled Perfect Harmony, has topped the charts in several countries around the world. The song, which is a duet with his wife Cherry Seaborn, is a romantic ballad that expresses their love and happiness. The song has been praised for its melody, lyrics, and vocals.",
+                              "email": "music@news.com",
                               "comments": [
                                 {
-                                  "id": 187,
-                                  "time": "2023-06-18T15:23:34",
-                                  "text": "Не согласен с автором, это не сработает",
-                                  "username": "Кира",
-                                  "email": "jhernandez37@gmail.com"
+                                  "id": "92",
+                                  "time": "2023-06-14T12:02:00",
+                                  "text": "This is so cool! The song is so beautiful!",
+                                  "username": "SheeranLover",
+                                  "email": "sheeranlover@yahoo.com"
                                 },
                                 {
-                                  "id": 183,
-                                  "time": "2023-06-16T12:45:34",
-                                  "text": "Мне кажется, что это не совсем точно",
-                                  "username": "Ирина",
-                                  "email": "flopez33@gmail.com"
+                                  "id": "143",
+                                  "time": "2023-06-14T12:03:00",
+                                  "text": "This is so lame. Ed Sheeran is boring.",
+                                  "username": "SheeranHater2",
+                                  "email": "sheeranhater2@outlook.com"
                                 },
                                 {
-                                  "id": 185,
-                                  "time": "2023-06-17T11:34:56",
-                                  "text": "Спасибо за информацию, очень интересно",
-                                  "username": "Егор",
-                                  "email": "hjohnson35@hotmail.com"
+                                  "id": "93",
+                                  "time": "2023-06-14T12:03:00",
+                                  "text": "This is so lame. Ed Sheeran is boring.",
+                                  "username": "SheeranHater",
+                                  "email": "sheeranhater@outlook.com"
                                 },
                                 {
-                                  "id": 182,
-                                  "time": "2023-06-16T09:34:12",
-                                  "text": "Не очень понятно, надо бы больше примеров",
-                                  "username": "Василий",
-                                  "email": "ejames32@outlook.com"
+                                  "id": "141",
+                                  "time": "2023-06-14T12:01:00",
+                                  "text": "Wow! That's awesome! I love Ed Sheeran!",
+                                  "username": "SheeranFan2",
+                                  "email": "sheeranfan2@gmail.com"
                                 },
                                 {
-                                  "id": 190,
-                                  "time": "2023-06-20T11:12:45",
-                                  "text": "Мне кажется, что это не совсем правильно",
-                                  "username": "Антон",
-                                  "email": "msmith40@outlook.com"
+                                  "id": "91",
+                                  "time": "2023-06-14T12:01:00",
+                                  "text": "Wow! That's awesome! I love Ed Sheeran!",
+                                  "username": "SheeranFan",
+                                  "email": "sheeranfan@gmail.com"
                                 }
                               ]
                             }
@@ -164,8 +162,8 @@ public interface CommentOpenApi {
 
     @Operation(summary = "Find all Comments by matching text and username params with pagination.",
             tags = "Comment", parameters = {
-            @Parameter(name = "username", description = "Enter your username here", example = "Анна"),
-            @Parameter(name = "text", description = "Enter your text here", example = "Какая"),
+            @Parameter(name = "text", description = "Enter your text here", example = "This"),
+            @Parameter(name = "username", description = "Enter your username here", example = "dinolover"),
             @Parameter(name = "page", description = "Enter your page number here", example = "0"),
             @Parameter(name = "size", description = "Enter your page size here", example = "10"),
             @Parameter(name = "sort", description = "Enter your sort by(id, time, text or username) here",
@@ -175,43 +173,24 @@ public interface CommentOpenApi {
             @ApiResponse(responseCode = "200", description = "List of Comments retrieved successfully",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CommentResponse.class), examples = @ExampleObject("""
-                            [
-                              {
-                                "id": 3,
-                                "time": "2023-06-02T09:12:08",
-                                "text": "Какая интересная статья, мне очень понравилось",
-                                "username": "Анна",
-                                "email": "klee03@hotmail.com"
-                              },
-                              {
-                                "id": 48,
-                                "time": "2023-06-02T09:12:08",
-                                "text": "Какая интересная статья, мне очень понравилось",
-                                "username": "Анна",
-                                "email": "ucook48@outlook.com"
-                              },
-                              {
-                                "id": 93,
-                                "time": "2023-06-02T09:12:08",
-                                "text": "Какая интересная статья, мне очень понравилось",
-                                "username": "Анна",
-                                "email": "pscott43@hotmail.com"
-                              },
-                              {
-                                "id": 138,
-                                "time": "2023-06-02T09:12:08",
-                                "text": "Какая интересная статья, мне очень понравилось",
-                                "username": "Анна",
-                                "email": "krivera38@yahoo.com"
-                              },
-                              {
-                                "id": 199,
-                                "time": "2023-06-02T09:12:08",
-                                "text": "Какая интересная статья, мне очень понравилось",
-                                "username": "Анна",
-                                "email": "vevans49@gmail.com"
-                              }
-                            ]
+                            {
+                              "comments": [
+                                {
+                                  "id": "37",
+                                  "time": "2023-06-14T11:07:00",
+                                  "text": "This is so cool! I wonder what it looked like.",
+                                  "username": "DinoLover",
+                                  "email": "dinolover@yahoo.com"
+                                },
+                                {
+                                  "id": "162",
+                                  "time": "2023-06-14T11:07:00",
+                                  "text": "This is so cool! I wonder what it looked like.",
+                                  "username": "DinoLover2",
+                                  "email": "dinolover2@yahoo.com"
+                                }
+                              ]
+                            }
                             """))),
             @ApiResponse(responseCode = "406", description = "Pageable wrong sort params",
                     content = @Content(mediaType = "application/json",
@@ -223,8 +202,9 @@ public interface CommentOpenApi {
                             }
                             """)))
     })
-    ResponseEntity<List<CommentResponse>> findAllByMatchingTextParams(@ParameterObject CommentRequest commentRequest,
-                                                                      @ParameterObject Pageable pageable);
+    ResponseEntity<CommentResponseList> findAllByMatchingTextParams(String text,
+                                                                    String username,
+                                                                    @ParameterObject Pageable pageable);
 
     @Operation(summary = "Save new Comment and related it with News by newsId.", tags = "Comment",
             security = @SecurityRequirement(name = "Bearer Authentication"),
@@ -232,9 +212,9 @@ public interface CommentOpenApi {
                     content = @Content(schema = @Schema(implementation = CommentWithNewsRequest.class),
                             examples = @ExampleObject("""
                                     {
-                                      "text": "Как то не очень :(",
-                                      "username": "Василий",
-                                      "news_id": 20
+                                      "text": "Not bad at all :(",
+                                      "username": "Vasiliy",
+                                      "newsId": "20"
                                     }
                                     """))))
     @ApiResponses(value = {
@@ -242,10 +222,10 @@ public interface CommentOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CommentResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 207,
-                              "time": "2023-06-08T22:34:43",
-                              "text": "Как то не очень :(",
-                              "username": "Василий",
+                              "id": "203",
+                              "time": "2023-06-16T14:31:34",
+                              "text": "Not bad at all :(",
+                              "username": "Vasiliy",
                               "email": "Green@mail.com"
                             }
                             """))),
@@ -278,20 +258,16 @@ public interface CommentOpenApi {
                             """))),
             @ApiResponse(responseCode = "409", description = "Validation error",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ValidationErrorResponse.class),
+                            schema = @Schema(implementation = IncorrectData.class),
                             examples = @ExampleObject("""
                                     {
-                                      "error_code": "409 CONFLICT",
-                                      "violations": [
-                                        {
-                                          "field_name": "text",
-                                          "error_message": "size must be between 3 and 500"
-                                        }
-                                      ]
+                                      "exception": "ProtoValidationException",
+                                      "error_message": ".CommentWithNewsRequest.news_id: must be greater than 0 - Got 0",
+                                      "error_code": "409 CONFLICT"
                                     }
                                     """)))
     })
-    ResponseEntity<CommentResponse> save(@Valid CommentWithNewsRequest commentWithNewsRequest,
+    ResponseEntity<CommentResponse> save(CommentWithNewsRequest commentWithNewsRequest,
                                          @Parameter(hidden = true) String token);
 
     @Operation(summary = "Update Comment by id.", tags = "Comment",
@@ -301,8 +277,8 @@ public interface CommentOpenApi {
                     content = @Content(schema = @Schema(implementation = CommentRequest.class),
                             examples = @ExampleObject("""
                                     {
-                                      "text": "Воу, это круто!",
-                                      "username": "Светка"
+                                      "text": "Wow, that's cool!",
+                                      "username": "Svetlana"
                                     }
                                     """))))
     @ApiResponses(value = {
@@ -310,11 +286,11 @@ public interface CommentOpenApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CommentResponse.class), examples = @ExampleObject("""
                             {
-                              "id": 208,
-                              "time": "2023-06-08T22:36:44",
-                              "text": "Воу, это круто!",
-                              "username": "Светка",
-                              "email": "ChakcNunChuck@gmail.com"
+                              "id": "191",
+                              "time": "2023-06-16T14:32:55",
+                              "text": "Wow, that's cool!",
+                              "username": "Svetlana",
+                              "email": "Green@mail.com"
                             }
                             """))),
             @ApiResponse(responseCode = "401", description = "Not Authenticated User",
@@ -361,15 +337,25 @@ public interface CommentOpenApi {
                                       "error_code": "409 CONFLICT",
                                       "violations": [
                                         {
-                                          "field_name": "text",
-                                          "error_message": "size must be between 3 and 500"
+                                          "field_name": "updateById.id",
+                                          "error_message": "must be greater than 0"
                                         }
                                       ]
+                                    }
+                                    """))),
+            @ApiResponse(responseCode = "409", description = "Validation error",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IncorrectData.class),
+                            examples = @ExampleObject("""
+                                    {
+                                      "exception": "ProtoValidationException",
+                                      "error_message": ".CommentRequest.username: must match pattern ^[a-zA-Zа-яА-ЯёЁ0-9@_-]+$ - Got \\"Svetlana111   \\"",
+                                      "error_code": "409 CONFLICT"
                                     }
                                     """)))
     })
     ResponseEntity<CommentResponse> updateById(@Positive Long id,
-                                               @Valid CommentRequest commentRequest,
+                                               CommentRequest commentRequest,
                                                @Parameter(hidden = true) String token);
 
     @Operation(summary = "Delete Comment by id.", tags = "Comment",

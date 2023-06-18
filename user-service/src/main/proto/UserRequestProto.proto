@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+import "validate/validate.proto";
+
+option java_package = "ru.clevertec.userservice.dto.proto";
+option java_multiple_files = true;
+
+message UserUpdateRequest {
+  string firstname = 1 [(validate.rules).string = {
+    pattern: "^[a-zA-Zа-яА-ЯёЁ]+$",
+    min_len: 2,
+    max_len: 30,
+  }];
+  string lastname = 2 [(validate.rules).string = {
+    pattern: "^[a-zA-Zа-яА-ЯёЁ]+$",
+    min_len: 2,
+    max_len: 30,
+  }];
+  string password = 3 [(validate.rules).string = {min_len: 3, max_len: 64}];
+}
+
+message UserRegisterRequest {
+  string firstname = 1 [(validate.rules).string = {
+    pattern: "^[a-zA-Zа-яА-ЯёЁ]+$"
+    min_len: 2,
+    max_len: 30,
+  }];
+  string lastname = 2 [(validate.rules).string = {
+    pattern: "^[a-zA-Zа-яА-ЯёЁ]+$",
+    min_len: 2,
+    max_len: 30,
+  }];
+  string email = 3 [(validate.rules).string.email = true];
+  string password = 4 [(validate.rules).string = {min_len: 3, max_len: 64}];
+  string role = 5 [(validate.rules).string.pattern = "ADMIN|JOURNALIST|SUBSCRIBER"];
+}
+
+message UserAuthenticationRequest {
+  string email = 1 [(validate.rules).string.email = true];
+  string password = 2 [(validate.rules).string = {min_len: 3, max_len: 64}];
+}

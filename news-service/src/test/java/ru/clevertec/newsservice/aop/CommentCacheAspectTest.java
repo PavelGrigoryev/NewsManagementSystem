@@ -12,9 +12,9 @@ import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import ru.clevertec.newsservice.cache.Cache;
 import ru.clevertec.newsservice.cache.LFUCache;
 import ru.clevertec.newsservice.cache.factory.CacheFactory;
-import ru.clevertec.newsservice.dto.DeleteResponse;
-import ru.clevertec.newsservice.dto.comment.CommentResponse;
-import ru.clevertec.newsservice.dto.comment.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.proto.CommentResponse;
+import ru.clevertec.newsservice.dto.proto.CommentWithNewsRequest;
+import ru.clevertec.newsservice.dto.proto.DeleteResponse;
 import ru.clevertec.newsservice.service.CommentService;
 import ru.clevertec.newsservice.service.impl.CommentServiceImpl;
 import ru.clevertec.newsservice.util.testbuilder.comment.CommentResponseTestBuilder;
@@ -180,7 +180,9 @@ class CommentCacheAspectTest {
         @DisplayName("test aspect should return expected value")
         void testAspectShouldReturnExpectedValue() {
             long id = 1L;
-            DeleteResponse expectedValue = new DeleteResponse("There is no Comment with ID " + id + " to delete");
+            DeleteResponse expectedValue = DeleteResponse.newBuilder()
+                    .setMessage("There is no Comment with ID " + id + " to delete")
+                    .build();
             String token = "jwt";
 
             doReturn(cache)
