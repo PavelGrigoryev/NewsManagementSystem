@@ -346,7 +346,7 @@ public interface NewsOpenApi {
                               "error_code": "403 FORBIDDEN"
                             }
                             """))),
-            @ApiResponse(responseCode = "404", description = "Not News with this id to delete",
+            @ApiResponse(responseCode = "404", description = "No News with this id to delete",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = IncorrectData.class), examples = @ExampleObject("""
                             {
