@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RequiredArgsConstructor
-public class UserServiceImplTest extends BaseIntegrationTest {
+class UserServiceImplTest extends BaseIntegrationTest {
 
     private final UserService userService;
     private static final String BEARER = "Bearer ";
