@@ -96,7 +96,6 @@ public class UserServiceImpl implements UserService {
                 .setEmail(email).build();
     }
 
-
     /**
      * Updates a user's information with the given {@link UserUpdateRequest} and returns a {@link UserResponse} containing
      * the updated user's information and his JWT token.
